@@ -1,0 +1,23 @@
+{
+	"UpdateLoopDelay": 1.0,
+	"ActorGemsMax": 6,
+	"ActorMilkMax": 2,
+	"ActorSemenMax": 1,
+	"BirthGemsFilled": 1,
+	"Sliders": {
+		"Gems": [
+			{ "Name": "PregnancyBelly", "Max": 0.65 },
+			{ "Name": "ChubbyArms", "Max": 0.7 },
+			{ "Name": "ChubbyButt", "Max": 0.5 },
+			{ "Name": "ChubbyLegs", "Max": 0.6 },
+			{ "Name": "ChubbyWaist", "Max": 0.6 },
+			{ "Name": "Breasts", "Max": 0.25 },
+			{ "Name": "BreastsGravity2", "Max": 0.25 }
+		],
+		"Milk": [
+			{ "Name": "Breasts", "Max": 1.5 },
+			{ "Name": "BreastsGravity2", "Max": 1.0 },
+			{ "Name": "BreastsTopSlope", "Max": 0.5 }
+		]
+	}
+}

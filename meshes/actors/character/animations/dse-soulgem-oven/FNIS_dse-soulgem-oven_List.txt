@@ -1,0 +1,18 @@
+Version 400
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'' Soulgem Oven 4 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'' darkcee.legit@gmail.com ''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+'' b  = idle
+'' o  = idle+ao
+'' -k = hkx comes from another mod.
+'' -AVbHumanoidFootIKDisable = disable foot falls
+'' -AVIbHeadTrackSpine = keep torso locked if head tracking enabled
+'' -h = head tracking enabled
+'' -a = acyclic (don't loop)
+
+b -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-insert1 insert1.hkx
