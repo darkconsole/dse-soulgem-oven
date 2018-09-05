@@ -30,3 +30,6 @@ Version requirements are much stricter this time, due to SSE modding still being
 
 * UI Extensions 1.2.0+
 	* https://www.nexusmods.com/skyrimspecialedition/mods/17561
+
+* SexLab Framework SE 1.63 Beta 2+
+	* https://www.loverslab.com/topic/91861-sexlab-framework-se-163-beta-2-april-5-2018/
