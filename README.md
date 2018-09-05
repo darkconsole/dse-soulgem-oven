@@ -27,3 +27,6 @@ Version requirements are much stricter this time, due to SSE modding still being
 
 * BodySlide 4.6.2+
     * https://www.nexusmods.com/skyrimspecialedition/mods/201
+
+* UI Extensions 1.2.0+
+	* https://www.nexusmods.com/skyrimspecialedition/mods/17561

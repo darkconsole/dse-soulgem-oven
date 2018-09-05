@@ -78,3 +78,40 @@ Function ActorSlidersClear(Actor Who, String Prefix)
 
 	Return
 EndFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Event OnAnimationEvent(ObjectReference What, String EvName)
+{handle animation events.}
+
+	Main.Util.PrintDebug(EvName)
+
+	If(EvName == "SGO4.ActorMoan")
+		self.OnAnimationEvent_ActorMoan(What as Actor)
+	ElseIf(EvName == "SGO4.ActorReset")
+		self.OnAnimationEvent_ActorReset(What as Actor)
+	EndIf
+
+	Return
+EndEvent
+
+Function OnAnimationEvent_ActorMoan(Actor Who)
+{play an expression on the actor face.}
+
+	sslBaseExpression Face = Main.SexLab.GetExpressionByName("Pained")
+	sslBaseVoice Voice = Main.SexLab.PickVoice(Who)
+
+	Face.Apply(Who,60,Who.GetLeveledActorBase().GetSex())
+	Voice.GetSound(75).Play(Who)
+
+	Return
+EndFunction
+
+Function OnAnimationEvent_ActorReset(Actor Who)
+{reset an actor's face.}
+
+	sslBaseExpression.ClearMFG(Who)
+
+	Return
+EndFunction

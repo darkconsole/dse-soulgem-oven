@@ -131,6 +131,12 @@ added to this list.}
 	Who.UnregisterForUpdate()
 	Who.RegisterForUpdate(600)
 
+	;; track animation events for actors we are watching.
+	Main.Body.UnregisterForAnimationEvent(Who,"SGO4.ActorMoan")
+	Main.Body.UnregisterForAnimationEvent(Who,"SGO4.ActorReset")
+	Main.Body.RegisterForAnimationEvent(Who,"SGO4.ActorMoan")
+	Main.Body.RegisterForAnimationEvent(Who,"SGO4.ActorReset")
+
 	Main.Util.PrintDebug(Who.GetDisplayName() + " is now being tracked.")
 	Return
 EndFunction

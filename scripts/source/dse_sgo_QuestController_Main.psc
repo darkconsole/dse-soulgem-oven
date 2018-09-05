@@ -39,6 +39,7 @@ dse_sgo_QuestDatabase_Main Property Data Auto
 dse_sgo_QuestUpdateLoop_Main Property Loop Auto
 dse_sgo_QuestUtil_Main Property Util Auto
 dse_sgo_QuestBody_Main Property Body Auto
+SexLabFramework Property SexLab Auto
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -97,7 +98,12 @@ Event OnInit()
 
 	;;;;;;;;
 
+	;; not for real things just hack testing.
+
+	SexLab = Util.GetFormFrom("SexLab.esm",0xd62) As SexLabFramework
 	self.Data.ActorTrackingAdd(self.Player)
+	
+	;;;;;;;;
 
 	self.Util.Print("Soulgem Oven 4 has started.")
 	Return
@@ -105,6 +111,11 @@ EndEvent
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Function OnAnimationEvent(ObjectReference Who, String EvName)
+
+	Return
+EndFunction
 
 Function ResetConfig()
 
