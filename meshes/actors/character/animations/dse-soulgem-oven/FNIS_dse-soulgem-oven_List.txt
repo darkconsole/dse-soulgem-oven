@@ -18,9 +18,9 @@ Version 400
 '' inserts a soulgem from the front.
 
 s -h,o,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable,TSGO4.ActorMoan/3.0 dse-sgo-insert01-01 insert01-01.hkx dse_sgo_AobjSoulgemInHand01
-+ -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable,TSGO4.ActorReset/-0.5 dse-sgo-insert01-02 insert01-02.hkx
++ -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable,TSGO4.ActorReset/-0.25 dse-sgo-insert01-02 insert01-02.hkx
 
 '' inserts a soulgem from behind.
 
 s -h,o,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable,TSGO4.ActorMoan/2.5 dse-sgo-insert02-01 insert02-01.hkx dse_sgo_AobjSoulgemInHand01
-+ -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable,TSGO4.ActorReset/-0.5 dse-sgo-insert02-02 insert02-02.hkx
++ -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable,TSGO4.ActorReset/-0.25 dse-sgo-insert02-02 insert02-02.hkx
