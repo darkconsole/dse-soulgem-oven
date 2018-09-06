@@ -8,6 +8,12 @@ dse_sgo_QuestController_Main Property Main Auto
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+String Property KeyEvActorMoan = "SGO4.ActorMoan" AutoReadOnly Hidden
+String Property KeyEvActorReset = "SGO4.ActorReset" AutoReadOnly Hidden
+
+String Property AniDefault = "IdleForceDefaultState" AutoReadOnly Hidden
+String Property AniInsert01 = "dse-sgo-insert01-01" AutoReadOnly Hidden
+String Property AniInsert02 = "dse-sgo-insert02-01" AutoReadOnly Hidden
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -82,15 +88,31 @@ EndFunction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+Function RegisterForCustomAnimationEvents(Actor Who)
+{watch an actor for SGO4 custom animation events.}
+
+	self.UnregisterForAnimationEvent(Who,self.KeyEvActorMoan)
+	self.UnregisterForAnimationEvent(Who,self.KeyEvActorReset)
+
+	self.RegisterForAnimationEvent(Who,self.KeyEvActorMoan)
+	self.RegisterForAnimationEvent(Who,self.KeyEvActorReset)
+
+	Return
+EndFunction
+
 Event OnAnimationEvent(ObjectReference What, String EvName)
 {handle animation events.}
 
-	Main.Util.PrintDebug(EvName)
+	Main.Util.PrintDebug(EvName + " " + What.GetDisplayName())
 
-	If(EvName == "SGO4.ActorMoan")
-		self.OnAnimationEvent_ActorMoan(What as Actor)
-	ElseIf(EvName == "SGO4.ActorReset")
-		self.OnAnimationEvent_ActorReset(What as Actor)
+	If(What as Actor)
+		If(EvName == "SGO4.ActorMoan")
+			self.OnAnimationEvent_ActorMoan(What as Actor)
+		ElseIf(EvName == "SGO4.ActorReset")
+			self.OnAnimationEvent_ActorReset(What as Actor)
+		ElseIf(EvName == "SGO4.ActorResetFace")
+			self.OnAnimationEvent_ActorResetFace(What as Actor)
+		EndIf
 	EndIf
 
 	Return
@@ -109,9 +131,38 @@ Function OnAnimationEvent_ActorMoan(Actor Who)
 EndFunction
 
 Function OnAnimationEvent_ActorReset(Actor Who)
+{reset an actor's body and face.}
+
+	sslBaseExpression.ClearMFG(Who)
+
+	If(Who == Main.Player)
+		Game.SetPlayerAIDriven(FALSE)
+	EndIf
+
+	Debug.SendAnimationEvent(Who,self.AniDefault)
+
+	Return
+EndFunction
+
+Function OnAnimationEvent_ActorResetFace(Actor Who)
 {reset an actor's face.}
 
 	sslBaseExpression.ClearMFG(Who)
+
+	Return
+EndFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Function ActorAnimateSolo(Actor Who, String AniName)
+{force an actor to perform some sort of blocking/busy animation.}
+
+	If(Who == Main.Player)
+		Game.SetPlayerAIDriven(TRUE)
+	EndIf
+
+	Debug.SendAnimationEvent(Who,AniName)
 
 	Return
 EndFunction

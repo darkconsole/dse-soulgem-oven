@@ -43,10 +43,12 @@ Function GemStagePopulate()
 
 	Int Mode = Main.Config.GetInt("BirthGemsFilled")
 
+	StorageUtil.FormListClear(None,self.KeyGemStageData)
+
 	If(Mode == 1)
-		self.GemStagePopulateFilled()
+		StorageUtil.FormListCopy(None,self.KeyGemStageData,self.GetGemStagesFilled())
 	ElseIf(Mode == 0)
-		self.GemStagePopulateEmpty()
+		StorageUtil.FormListCopy(None,self.KeyGemStageData,self.GetGemStagesEmpty())
 	ElseIf(Mode == -1)
 		;; i still need to work out how you can generate a custom
 		;; list of things to birth.
@@ -55,56 +57,32 @@ Function GemStagePopulate()
 	Return
 EndFunction
 
-Function GemStagePopulateFilled()
-{fill the gem dataset with the full gems.}
-
-	StorageUtil.FormListClear(None,KeyGemStageData)
-
-	;; petty
-	StorageUtil.FormListAdd(None,KeyGemStageData,Main.Util.GetFormFrom("Skyrim.esm",0x2e4e3))
-
-	;; lesser
-	StorageUtil.FormListAdd(None,KeyGemStageData,Main.Util.GetFormFrom("Skyrim.esm",0x2e4e5))
-
-	;; common
-	StorageUtil.FormListAdd(None,KeyGemStageData,Main.Util.GetFormFrom("Skyrim.esm",0x2e4f3))
-
-	;; greater
-	StorageUtil.FormListAdd(None,KeyGemStageData,Main.Util.GetFormFrom("Skyrim.esm",0x2e4fb))
-
-	;; grand
-	StorageUtil.FormListAdd(None,KeyGemStageData,Main.Util.GetFormFrom("Skyrim.esm",0x2e4ff))
-
-	;; black
-	StorageUtil.FormListAdd(None,KeyGemStageData,Main.Util.GetFormFrom("Skyrim.esm",0x2e504))
-
-	Return
-EndFunction
-
-Function GemStagePopulateEmpty()
+Form[] Function GetGemStagesFilled()
 {fill the gem dataset with the empty gems.}
 
-	StorageUtil.FormListClear(None,KeyGemStageData)
+	Form[] Gems = new Form[6]
+	Gems[0] = Main.Util.GetFormFrom("Skyrim.esm",0x2e4e3)
+	Gems[1] = Main.Util.GetFormFrom("Skyrim.esm",0x2e4e5)
+	Gems[2] = Main.Util.GetFormFrom("Skyrim.esm",0x2e4f3)
+	Gems[3] = Main.Util.GetFormFrom("Skyrim.esm",0x2e4fb)
+	Gems[4] = Main.Util.GetFormFrom("Skyrim.esm",0x2e4ff)
+	Gems[5] = Main.Util.GetFormFrom("Skyrim.esm",0x2e504)
 
-	;; petty
-	StorageUtil.FormListAdd(None,KeyGemStageData,Main.Util.GetFormFrom("Skyrim.esm",0x2e4e2))
+	Return Gems
+EndFunction
 
-	;; lesser
-	StorageUtil.FormListAdd(None,KeyGemStageData,Main.Util.GetFormFrom("Skyrim.esm",0x2e4e4))
+Form[] Function GetGemStagesEmpty()
+{fill the gem dataset with the empty gems.}
 
-	;; common
-	StorageUtil.FormListAdd(None,KeyGemStageData,Main.Util.GetFormFrom("Skyrim.esm",0x2e4e6))
+	Form[] Gems = new Form[6]
+	Gems[0] = Main.Util.GetFormFrom("Skyrim.esm",0x2e4e2)
+	Gems[1] = Main.Util.GetFormFrom("Skyrim.esm",0x2e4e4)
+	Gems[2] = Main.Util.GetFormFrom("Skyrim.esm",0x2e4e6)
+	Gems[3] = Main.Util.GetFormFrom("Skyrim.esm",0x2e4f4)
+	Gems[4] = Main.Util.GetFormFrom("Skyrim.esm",0x2e4fc)
+	Gems[5] = Main.Util.GetFormFrom("Skyrim.esm",0x2e500)
 
-	;; greater
-	StorageUtil.FormListAdd(None,KeyGemStageData,Main.Util.GetFormFrom("Skyrim.esm",0x2e4f4))
-
-	;; grand
-	StorageUtil.FormListAdd(None,KeyGemStageData,Main.Util.GetFormFrom("Skyrim.esm",0x2e4fc))
-
-	;; black
-	StorageUtil.FormListAdd(None,KeyGemStageData,Main.Util.GetFormFrom("Skyrim.esm",0x2e500))
-
-	Return
+	Return Gems
 EndFunction
 
 Int Function GemStageCount()
@@ -114,6 +92,7 @@ Int Function GemStageCount()
 EndFunction
 
 Form Function GemStageGet(Int Index)
+{}
 
 	Return StorageUtil.FormListGet(None,KeyGemStageData,Index)
 EndFunction
@@ -132,10 +111,7 @@ added to this list.}
 	Who.RegisterForUpdate(600)
 
 	;; track animation events for actors we are watching.
-	Main.Body.UnregisterForAnimationEvent(Who,"SGO4.ActorMoan")
-	Main.Body.UnregisterForAnimationEvent(Who,"SGO4.ActorReset")
-	Main.Body.RegisterForAnimationEvent(Who,"SGO4.ActorMoan")
-	Main.Body.RegisterForAnimationEvent(Who,"SGO4.ActorReset")
+	Main.Body.RegisterForCustomAnimationEvents(Who)
 
 	Main.Util.PrintDebug(Who.GetDisplayName() + " is now being tracked.")
 	Return

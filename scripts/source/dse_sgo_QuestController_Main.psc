@@ -34,17 +34,24 @@ EndFunction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; local mod libraries.
+
 dse_sgo_QuestConfig_Main Property Config Auto
 dse_sgo_QuestDatabase_Main Property Data Auto
 dse_sgo_QuestUpdateLoop_Main Property Loop Auto
 dse_sgo_QuestUtil_Main Property Util Auto
 dse_sgo_QuestBody_Main Property Body Auto
-SexLabFramework Property SexLab Auto
+
+;; third party libraries.
+
+SexLabFramework Property SexLab Auto Hidden
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Actor Property Player Auto
+
+FormList Property ListGemFilter Auto
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -61,6 +68,12 @@ Event OnInit()
 	Int Wait = 0
 
 	If(self.IsStopped())
+		Return
+	EndIf
+
+	If(!self.CheckForDeps())
+		self.Reset()
+		self.Stop()
 		Return
 	EndIf
 
@@ -112,11 +125,6 @@ EndEvent
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Function OnAnimationEvent(ObjectReference Who, String EvName)
-
-	Return
-EndFunction
-
 Function ResetConfig()
 
 	self.Config.Reset()
@@ -139,3 +147,19 @@ Function ResetMod()
 	self.Start()
 	Return
 EndFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Bool Function CheckForDeps()
+{make sure we have everything we need installed.}
+
+	Bool Output = TRUE
+
+	Return Output
+EndFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
