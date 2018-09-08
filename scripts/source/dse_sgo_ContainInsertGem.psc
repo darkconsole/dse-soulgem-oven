@@ -113,7 +113,6 @@ Event OnActivate(ObjectReference What)
 
 	Main.Util.PrintDebug(What.GetDisplayName() + " inserted " + CountItem + " gems.")
 	self.GemData = Utility.CreateFloatArray(CountItem,0.0)
-	Main.Util.PrintDebug("CreateFloatArray Done")
 	Iter = 0
 
 	;;;;;;;;
@@ -142,13 +141,26 @@ Event OnActivate(ObjectReference What)
 
 	If(self.GemData.Length > 0)
 		self.InsertGem(Main.Player)
-	Else
-		self.Disable()
-		self.Delete()
+		Return
 	EndIf
 
+	self.Done()
 	Return
 EndEvent
+
+Function Done()
+{handle cleanup of this container.}
+
+	self.RemoveAllItems(None)
+	self.UnregisterForModEvent(Main.Body.KeyEvActorDone)
+	self.UnregisterForModEvent(Main.Body.KeyEvActorInsert)
+	self.Disable()
+	self.Delete()
+
+	Main.Util.PrintDebug("Insertion Container Deleted")
+
+	Return
+EndFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -170,9 +182,9 @@ Function InsertGem(Actor Who)
 EndFunction
 
 Event OnAnimateInsert(Form What)
+{watch for insertion events to trigger adding the gem.}
 
 	Actor Who = What as Actor
-	Main.Util.PrintDebug("ContainerInsertGem OnAnimateInsert")
 
 	Main.Data.ActorGemAdd(Who,self.GemData[self.GemLoop])
 
@@ -180,9 +192,9 @@ Event OnAnimateInsert(Form What)
 EndEvent
 
 Event OnAnimateDone(Form What)
+{watch for finish events to find out if we need to insert more or to stop.}
 
 	Actor Who = What as Actor
-	Main.Util.PrintDebug("ContainerInsertGem OnAnimateDone")
 
 	self.GemLoop += 1
 
@@ -191,9 +203,7 @@ Event OnAnimateDone(Form What)
 		Return
 	EndIf
 
-	self.UnregisterForModEvent(Main.Body.KeyEvActorDone)
-	self.Disable()
-	self.Delete()
+	self.Done()
 	Return
 EndEvent
 
