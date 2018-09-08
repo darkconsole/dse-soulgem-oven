@@ -1,5 +1,5 @@
 {
-	"UpdateLoopDelay": 1.0,
+	"UpdateLoopDelay": 60.0,
 	"ActorGemsMax": 6,
 	"ActorMilkMax": 2,
 	"ActorSemenMax": 1,

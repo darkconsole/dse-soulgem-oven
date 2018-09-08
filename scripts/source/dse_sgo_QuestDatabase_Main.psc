@@ -217,6 +217,8 @@ Bool Function ActorGemAdd(Actor Who, Float Val=0.0)
 	EndIf
 
 	StorageUtil.FloatListAdd(Who,self.KeyActorGemData,Val)
+
+	Main.Body.ActorUpdate(Who)
 	Return TRUE
 EndFunction
 

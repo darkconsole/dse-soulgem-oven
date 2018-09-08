@@ -10,6 +10,9 @@ dse_sgo_QuestController_Main Property Main Auto
 
 String Property KeyEvActorMoan = "SGO4.ActorMoan" AutoReadOnly Hidden
 String Property KeyEvActorReset = "SGO4.ActorReset" AutoReadOnly Hidden
+String Property KeyEvActorResetFace = "SGO4.ActorResetFace" AutoReadOnly Hidden
+String Property KeyEvActorDone = "SGO4.ActorDone" AutoReadOnly Hidden
+String Property KeyEvActorInsert = "SGO4.ActorInsert" AutoReadOnly Hidden
 
 String Property AniDefault = "IdleForceDefaultState" AutoReadOnly Hidden
 String Property AniInsert01 = "dse-sgo-insert01-01" AutoReadOnly Hidden
@@ -93,9 +96,15 @@ Function RegisterForCustomAnimationEvents(Actor Who)
 
 	self.UnregisterForAnimationEvent(Who,self.KeyEvActorMoan)
 	self.UnregisterForAnimationEvent(Who,self.KeyEvActorReset)
+	self.UnregisterForAnimationEvent(Who,self.KeyEvActorResetFace)
+	self.UnregisterForAnimationEvent(Who,self.KeyEvActorDone)
+	self.UnregisterForAnimationEvent(Who,self.KeyEvActorInsert)
 
 	self.RegisterForAnimationEvent(Who,self.KeyEvActorMoan)
 	self.RegisterForAnimationEvent(Who,self.KeyEvActorReset)
+	self.RegisterForAnimationEvent(Who,self.KeyEvActorResetFace)
+	self.RegisterForAnimationEvent(Who,self.KeyEvActorDone)
+	self.RegisterForAnimationEvent(Who,self.KeyEvActorInsert)
 
 	Return
 EndFunction
@@ -106,12 +115,16 @@ Event OnAnimationEvent(ObjectReference What, String EvName)
 	Main.Util.PrintDebug(EvName + " " + What.GetDisplayName())
 
 	If(What as Actor)
-		If(EvName == "SGO4.ActorMoan")
+		If(EvName == self.KeyEvActorMoan)
 			self.OnAnimationEvent_ActorMoan(What as Actor)
-		ElseIf(EvName == "SGO4.ActorReset")
+		ElseIf(EvName == self.KeyEvActorReset)
 			self.OnAnimationEvent_ActorReset(What as Actor)
-		ElseIf(EvName == "SGO4.ActorResetFace")
+		ElseIf(EvName == self.KeyEvActorResetFace)
 			self.OnAnimationEvent_ActorResetFace(What as Actor)
+		ElseIf(EvName == self.KeyEvActorDone)
+			self.OnAnimationEvent_ActorDone(What as Actor)
+		ElseIf(EvName == self.KeyEvActorInsert)
+			self.OnAnimationEvent_ActorInsert(What as Actor)
 		EndIf
 	EndIf
 
@@ -148,6 +161,36 @@ Function OnAnimationEvent_ActorResetFace(Actor Who)
 {reset an actor's face.}
 
 	sslBaseExpression.ClearMFG(Who)
+
+	Return
+EndFunction
+
+Function OnAnimationEvent_ActorDone(Actor Who)
+{we are completely done animating.}
+
+	Int Ev
+
+	self.OnAnimationEvent_ActorReset(Who)
+
+	Main.Util.PrintDebug("ModEvent: " + self.KeyEvActorDone)
+
+ 	Ev = ModEvent.Create(self.KeyEvActorDone)
+	ModEvent.PushForm(Ev,Who)
+	ModEvent.Send(Ev)
+
+	Return
+EndFunction
+
+Function OnAnimationEvent_ActorInsert(Actor Who)
+{we are completely done animating.}
+
+	Int Ev
+
+	Main.Util.PrintDebug("ModEvent: " + self.KeyEvActorInsert)
+
+ 	Ev = ModEvent.Create(self.KeyEvActorInsert)
+	ModEvent.PushForm(Ev,Who)
+	ModEvent.Send(Ev)
 
 	Return
 EndFunction
