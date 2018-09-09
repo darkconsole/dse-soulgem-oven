@@ -1,6 +1,12 @@
 ScriptName dse_sgo_ContainInsertGem extends ObjectReference
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 dse_sgo_QuestController_Main Property Main Auto
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Int Property MaxCount Auto Hidden
 Int Property CurrentCount Auto Hidden
@@ -8,6 +14,9 @@ Int Property CurrentCount Auto Hidden
 Actor Property InsertInto Auto Hidden
 Float[] Property GemData Auto Hidden
 Int Property GemLoop Auto Hidden
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Event OnLoad()
 {when this container is placed in the game world.}
@@ -20,8 +29,6 @@ Event OnLoad()
 	If(self.InsertInto == None)
 		self.InsertInto = Main.Player
 	EndIf
-
-	Main.Data.ActorTrackingAdd(self.InsertInto)
 
 	;; figure out if we even can.
 
@@ -131,6 +138,11 @@ Event OnActivate(ObjectReference What)
 
 	;;;;;;;;
 
+	;; todo if CountItem > self.MaxCount 
+	;; because the add item event seems flakey at best.
+
+	;;;;;;;;
+
 	Main.Util.PrintDebug(Main.Player.GetDisplayName() + " added " + CountItem + " gems.")
 	self.GemData = Utility.CreateFloatArray(CountItem,0.0)
 	Iter = 0
@@ -196,6 +208,7 @@ Function InsertGem(Actor Who)
 		AniName = Main.Body.AniInsert02
 	EndIf
 
+	Main.Util.ActorArmourRemove(Who)
 	Main.Body.ActorAnimateSolo(Who,AniName)
 
 	Return
@@ -223,6 +236,7 @@ Event OnAnimateDone(Form What)
 		Return
 	EndIf
 
+	Main.Util.ActorArmourReplace(Who)
 	self.Done()
 	Return
 EndEvent

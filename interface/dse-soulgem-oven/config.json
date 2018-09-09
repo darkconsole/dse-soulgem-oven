@@ -9,6 +9,7 @@
 	"MilksPerDay": 2.0,
 	"MilksPregPercent": 50.0,
 	"SemensPerDay": 2.0,
+	"SexLabStrip": true,
 	"Sliders": {
 		"Gems": [
 			{ "Name": "PregnancyBelly", "Max": 0.65 },

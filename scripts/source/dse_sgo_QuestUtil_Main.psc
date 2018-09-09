@@ -66,8 +66,10 @@ Function ActorArmourRemove(Actor Who)
 	Form[] Items
 
 	If(Main.Config.GetBool("SexLabStrip"))
+		Main.Util.PrintDebug("Stripping " + Who.GetDisplayName() + " via SexLab.")
 		Items = Main.SexLab.StripActor(Who,None,FALSE,FALSE)
 	Else
+		Main.Util.PrintDebug("Stripping " + Who.GetDisplayName() + " manually.")
 		If(Who.GetWornForm(0x00000004) != None)
 			Items = new Form[1]
 			Items[0] = Who.GetWornForm(0x00000004)
@@ -86,7 +88,11 @@ EndFunction
 Function ActorArmourReplace(Actor Who)
 {replace an actor's chestpiece.}
 
-	Form[] Items = StorageUtil.FormListToArray(Who,"SGO4.Actor.Armor")
+	Form[] Items
+
+	If(StorageUtil.FormListCount(Who,"SGO4.Actor.Armor") > 0)
+		Items = StorageUtil.FormListToArray(Who,"SGO4.Actor.Armor")
+	EndIf
 
 	;;If(Main.Config.GetBool("SexLabStrip"))
 	If((Items != None) && (Items.Length > 0))

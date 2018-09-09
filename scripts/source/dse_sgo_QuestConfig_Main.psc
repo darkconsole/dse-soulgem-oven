@@ -51,6 +51,12 @@ Function ReloadConfigFile()
 	Return
 EndFunction
 
+Bool Function GetBool(String Path)
+{fetch an integer from the json config.}
+
+	Return JsonUtil.GetPathBoolValue(self.FileConfig,Path)
+EndFunction
+
 Int Function GetInt(String Path)
 {fetch an integer from the json config.}
 

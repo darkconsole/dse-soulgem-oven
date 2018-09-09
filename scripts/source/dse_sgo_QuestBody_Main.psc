@@ -237,6 +237,7 @@ Function ActorAnimateSolo(Actor Who, String AniName)
 		Game.SetPlayerAIDriven(TRUE)
 	EndIf
 
+	self.RegisterForCustomAnimationEvents(Who)
 	Debug.SendAnimationEvent(Who,AniName)
 
 	Return

@@ -122,9 +122,6 @@ added to this list.}
 	Who.UnregisterForUpdate()
 	Who.RegisterForUpdate(600)
 
-	;; track animation events for actors we are watching.
-	Main.Body.RegisterForCustomAnimationEvents(Who)
-
 	Main.Util.PrintDebug(Who.GetDisplayName() + " is now being tracked.")
 	Return
 EndFunction
@@ -303,6 +300,7 @@ Bool Function ActorGemAdd(Actor Who, Float Val=0.0)
 
 	StorageUtil.FloatListAdd(Who,self.KeyActorGemData,Val)
 
+	self.ActorTrackingAdd(Who)
 	Main.Body.ActorUpdate(Who)
 	Return TRUE
 EndFunction
