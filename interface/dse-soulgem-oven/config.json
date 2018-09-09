@@ -10,6 +10,9 @@
 	"MilksPregPercent": 50.0,
 	"SemensPerDay": 2.0,
 	"SexLabStrip": true,
+	"LevelAlchFactor": 1.0,
+	"LevelEnchFactor": 1.0,
+	"LevelValueBase": 100.0,
 	"Sliders": {
 		"Gems": [
 			{ "Name": "PregnancyBelly", "Max": 0.65 },

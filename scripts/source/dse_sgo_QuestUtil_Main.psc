@@ -60,6 +60,27 @@ EndFunction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+Float Function GetLeveledValue(Float Level, Float Value, Float Factor = 1.0)
+{modify a value based on a level 100 system. this means at level 100 the input
+value will be doubled.}
+	
+	;; input 1 at level 0
+	;; ((0 / 100) * 1) + 1 = 1
+
+	;; input 1 at level 1
+	;; ((1 / 100) * 1) + 1 = 1.01
+
+	;; input 1 at level 50
+	;; ((50 / 100) * 1) + 1 = 1.5
+
+	;; input 1 at level 100
+	;; ((100 / 100) * 1) + 1 = 2.0
+
+	Float Base = Main.Config.GetFloat("LevelValueBase")
+
+	Return (((Level / Base) * (Value * Factor)) + Value) as Float
+EndFunction
+
 Function ActorArmourRemove(Actor Who)
 {remove an actor's chestpiece.}
 
@@ -106,5 +127,46 @@ Function ActorArmourReplace(Actor Who)
 	;;EndIf
 
 	StorageUtil.FormListClear(Who,"SGO4.Actor.Armor")
+	Return
+EndFunction
+
+Function ActorLevelAlchemy(Actor Who, Float ItemValue=1.0)
+{progress the alchemy skill for the specified actor. for most things we will
+leave ItemValue at the default of 1.0.}
+
+	Float Factor
+	Float Level
+	Float Value
+	Float MilksPerDay
+
+	If(Who != Main.Player)
+		;; not possible to level npcs at this time.
+		Return
+	EndIf
+
+	Factor = Main.Config.GetFloat("LevelAlchFactor")
+	MilksPerday = Main.Config.GetFloat("MilksPerDay")
+
+	If(Factor == 0.0)
+		;; do not process when disabled.
+		Return
+	EndIf
+
+	;; http://www.uesp.net/wiki/Skyrim:Leveling#Skill_XP
+
+	;; xp/btl gained at x btl/day at level 0.
+	;; double this at level 100 with 1.0 progress factor.
+	;; 1 = 100xp
+	;; 2 = 50xp
+	;; 3 = 33xp (default)
+
+	Level = Who.GetLevel()
+	Value = (100 / MilksPerDay) * ItemValue
+
+	;; if its progressing retarded fast, manipulate the 24 to be smaller.
+	;; if too slow manipulate the 24 larger.
+	;; once this calc feels good to me at default, users can tweak it via the factor.
+
+	Game.AdvanceSkill("Alchemy",self.GetLeveledValue(Level,Value,Factor))
 	Return
 EndFunction
