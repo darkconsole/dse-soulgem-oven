@@ -56,3 +56,49 @@ Int Function RoundToInt(Float Val)
 
 	Return Math.Floor(Val + 0.5)
 EndFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Function ActorArmourRemove(Actor Who)
+{remove an actor's chestpiece.}
+
+	Form[] Items
+
+	If(Main.Config.GetBool("SexLabStrip"))
+		Items = Main.SexLab.StripActor(Who,None,FALSE,FALSE)
+	Else
+		If(Who.GetWornForm(0x00000004) != None)
+			Items = new Form[1]
+			Items[0] = Who.GetWornForm(0x00000004)
+			Who.UnequipItemSlot(32)
+			Who.QueueNiNodeUpdate()
+		EndIf
+	EndIf
+
+	If((Items != None) && (Items.Length > 0))
+		StorageUtil.FormListCopy(Who,"SGO4.Actor.Armor",Items)
+	EndIf
+
+	Return
+EndFunction
+
+Function ActorArmourReplace(Actor Who)
+{replace an actor's chestpiece.}
+
+	Form[] Items = StorageUtil.FormListToArray(Who,"SGO4.Actor.Armor")
+
+	;;If(Main.Config.GetBool("SexLabStrip"))
+	If((Items != None) && (Items.Length > 0))
+		Main.SexLab.UnstripActor(Who,Items,FALSE)
+	EndIf
+	;;Else
+	;;	If(StorageUtil.GetFormValue(Who,"SGO.Actor.Armor.Chest"))
+	;;		Who.EquipItem(Storageutil.GetFormValue(Who,"SGO.Actor.Armor.Chest"),FALSE,TRUE)
+	;;		StorageUtil.SetFormValue(who,"SGO.Actor.Armor.Chest",None)
+	;;	EndIf
+	;;EndIf
+
+	StorageUtil.FormListClear(Who,"SGO4.Actor.Armor")
+	Return
+EndFunction
