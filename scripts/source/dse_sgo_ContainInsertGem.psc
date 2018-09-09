@@ -21,6 +21,8 @@ Event OnLoad()
 		self.InsertInto = Main.Player
 	EndIf
 
+	Main.Data.ActorTrackingAdd(self.InsertInto)
+
 	;; figure out if we even can.
 
 	If(Main.Data.ActorGemCount(self.InsertInto) >= Main.Data.ActorGemMax(self.InsertInto))
