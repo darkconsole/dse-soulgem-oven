@@ -206,4 +206,3 @@ Event OnAnimateDone(Form What)
 	self.Done()
 	Return
 EndEvent
-
