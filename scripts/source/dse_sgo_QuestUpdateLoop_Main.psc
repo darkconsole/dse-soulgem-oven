@@ -19,6 +19,7 @@ EndEvent
 Event OnUpdate()
 {tick tock.}
 	
+	Float Delay
 	Int ActorCount
 	Int ActorIter
 	Bool ActorCull
@@ -27,11 +28,7 @@ Event OnUpdate()
 	;;;;;;;;
 	;;;;;;;;
 
-	Main.Util.PrintDebug("Update Begin")
-
-	;;;;;;;;
-	;;;;;;;;
-
+	Delay = Main.Config.GetFloat("UpdateLoopDelay")
 	ActorCount = Main.Data.ActorTrackingCount()
 	ActorIter = 0
 	ActorCull = FALSE
@@ -41,35 +38,31 @@ Event OnUpdate()
 
 		If(Who != None)
 			If(Who.Is3dLoaded())
-				Main.Util.PrintDebug("Update Loop " + Utility.GetCurrentGameTime() +  " " + Who.GetDisplayName())
+				Main.Util.PrintDebug("Update " + Who.GetDisplayName())
 				Main.Data.ActorUpdate(Who)
 				Main.Body.ActorUpdate(Who)
 			Else
-				Main.Util.PrintDebug("Update Loop " + Utility.GetCurrentGameTime() +  " " + Who.GetDisplayName() + " Skipped (Not Loaded)")
+				Main.Util.PrintDebug("Update "  + Who.GetDisplayName() + " Skipped (Not Loaded)")
 			EndIf
 		Else
 			ActorCull = TRUE
 		EndIf
 
 		ActorIter += 1
-		Utility.Wait(0.25)
+		Utility.Wait(Delay)
 	EndWhile
 
 	If(ActorCull)
+		Main.Util.PrintDebug("Update detected lost references, cleaning tracking list.")
 		Main.Data.ActorTrackingCull()
 	EndIf
 
 	;;;;;;;;
 	;;;;;;;;
 
-	Main.Util.PrintDebug("Update Finished")
-
-	;;;;;;;;
-	;;;;;;;;
-
 	If(self.IsRunning())
 		Main.Util.PrintDebug("Update Loop Renewed")
-		self.RegisterForSingleUpdate(Main.Config.GetFloat("UpdateLoopDelay"))
+		self.RegisterForSingleUpdate(Main.Config.GetFloat("UpdateLoopFreq"))
 	Else
 		Main.Util.PrintDebug("Update Loop Terminated")
 	EndIf

@@ -669,7 +669,8 @@ the actor is not biologically able to produce gems.}
 
 	;; update our fertile value.
 
-	StorageUtil.SetFloatValue(who,self.KeyActorFertilityData,Nval)
+	StorageUtil.SetFloatValue(Who,self.KeyActorFertilityData,Nval)
+	Main.Util.PrintDebug(Who.GetDisplayName() + " fertility data " + Nval + " " + self.ActorFertilityFactor(Who))
 
 	;; todo: immersive messages comparing fval and nval.
 

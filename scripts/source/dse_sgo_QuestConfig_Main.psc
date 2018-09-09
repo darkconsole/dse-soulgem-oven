@@ -13,16 +13,74 @@ Bool Property DebugMode = TRUE Auto Hidden
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-String Property FileConfig = "../../../interface/dse-soulgem-oven/config.json" AutoReadOnly Hidden
+String Property FileConfig = "../../../configs/dse-soulgem-oven/config.json" AutoReadOnly Hidden
 
-;; Float UpdateLoopDelay: how long it waits between calculations of tracked actors.
-;; Int ActorGemsMax: how many gems can be incubated at one time per actor.
-;; Int ActorMilkMax: how many bottes of milk can be carried per actor.
-;; Int ActorSemenMax: how many bottles of semen can be carried per actor.
-;; Int BirthFilledGems: 1 = filled, 0 = unfilled, -1 = custom birth list (todo)
-;; Float MilkPregPercent: how far along pregnancy has to be before milk production starts.
-;; Array Sliders.Gems: sliders for bodymorphs
-;; Array Sliders.Milk: sliders for bodymorphs
+;; Float UpdateLoopFreq (in seconds)
+;; how often the update loop runs.
+
+;; Float UpdateLoopDelay (in seconds)
+;; how long it waits between calculations of tracked actors.
+
+;; Float UpdateGameHours (in hours)
+;; minimum in-game time that must pass before an actor gets recalculated.
+
+;; Int BirthFilledGems
+;; 1 = filled, 0 = unfilled, -1 = custom birth list (not impl yet)
+
+;; Int ActorGemsMax
+;; how many gems can be incubated at one time per actor.
+
+;; Int ActorMilkMax
+;; how many bottes of milk can be carried per actor.
+
+;; Int ActorSemenMax
+;; how many bottles of semen can be carried per actor.
+
+;; Float GemsPerDay
+;; how many stages per day a gem matures. soulgems have six stages, so 1.0 means
+;; it will take 1 in-game day to go from petty to lesser, 6 days to go from
+;; petty to black.
+
+;; Float MilksPerDay
+;; how many bottles are generated over 24hr game time.
+
+;; Float MilksPregPercent (0.0 to 100.0)
+;; how far along pregnancy has to be before milk production starts.
+
+;; Float SemensPerDay
+;; how many bottles are generated over 24hr game time.
+
+;; Bool SexLabStrip
+;; use sexlab's stripping options, or just remove the chestpiece.
+
+;; Float LevelAlchFactor
+;; adjusts how fast alchemy levels.
+
+;; Float LevelEnchFactor
+;; adjusts how fast enchanting levels.
+
+;; Float LevelValueBase
+;; adjusts the maximum level used in the math for curving leveled values.
+
+;; Int FertilityDays
+;; how many days a fertility cycle lasts. within this amount of days the
+;; character will experience point of being barely fertile and a point of being
+;; extremely fertile.
+
+;; Float FertilityWindow
+;; multiplier of fertility chance. if the baseline chance is 50%, a window of
+;; 2.0 will half 50% in the low time and double it in the high time.
+
+;; Bool FertilitySync
+;; followers will slowly sync their fertility cycles to match the players...
+
+;; Array Sliders.Gems [ { "Name":"Breasts", "Max":2.0 }, ... ]
+;; sliders for bodymorphs. this example means at 100% preg the breasts will be
+;; augmented by 2.0 as if you moved the slider in racemenu yourself. you can
+;; add as many or as few sliders as you want.
+
+;; Array Sliders.Milk
+;; sliders for bodymorphs. same format as Sliders.Gems.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
