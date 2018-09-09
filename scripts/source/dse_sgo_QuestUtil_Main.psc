@@ -170,3 +170,46 @@ leave ItemValue at the default of 1.0.}
 	Game.AdvanceSkill("Alchemy",self.GetLeveledValue(Level,Value,Factor))
 	Return
 EndFunction
+
+Function ActorLevelEnchanting(Actor Who, Float ItemValue=-1.0)
+{progress the enchanting skill for the specified actor. item value will default
+to an item value equal to the gem stages as we are using this for gem birthing
+mostly.}
+
+	Float Factor
+	Float Level
+	Float Value
+	Float Base
+
+	If(Who != Main.Player)
+		;; not possible to level npcs at this time.
+		Return
+	EndIf
+
+	Factor = Main.Config.GetFloat("LevelEnchFactor")
+
+	If(Factor == 0.0)
+		;; do not process when disabled.
+		Return
+	EndIf
+
+	;; http://www.uesp.net/wiki/Skyrim:Leveling#Skill_XP
+	;; normal enchanting works as 1xp per item enchanted and it seems enchanting levels fast
+	;; so we will use small numbers here.
+
+	Base = Main.Data.GemStageCount()
+	Level = Who.GetLevel()
+
+	If(ItemValue == -1.0)
+		ItemValue = Base
+	EndIf
+
+	Value = ((ItemValue / Base) / 2.0)
+
+	;; if enchanting levels too slow manipulate the /2.0 smaller.
+	;; if too fast, manipulate the /2.0 larger.
+	;; once this calc feels good to me at default, users can tweak it via the factor.
+
+	Game.AdvanceSkill("Enchanting",self.GetLeveledValue(Level,Value,Factor))
+	Return
+EndFunction
