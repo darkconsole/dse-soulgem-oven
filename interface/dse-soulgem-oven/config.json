@@ -5,7 +5,7 @@
 	"ActorGemsMax": 6,
 	"ActorMilkMax": 2,
 	"ActorSemenMax": 1,
-	"GemsPerDay": 8.0,
+	"GemsPerDay": 1.0,
 	"MilksPerDay": 2.0,
 	"MilksPregPercent": 50.0,
 	"SemensPerDay": 2.0,
@@ -13,6 +13,9 @@
 	"LevelAlchFactor": 1.0,
 	"LevelEnchFactor": 1.0,
 	"LevelValueBase": 100.0,
+	"FertilityDays": 28,
+	"FertilityWindow": 2.0,
+	"FertilitySync": true,
 	"Sliders": {
 		"Gems": [
 			{ "Name": "PregnancyBelly", "Max": 0.65 },

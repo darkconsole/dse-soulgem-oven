@@ -28,6 +28,9 @@ String Property KeyActorSemenData = "SGO4.Actor.Semen" AutoReadOnly Hidden
 String Property KeyActorTimeUpdated = "SGO4.Actor.UpdateTime" AutoReadOnly Hidden
 {Actor.FloatValue}
 
+String Property KeyActorFertilityData = "SGO4.Actor.Fertility" AutoReadOnly Hidden
+{Actor.FloatValue}
+
 String Property KeyActorModListPrefix = "SGO4.Actor.Mod." AutoReadOnly Hidden
 {Generates Actor.StringLists}
 
@@ -178,6 +181,7 @@ Function ActorUpdate(Actor Who)
 	Bool Gems
 	Bool Milk
 	Bool Semen
+	Bool Fertility
 
 	If(TimeSince < Main.Config.GetFloat("UpdateGameHours"))
 		Main.Util.PrintDebug(Who.GetDisplayName() + " not ready for calc.")
@@ -187,6 +191,7 @@ Function ActorUpdate(Actor Who)
 	Gems = self.ActorGemUpdateData(Who,TimeSince)
 	Milk = self.ActorMilkUpdateData(Who,TimeSince)
 	Semen = self.ActorSemenUpdateData(Who,TimeSince)
+	Fertility = self.ActorFertilityUpdateData(Who,TimeSince)
 
 	If(!Gems && !Milk && !Semen)
 		;; if we bailed all three updates then there is no point to be
@@ -562,4 +567,111 @@ EndFunction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+Float Function ActorFertilityValue(Actor Who)
+{get the current fertility value.}
 
+	Float Value = StorageUtil.GetFloatValue(Who,self.KeyActorFertilityData,-1.0)
+
+	If(Value == -1.0)
+		Value = Utility.RandomFloat(0.0,Main.Config.GetInt("FertilityDays"))
+		StorageUtil.SetFloatValue(Who,self.KeyActorFertilityData,Value)
+	EndIf
+
+	Return Value
+EndFunction
+
+Float Function ActorFertilityFactor(Actor Who, float Vmod=0.0)
+{fetch the current multiplier for the fertility value using science and shit.}
+
+	Int FertilityDays = Main.Config.GetInt("FertilityDays")
+	Float FertilityWindow = Main.Config.GetFloat("FertilityWindow")
+	Float Fval
+	Float Poff
+	Int Plen
+
+	If(FertilityDays == 0.0)
+		Return 1.0
+	EndIf
+
+	;; the x value of the wave.
+
+	Fval = self.ActorFertilityValue(Who)
+	Fval += Vmod
+
+
+	;; the period offset is used to crank the amplitude and vertical offset of
+	;; the wave.
+	
+	Poff = (FertilityWindow - 1) / 2
+
+	;; the period length.
+	
+	Plen = FertilityDays
+
+	;;  /     /          \      \
+	;; |     | 2[pi]      |      |
+	;; | sin | ----- fval | poff | + poff
+	;; |     | plen       |      |
+	;;  \     \          /      /
+	;;           period    amp    y-offset
+
+	;; SINEWAVESMOTHERFUCKER.
+
+	Return ((Math.Sin(Math.RadiansToDegrees(((2*3.14159) / Plen) * Fval)) * Poff) + Poff) + 1
+EndFunction
+
+Bool Function ActorFertilityUpdateData(Actor Who, Float TimeSince)
+{this function will keep a running loop of time from 0 to 28. returns false if
+the actor is not biologically able to produce gems.}
+
+	;; 1 2 3... 27 28 0 1 2 3...
+
+	Int FertilityDays = Main.Config.GetInt("FertilityDays")
+	Bool FertilitySync = Main.Config.GetBool("FertilitySync")
+	Float FertilityWindow = Main.Config.GetFloat("FertilityWindow")
+	Float SyncDist
+
+	;; todo - if not in gem faction, bail.
+
+	If(FertilityDays == 0)
+		;; no need to process if disabled.
+		Return TRUE
+	EndIf
+
+	If(TimeSince < 1.0)
+		;; no need to process if too soon.
+		Return TRUE
+	EndIf
+
+	;; get our current values. if this actor has not yet ever been calculated
+	;; then we set them at a random point in the cycle to try and avoid having
+	;; all the females in skyrim synced up.
+
+	Float Fval = self.ActorFertilityValue(Who)
+	Float Nval = Fval + (TimeSince / 24.0)
+
+	;; attempt to sync up cycles with any followers currently following lololol.
+	;; for starters we will try just making followers run hotter until they
+	;; are synced up.
+
+	If(FertilitySync && Who != Main.Player)
+		;; todo follower faction check not distance check.
+		If(Main.Player.GetDistance(Who) <= 750)
+			SyncDist = Math.Abs(self.ActorFertilityFactor(Who) - self.ActorFertilityFactor(Main.Player))
+			Main.Util.PrintDebug(Who.GetDisplayName() + " fertility out of sync by " + SyncDist)
+			If((SyncDist / FertilityWindow) > 0.1)
+				Nval += (TimeSince / 24.0) * 3.0
+			EndIf
+		EndIf
+	EndIf
+
+	Nval = PapyrusUtil.WrapFloat(Nval,FertilityDays,1.0)
+
+	;; update our fertile value.
+
+	StorageUtil.SetFloatValue(who,self.KeyActorFertilityData,Nval)
+
+	;; todo: immersive messages comparing fval and nval.
+
+	Return TRUE
+EndFunction
