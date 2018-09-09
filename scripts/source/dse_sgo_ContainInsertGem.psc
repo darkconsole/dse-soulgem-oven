@@ -5,11 +5,29 @@ dse_sgo_QuestController_Main Property Main Auto
 Int Property MaxCount Auto Hidden
 Int Property CurrentCount Auto Hidden
 
+Actor Property InsertInto Auto Hidden
 Float[] Property GemData Auto Hidden
 Int Property GemLoop Auto Hidden
 
 Event OnLoad()
 {when this container is placed in the game world.}
+
+	;; figure out who we wanted to shove this into.
+
+	self.InsertInto = StorageUtil.GetFormValue(self,"SGO4.InsertInto") as Actor
+	StorageUtil.UnsetFormValue(self,"SGO4.InsertInto")
+
+	If(self.InsertInto == None)
+		self.InsertInto = Main.Player
+	EndIf
+
+	;; figure out if we even can.
+
+	If(Main.Data.ActorGemCount(self.InsertInto) >= Main.Data.ActorGemMax(self.InsertInto))
+		Main.Util.Print(self.InsertInto.GetDisplayName() + " fit any more gems.")
+		self.Done()
+		Return
+	EndIf
 
 	;; build a list of acceptable items.
 	;; this may need to be tweaked if the custom item system ever
@@ -21,7 +39,7 @@ Event OnLoad()
 
 	;; determine how many gems we can add.
 
-	self.MaxCount = (Main.Data.ActorGemMax(Main.Player) - Main.Data.ActorGemCount(Main.Player))
+	self.MaxCount = (Main.Data.ActorGemMax(self.InsertInto) - Main.Data.ActorGemCount(self.InsertInto))
 	self.CurrentCount = 0
 
 	;; tell the player to open us.
@@ -42,9 +60,9 @@ Event OnItemAdded(Form Type, Int Count, ObjectReference What, ObjectReference So
 		Main.Util.Print("$SGO4_CannotInsertThat")
 
 		If(What != None)
-			RemoveItem(What,Count,TRUE,Source)
+			self.RemoveItem(What,Count,TRUE,Source)
 		Else
-			RemoveItem(Type,Count,TRUE,Source)
+			self.RemoveItem(Type,Count,TRUE,Source)
 		EndIf
 
 		Return
@@ -56,9 +74,9 @@ Event OnItemAdded(Form Type, Int Count, ObjectReference What, ObjectReference So
 		Main.Util.Print("$SGO4_CannotInsertMore")
 
 		If(What != None)
-			RemoveItem(What,Count,TRUE,Source)
+			self.RemoveItem(What,Count,TRUE,Source)
 		Else
-			RemoveItem(Type,Count,TRUE,Source)
+			self.RemoveItem(Type,Count,TRUE,Source)
 		EndIf
 
 		Return
@@ -94,7 +112,7 @@ Event OnActivate(ObjectReference What)
 
 	;; trick to lock up this processing until we close the menu.
 
-	Main.Util.PrintDebug(Main.Player.GetDisplayName() + " can insert " + self.MaxCount + " gem(s).")
+	Main.Util.PrintDebug(self.InsertInto.GetDisplayName() + " can insert " + self.MaxCount + " gem(s).")
 	Utility.Wait(0.25)
 
 	;; process the contents.
@@ -111,7 +129,7 @@ Event OnActivate(ObjectReference What)
 
 	;;;;;;;;
 
-	Main.Util.PrintDebug(What.GetDisplayName() + " inserted " + CountItem + " gems.")
+	Main.Util.PrintDebug(Main.Player.GetDisplayName() + " added " + CountItem + " gems.")
 	self.GemData = Utility.CreateFloatArray(CountItem,0.0)
 	Iter = 0
 
@@ -126,7 +144,7 @@ Event OnActivate(ObjectReference What)
 
 		While(IterItem < CountItem)
 			self.GemData[Iter] = TypeVal as Float
-			Main.Util.PrintDebug(What.GetDisplayName() + " " + Type.GetName() + ": " + self.GemData[Iter])
+			Main.Util.PrintDebug(self.InsertInto.GetDisplayName() + " " + Type.GetName() + ": " + self.GemData[Iter])
 
 			Iter += 1
 			IterItem +=1
@@ -140,7 +158,7 @@ Event OnActivate(ObjectReference What)
 	self.GemLoop = 0
 
 	If(self.GemData.Length > 0)
-		self.InsertGem(Main.Player)
+		self.InsertGem(self.InsertInto)
 		Return
 	EndIf
 

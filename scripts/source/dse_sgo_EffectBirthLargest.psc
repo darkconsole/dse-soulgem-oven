@@ -4,6 +4,12 @@ dse_sgo_QuestController_Main Property Main Auto
 
 Event OnEffectStart(Actor Who, Actor From)
 
+	If(!Main.Data.ActorGemReady(Who))
+		Main.Util.Print(Who.GetDisplayName() + " is not ready to birth.")
+		self.Dispel()
+		Return
+	EndIf
+
 	self.RegisterForModEvent(Main.Body.KeyEvActorSpawnGem,"OnSpawnGem")
 	self.RegisterForModEvent(Main.Body.KeyEvActorDone,"OnDone")
 	Main.Body.ActorAnimateSolo(Who,Main.Body.AniBirth01)
@@ -14,7 +20,7 @@ EndEvent
 Event OnSpawnGem(Form What)
 
 	Actor Who = What as Actor
-	Int TypeVal = Math.Floor(Main.Data.ActorGemRemoveLargest(Who)) - 1
+	Int TypeVal = Math.Floor(Main.Data.ActorGemRemoveLargest(Who))
 	Form Type = Main.Data.GemStageGet(TypeVal)
 	ObjectReference Gem = Who.PlaceAtMe(Type,1,FALSE,TRUE)
 

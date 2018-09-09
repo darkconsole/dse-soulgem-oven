@@ -40,8 +40,13 @@ Event OnUpdate()
 		Who = Main.Data.ActorTrackingGet(ActorIter)
 
 		If(Who != None)
-			Main.Util.PrintDebug("Update Loop: Actor(" + Who.GetDisplayName() + ")")
-			Main.Body.ActorUpdate(Who)
+			If(Who.Is3dLoaded())
+				Main.Util.PrintDebug("Update Loop " + Utility.GetCurrentGameTime() +  " " + Who.GetDisplayName())
+				Main.Data.ActorUpdate(Who)
+				Main.Body.ActorUpdate(Who)
+			Else
+				Main.Util.PrintDebug("Update Loop " + Utility.GetCurrentGameTime() +  " " + Who.GetDisplayName() + " Skipped (Not Loaded)")
+			EndIf
 		Else
 			ActorCull = TRUE
 		EndIf

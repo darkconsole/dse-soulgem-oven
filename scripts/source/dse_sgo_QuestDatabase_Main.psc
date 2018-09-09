@@ -25,6 +25,9 @@ String Property KeyActorMilkData = "SGO4.Actor.Milk" AutoReadOnly Hidden
 String Property KeyActorSemenData = "SGO4.Actor.Semen" AutoReadOnly Hidden
 {Actor.FloatValue}
 
+String Property KeyActorTimeUpdated = "SGO4.Actor.UpdateTime" AutoReadOnly Hidden
+{Actor.FloatValue}
+
 String Property KeyActorModListPrefix = "SGO4.Actor.Mod." AutoReadOnly Hidden
 {Generates Actor.StringLists}
 
@@ -91,10 +94,14 @@ Int Function GemStageCount()
 	Return StorageUtil.FormListCount(None,KeyGemStageData)
 EndFunction
 
-Form Function GemStageGet(Int Index)
-{}
+Form Function GemStageGet(Int Val)
+{get the type of item for the selected stage.}
 
-	Return StorageUtil.FormListGet(None,KeyGemStageData,Index)
+	If(Val < 1)
+		Return None
+	EndIf
+
+	Return StorageUtil.FormListGet(None,KeyGemStageData,(Val - 1))
 EndFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -103,6 +110,11 @@ EndFunction
 Function ActorTrackingAdd(Actor Who)
 {it does not matter why we want to track the actor. for any reason they get
 added to this list.}
+
+	If(self.IsActorTracked(Who))
+		;; if we are already tracking this actor give up now.
+		Return
+	EndIf
 
 	StorageUtil.FormListAdd(None,KeyActorTracking,Who,FALSE)
 
@@ -114,6 +126,22 @@ added to this list.}
 	Main.Body.RegisterForCustomAnimationEvents(Who)
 
 	Main.Util.PrintDebug(Who.GetDisplayName() + " is now being tracked.")
+	Return
+EndFunction
+
+Function ActorTrackingRemove(Actor Who)
+{it does not matter why we want to track the actor. for any reason they get
+added to this list.}
+
+	StorageUtil.FormListRemove(None,KeyActorTracking,Who,TRUE)
+
+	;; unpersist hack. (left for other mods.)
+	;; Who.UnregisterForUpdate()
+
+	;; untrack animations.
+	Main.Body.UnregisterForCustomAnimationEvents(Who)
+
+	Main.Util.PrintDebug(Who.GetDisplayName() + " is no longer being tracked.")
 	Return
 EndFunction
 
@@ -141,6 +169,63 @@ Bool function IsActorTracked(Actor Who)
 {determine if we are tracking this actor or not.}
 
 	Return StorageUtil.FormListHas(None,KeyActorTracking,Who)
+EndFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Function ActorUpdate(Actor Who)
+{update the progression of actor's bio data.}
+
+	Float TimeSince = self.ActorGetHoursSinceUpdate(Who)
+	Bool Gems
+	Bool Milk
+	Bool Semen
+
+	If(TimeSince < Main.Config.GetFloat("UpdateGameHours"))
+		Main.Util.PrintDebug(Who.GetDisplayName() + " not ready for calc.")
+		Return
+	EndIf
+	
+	Gems = self.ActorGemUpdateData(Who,TimeSince)
+	Milk = self.ActorMilkUpdateData(Who,TimeSince)
+	Semen = self.ActorSemenUpdateData(Who,TimeSince)
+
+	If(!Gems && !Milk && !Semen)
+		;; if we bailed all three updates then there is no point to be
+		;; tracking this actor.
+		self.ActorTrackingRemove(Who)
+		self.ActorSetTimeUpdated(Who,0.0)
+		Return
+	EndIf
+
+	self.ActorSetTimeUpdated(Who)
+	Return
+EndFunction
+
+Float Function ActorGetHoursSinceUpdate(Actor Who)
+{return how many game hours have passed since this actor was last updated.}
+
+	Float Current = Utility.GetCurrentGameTime()
+	Float Last = StorageUtil.GetFloatValue(Who,self.KeyActorTimeUpdated,0.0)
+
+	If(Last == 0.0)
+		self.ActorSetTimeUpdated(Who)
+		Last = Current
+	EndIf
+
+	Return (Current - Last) * 24
+EndFunction
+
+Function ActorSetTimeUpdated(Actor Who, Float When=0.0)
+{set this actor as having just been updated.}
+
+	If(When == 0.0)
+		When = Utility.GetCurrentGameTime()
+	EndIf
+
+	StorageUtil.SetFloatValue(Who,self.KeyActorTimeUpdated,When)
+	Return
 EndFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -230,10 +315,23 @@ Function ActorGemClear(Actor Who)
 	Return
 EndFunction
 
-Float Function ActorGemGet(Actor Who, Int Index)
+Float Function ActorGemGet(Actor Who, Int Index, Bool Limit=TRUE)
 {get the value of a specific gem in an actor.}
 
-	Return StorageUtil.FloatListGet(Who,KeyActorGemData,Index)
+	Int Max = self.GemStageCount()
+	Float Gem = StorageUtil.FloatListGet(Who,KeyActorGemData,Index)
+
+	If(Limit && Gem > Max)
+		Gem = Max as Float
+	EndIf
+
+	Return Gem
+EndFunction
+
+Float Function ActorGemInc(Actor Who, Int Index, Float Inc)
+{get the value of a specific gem in an actor.}
+
+	Return StorageUtil.FloatListAdjust(Who,KeyActorGemData,Index,Inc)
 EndFunction
 
 Int Function ActorGemCount(Actor Who)
@@ -269,10 +367,6 @@ Float Function ActorGemTotalPercent(Actor Who)
 	While(GemIter < GemCount)
 		Current = self.ActorGemGet(Who,GemIter)
 
-		If(Current > GemStages)
-			Current = GemStages as Float
-		EndIf
-
 		Value += Current
 		GemIter += 1
 	EndWhile
@@ -286,6 +380,62 @@ Float Function ActorGemTotalPercent(Actor Who)
 	Return (Value / (ValueMax as Float))
 EndFunction
 
+Float Function ActorGemRemoveLargest(Actor Who)
+{pull the largest gem out of the dataset.}
+
+	Int Len = StorageUtil.FloatListCount(Who,self.KeyActorGemData)
+	Float Out
+
+	StorageUtil.FloatListSort(Who,self.KeyActorGemData)
+	Out = self.ActorGemGet(Who,(Len - 1))
+
+	StorageUtil.FloatListRemoveAt(Who,self.KeyActorGemData,(Len - 1))
+
+	Main.Body.ActorUpdate(Who)
+	Return Out
+EndFunction
+
+Bool Function ActorGemReady(Actor Who)
+{return if this actor has any gems that have progressed far enough to birth.}
+
+	Int GemCount = self.ActorGemCount(Who)
+	Int GemIter = 0
+
+	While(GemIter < GemCount)
+		If(self.ActorGemGet(Who,GemIter) >= 1.0)
+			Return TRUE
+		EndIf
+		GemIter += 1
+	EndWhile
+
+	Return FALSE
+EndFunction
+
+Bool Function ActorGemUpdateData(Actor Who, Float TimeSince)
+{update the actors gem data given the time progression. returns false if this
+actor is physically not capable of producing this item.}
+
+	Float PerDay = Main.Config.GetFloat("GemsPerDay")
+	Float Inc = ((TimeSince * PerDay) / 24.0)
+	Int GemCount = self.ActorGemCount(Who)
+	Int GemIter = 0
+
+	;; todo - if not in gem faction, bail.
+
+	If(GemCount == 0)
+		Main.Util.PrintDebug(Who.GetDisplayName() + " is not incubating gems.")
+		Return TRUE
+	EndIf
+
+	While(GemIter < GemCount)
+		self.ActorGemInc(Who,GemIter,Inc)
+		GemIter += 1
+	EndWhile
+
+	Main.Util.PrintDebug(Who.GetDisplayName() + " " + GemCount + " gems have progressed " + Inc)
+	Return TRUE
+EndFunction
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -296,17 +446,24 @@ Function ActorMilkSet(Actor Who, Float Value)
 	Return
 EndFunction
 
-Function ActorMilkAdjust(Actor Who, Float Value)
+Function ActorMilkInc(Actor Who, Float Value)
 {add/sub how much milk this actor has.}
 
 	StorageUtil.AdjustFloatValue(Who,self.KeyActorMilkData,Value)
 	Return
 EndFunction
 
-Float Function ActorMilkAmount(Actor Who)
+Float Function ActorMilkAmount(Actor Who, Bool Limit=TRUE)
 {return how much milk an actor has.}
 
-	Return StorageUtil.GetFloatValue(Who,self.KeyActorMilkData)
+	Int MilkMax = self.ActorMilkMax(Who)
+	Float MilkVal = StorageUtil.GetFloatValue(Who,self.KeyActorMilkData)
+
+	If(Limit && MilkVal > MilkMax)
+		MilkVal = MilkMax as Float
+	EndIf
+
+	Return MilkVal
 EndFunction
 
 Function ActorMilkClear(Actor Who)
@@ -334,13 +491,50 @@ Float Function ActorMilkTotalPercent(Actor Who)
 	Return (MilkAmount / (ValueMax as Float))
 EndFunction
 
+Bool Function ActorMilkUpdateData(Actor Who, Float TimeSince)
+{update the actors gem data given the time progression. returns false if this
+actor is physically not capable of producing this item.}
+
+	Float PregPercent = self.ActorGemTotalPercent(Who)
+	Float PregNeeded = Main.Config.GetFloat("MilksPregPercent") / 100.0
+	Float PerDay = Main.Config.GetFloat("MilksPerDay")
+	Float Inc = ((TimeSince * PerDay) / 24.0)
+
+	;; todo if not in milk faction, bail.
+
+	If(PregPercent < PregNeeded)
+		Main.Util.PrintDebug(Who.GetDisplayName() + " is not producing milk yet.")
+		Return TRUE
+	EndIf
+
+	Inc *= PregPercent
+	self.ActorMilkInc(Who,Inc)
+
+	Main.Util.PrintDebug(Who.GetDisplayName() + " milk has progressed " + Inc)
+	Return TRUE
+EndFunction
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Float Function ActorSemenAmount(Actor Who)
+Float Function ActorSemenAmount(Actor Who, Bool Limit=TRUE)
 {return how much semen an actor has.}
 
-	Return StorageUtil.GetFloatValue(Who,self.KeyActorSemenData)
+	Int SemenMax = self.ActorSemenMax(Who)
+	Float SemenVal = StorageUtil.GetFloatValue(Who,self.KeyActorSemenData)
+
+	If(Limit && SemenVal > SemenMax)
+		SemenVal = SemenMax as Float
+	EndIf
+
+	Return SemenVal
+EndFunction
+
+Function ActorSemenInc(Actor Who, Float Value)
+{add/sub how much semen this actor has.}
+
+	StorageUtil.AdjustFloatValue(Who,self.KeyActorSemenData,Value)
+	Return
 EndFunction
 
 Int Function ActorSemenMax(Actor Who)
@@ -350,6 +544,21 @@ Int Function ActorSemenMax(Actor Who)
 	Float Val = self.ActorModGetFinal(Who,"SemenMax",Base)
 
 	Return Main.Util.RoundToInt(Val)
+EndFunction
+
+Bool Function ActorSemenUpdateData(Actor Who, Float TimeSince)
+{update the actors gem data given the time progression. returns false if this
+actor is physically not capable of producing this item.}
+
+	Float PerDay = Main.Config.GetFloat("SemensPerDay")
+	Float Inc = ((TimeSince * PerDay) / 24.0)
+
+	;; todo - if not in semen faction, bail.
+
+	self.ActorSemenInc(Who,Inc)
+
+	Main.Util.PrintDebug(Who.GetDisplayName() + " semen has progressed " + Inc)
+	Return TRUE
 EndFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

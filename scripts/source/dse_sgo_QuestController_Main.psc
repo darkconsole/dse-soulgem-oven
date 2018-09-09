@@ -51,6 +51,7 @@ SexLabFramework Property SexLab Auto Hidden
 
 Actor Property Player Auto
 
+Container Property ContainInsertGems Auto
 FormList Property ListGemFilter Auto
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -1,5 +1,8 @@
 ScriptName dse_sgo_QuestConfig_Main extends Quest
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 dse_sgo_QuestController_Main Property Main Auto
  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7,7 +10,19 @@ dse_sgo_QuestController_Main Property Main Auto
 
 Bool Property DebugMode = TRUE Auto Hidden
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 String Property FileConfig = "../../../interface/dse-soulgem-oven/config.json" AutoReadOnly Hidden
+
+;; Float UpdateLoopDelay: how long it waits between calculations of tracked actors.
+;; Int ActorGemsMax: how many gems can be incubated at one time per actor.
+;; Int ActorMilkMax: how many bottes of milk can be carried per actor.
+;; Int ActorSemenMax: how many bottles of semen can be carried per actor.
+;; Int BirthFilledGems: 1 = filled, 0 = unfilled, -1 = custom birth list (todo)
+;; Float MilkPregPercent: how far along pregnancy has to be before milk production starts.
+;; Array Sliders.Gems: sliders for bodymorphs
+;; Array Sliders.Milk: sliders for bodymorphs
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

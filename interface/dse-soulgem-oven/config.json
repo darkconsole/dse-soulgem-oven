@@ -1,9 +1,14 @@
 {
-	"UpdateLoopDelay": 60.0,
+	"UpdateLoopDelay": 10.0,
+	"UpdateGameHours": 1.0,
+	"BirthGemsFilled": 1,
 	"ActorGemsMax": 6,
 	"ActorMilkMax": 2,
 	"ActorSemenMax": 1,
-	"BirthGemsFilled": 1,
+	"GemsPerDay": 8.0,
+	"MilksPerDay": 2.0,
+	"MilksPregPercent": 50.0,
+	"SemensPerDay": 2.0,
 	"Sliders": {
 		"Gems": [
 			{ "Name": "PregnancyBelly", "Max": 0.65 },

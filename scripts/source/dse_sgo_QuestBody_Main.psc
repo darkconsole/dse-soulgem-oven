@@ -9,14 +9,17 @@ dse_sgo_QuestController_Main Property Main Auto
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 String Property KeyEvActorMoan = "SGO4.ActorMoan" AutoReadOnly Hidden
+String Property KeyEvActorMoanLoud = "SGO4.ActorMoanLoud" AutoReadOnly Hidden
 String Property KeyEvActorReset = "SGO4.ActorReset" AutoReadOnly Hidden
 String Property KeyEvActorResetFace = "SGO4.ActorResetFace" AutoReadOnly Hidden
 String Property KeyEvActorDone = "SGO4.ActorDone" AutoReadOnly Hidden
 String Property KeyEvActorInsert = "SGO4.ActorInsert" AutoReadOnly Hidden
+String Property KeyEvActorSpawnGem = "SGO4.ActorSpawnGem" AutoReadOnly Hidden
 
 String Property AniDefault = "IdleForceDefaultState" AutoReadOnly Hidden
 String Property AniInsert01 = "dse-sgo-insert01-01" AutoReadOnly Hidden
 String Property AniInsert02 = "dse-sgo-insert02-01" AutoReadOnly Hidden
+String Property AniBirth01 = "dse-sgo-birth01-01" AutoReadOnly Hidden
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -94,17 +97,28 @@ EndFunction
 Function RegisterForCustomAnimationEvents(Actor Who)
 {watch an actor for SGO4 custom animation events.}
 
-	self.UnregisterForAnimationEvent(Who,self.KeyEvActorMoan)
-	self.UnregisterForAnimationEvent(Who,self.KeyEvActorReset)
-	self.UnregisterForAnimationEvent(Who,self.KeyEvActorResetFace)
-	self.UnregisterForAnimationEvent(Who,self.KeyEvActorDone)
-	self.UnregisterForAnimationEvent(Who,self.KeyEvActorInsert)
-
+	self.UnregisterForCustomAnimationEvents(Who)
 	self.RegisterForAnimationEvent(Who,self.KeyEvActorMoan)
+	self.RegisterForAnimationEvent(Who,self.KeyEvActorMoanLoud)
 	self.RegisterForAnimationEvent(Who,self.KeyEvActorReset)
 	self.RegisterForAnimationEvent(Who,self.KeyEvActorResetFace)
 	self.RegisterForAnimationEvent(Who,self.KeyEvActorDone)
 	self.RegisterForAnimationEvent(Who,self.KeyEvActorInsert)
+	self.RegisterForAnimationEvent(Who,self.KeyEvActorSpawnGem)
+
+	Return
+EndFunction
+
+Function UnregisterForCustomAnimationEvents(Actor Who)
+{stop watching an actor for SGO4 custom animation events.}
+
+	self.UnregisterForAnimationEvent(Who,self.KeyEvActorMoan)
+	self.UnregisterForAnimationEvent(Who,self.KeyEvActorMoanLoud)
+	self.UnregisterForAnimationEvent(Who,self.KeyEvActorReset)
+	self.UnregisterForAnimationEvent(Who,self.KeyEvActorResetFace)
+	self.UnregisterForAnimationEvent(Who,self.KeyEvActorDone)
+	self.UnregisterForAnimationEvent(Who,self.KeyEvActorInsert)
+	self.UnregisterForAnimationEvent(Who,self.KeyEvActorSpawnGem)
 
 	Return
 EndFunction
@@ -116,7 +130,9 @@ Event OnAnimationEvent(ObjectReference What, String EvName)
 
 	If(What as Actor)
 		If(EvName == self.KeyEvActorMoan)
-			self.OnAnimationEvent_ActorMoan(What as Actor)
+			self.OnAnimationEvent_ActorMoan(What as Actor,50)
+		ElseIf(EvName == self.KeyEvActorMoanLoud)
+			self.OnAnimationEvent_ActorMoan(What as Actor,100)
 		ElseIf(EvName == self.KeyEvActorReset)
 			self.OnAnimationEvent_ActorReset(What as Actor)
 		ElseIf(EvName == self.KeyEvActorResetFace)
@@ -125,20 +141,22 @@ Event OnAnimationEvent(ObjectReference What, String EvName)
 			self.OnAnimationEvent_ActorDone(What as Actor)
 		ElseIf(EvName == self.KeyEvActorInsert)
 			self.OnAnimationEvent_ActorInsert(What as Actor)
+		ElseIf(EvName == self.KeyEvActorSpawnGem)
+			self.OnAnimationEvent_ActorSpawnGem(What as Actor)
 		EndIf
 	EndIf
 
 	Return
 EndEvent
 
-Function OnAnimationEvent_ActorMoan(Actor Who)
+Function OnAnimationEvent_ActorMoan(Actor Who, Int Vol)
 {play an expression on the actor face.}
 
 	sslBaseExpression Face = Main.SexLab.GetExpressionByName("Pained")
 	sslBaseVoice Voice = Main.SexLab.PickVoice(Who)
 
-	Face.Apply(Who,60,Who.GetLeveledActorBase().GetSex())
-	Voice.GetSound(75).Play(Who)
+	Face.Apply(Who,50,Who.GetLeveledActorBase().GetSex())
+	Voice.GetSound(Vol).Play(Who)
 
 	Return
 EndFunction
@@ -182,13 +200,27 @@ Function OnAnimationEvent_ActorDone(Actor Who)
 EndFunction
 
 Function OnAnimationEvent_ActorInsert(Actor Who)
-{we are completely done animating.}
+{an insertion happened in the animation.}
 
 	Int Ev
 
 	Main.Util.PrintDebug("ModEvent: " + self.KeyEvActorInsert)
 
  	Ev = ModEvent.Create(self.KeyEvActorInsert)
+	ModEvent.PushForm(Ev,Who)
+	ModEvent.Send(Ev)
+
+	Return
+EndFunction
+
+Function OnAnimationEvent_ActorSpawnGem(Actor Who)
+{a gem spawn happened in the animation.}
+
+	Int Ev
+
+	Main.Util.PrintDebug("ModEvent: " + self.KeyEvActorSpawnGem)
+
+ 	Ev = ModEvent.Create(self.KeyEvActorSpawnGem)
 	ModEvent.PushForm(Ev,Who)
 	ModEvent.Send(Ev)
 
