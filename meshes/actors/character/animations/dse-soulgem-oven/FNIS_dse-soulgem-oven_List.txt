@@ -28,3 +28,7 @@ s -h,o,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable,TSGO4.ActorMoan/2.5,TSGO4.A
 '' simple single squat birth.
 
 b -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable,TSGO4.ActorMoan/2.0,TSGO4.ActorMoanLoud/4.0,TSGO4.ActorSpawnGem/4.70,TSGO4.ActorDone/-0.1 dse-sgo-birth01-01 birth01-01.hkx
+
+'' simple single milking.
+
+b -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable,TSGO4.ActorMoan/1.5,TSGO4.ActorMoan/3.30,TSGO4.ActorSpawnMilk/3.33,TSGO4.ActorDone/-0.1 dse-sgo-milking01-01 milking01-01.hkx

@@ -44,17 +44,17 @@ Event OnEffectStart(Actor Who, Actor From)
 
 	;; get ready for a show.
 
-	self.RegisterForModEvent(Main.Body.KeyEvActorSpawnGem,"OnSpawnGem")
+	self.RegisterForModEvent(Main.Body.KeyEvActorSpawnMilk,"OnSpawnMilk")
 	self.RegisterForModEvent(Main.Body.KeyEvActorDone,"OnDone")
 
 	Main.Data.ActorMilkLimit(self.MilkFrom)
 	Main.Util.ActorArmourRemove(self.MilkFrom)
-	Main.Body.ActorAnimateSolo(self.MilkFrom,Main.Body.AniBirth01)
+	Main.Body.ActorAnimateSolo(self.MilkFrom,Main.Body.AniMilking01)
 
 	Return
 EndEvent
 
-Event OnSpawnGem(Form What)
+Event OnSpawnMilk(Form What)
 
 	ObjectReference Bottle
 

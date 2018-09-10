@@ -15,11 +15,13 @@ String Property KeyEvActorResetFace = "SGO4.ActorResetFace" AutoReadOnly Hidden
 String Property KeyEvActorDone = "SGO4.ActorDone" AutoReadOnly Hidden
 String Property KeyEvActorInsert = "SGO4.ActorInsert" AutoReadOnly Hidden
 String Property KeyEvActorSpawnGem = "SGO4.ActorSpawnGem" AutoReadOnly Hidden
+String Property KeyEvActorSpawnMilk = "SGO4.ActorSpawnMilk" AutoReadOnly Hidden
 
 String Property AniDefault = "IdleForceDefaultState" AutoReadOnly Hidden
 String Property AniInsert01 = "dse-sgo-insert01-01" AutoReadOnly Hidden
 String Property AniInsert02 = "dse-sgo-insert02-01" AutoReadOnly Hidden
 String Property AniBirth01 = "dse-sgo-birth01-01" AutoReadOnly Hidden
+String Property AniMilking01 = "dse-sgo-milking01-01" AutoReadOnly Hidden
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -105,6 +107,7 @@ Function RegisterForCustomAnimationEvents(Actor Who)
 	self.RegisterForAnimationEvent(Who,self.KeyEvActorDone)
 	self.RegisterForAnimationEvent(Who,self.KeyEvActorInsert)
 	self.RegisterForAnimationEvent(Who,self.KeyEvActorSpawnGem)
+	self.RegisterForAnimationEvent(Who,self.KeyEvActorSpawnMilk)
 
 	Return
 EndFunction
@@ -119,6 +122,7 @@ Function UnregisterForCustomAnimationEvents(Actor Who)
 	self.UnregisterForAnimationEvent(Who,self.KeyEvActorDone)
 	self.UnregisterForAnimationEvent(Who,self.KeyEvActorInsert)
 	self.UnregisterForAnimationEvent(Who,self.KeyEvActorSpawnGem)
+	self.UnregisterForAnimationEvent(Who,self.KeyEvActorSpawnMilk)
 
 	Return
 EndFunction
@@ -143,6 +147,8 @@ Event OnAnimationEvent(ObjectReference What, String EvName)
 			self.OnAnimationEvent_ActorInsert(What as Actor)
 		ElseIf(EvName == self.KeyEvActorSpawnGem)
 			self.OnAnimationEvent_ActorSpawnGem(What as Actor)
+		ElseIf(EvName == self.KeyEvActorSpawnMilk)
+			self.OnAnimationEvent_ActorSpawnMilk(What as Actor)
 		EndIf
 	EndIf
 
@@ -226,6 +232,21 @@ Function OnAnimationEvent_ActorSpawnGem(Actor Who)
 
 	Return
 EndFunction
+
+Function OnAnimationEvent_ActorSpawnMilk(Actor Who)
+{a gem spawn happened in the animation.}
+
+	Int Ev
+
+	Main.Util.PrintDebug("ModEvent: " + self.KeyEvActorSpawnMilk)
+
+ 	Ev = ModEvent.Create(self.KeyEvActorSpawnMilk)
+	ModEvent.PushForm(Ev,Who)
+	ModEvent.Send(Ev)
+
+	Return
+EndFunction
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
