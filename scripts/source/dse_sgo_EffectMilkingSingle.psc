@@ -56,8 +56,13 @@ EndEvent
 
 Event OnSpawnGem(Form What)
 
-	ObjectReference Bottle = self.MilkFrom.PlaceAtMe(self.Milk,1,FALSE,TRUE)
+	ObjectReference Bottle
 
+	If(What != self.MilkFrom)
+		Return
+	EndIf
+
+	Bottle = self.MilkFrom.PlaceAtMe(self.Milk,1,FALSE,TRUE)
 	Main.Data.ActorMilkInc(self.MilkFrom,-1.0)
 
 	Bottle.MoveToNode(self.MilkFrom,"AnimObjectA")
@@ -68,6 +73,10 @@ Event OnSpawnGem(Form What)
 EndEvent
 
 Event OnDone(Form What)
+
+	If(What != self.MilkFrom)
+		Return
+	EndIf
 
 	Main.Util.ActorArmourReplace(self.MilkFrom)
 	self.Dispel()

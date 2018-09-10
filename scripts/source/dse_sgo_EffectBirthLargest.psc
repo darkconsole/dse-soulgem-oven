@@ -51,9 +51,17 @@ EndEvent
 
 Event OnSpawnGem(Form What)
 
-	Int TypeVal = Math.Floor(Main.Data.ActorGemRemoveLargest(self.BirthFrom))
-	Form Type = Main.Data.GemStageGet(TypeVal)
-	ObjectReference Gem = self.BirthFrom.PlaceAtMe(Type,1,FALSE,TRUE)
+	Int TypeVal
+	Form Type
+	ObjectReference Gem
+
+	If(What != self.BirthFrom)
+		Return
+	EndIf
+
+	TypeVal = Math.Floor(Main.Data.ActorGemRemoveLargest(self.BirthFrom))
+	Type = Main.Data.GemStageGet(TypeVal)
+	Gem = self.BirthFrom.PlaceAtMe(Type,1,FALSE,TRUE)
 
 	Gem.MoveToNode(self.BirthFrom,"AnimObjectA")
 	Gem.SetActorOwner(Main.Player.GetActorBase())
@@ -63,6 +71,10 @@ Event OnSpawnGem(Form What)
 EndEvent
 
 Event OnDone(Form What)
+
+	If(What != self.BirthFrom)
+		Return
+	EndIf
 
 	Main.Util.ActorArmourReplace(self.BirthFrom)
 	self.Dispel()

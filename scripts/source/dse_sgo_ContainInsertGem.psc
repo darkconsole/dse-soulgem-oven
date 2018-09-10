@@ -217,9 +217,11 @@ EndFunction
 Event OnAnimateInsert(Form What)
 {watch for insertion events to trigger adding the gem.}
 
-	Actor Who = What as Actor
+	If(What != self.InsertInto)
+		Return
+	EndIf
 
-	Main.Data.ActorGemAdd(Who,self.GemData[self.GemLoop])
+	Main.Data.ActorGemAdd((What as Actor),self.GemData[self.GemLoop])
 
 	Return
 EndEvent
@@ -227,16 +229,18 @@ EndEvent
 Event OnAnimateDone(Form What)
 {watch for finish events to find out if we need to insert more or to stop.}
 
-	Actor Who = What as Actor
+	If(What != self.InsertInto)
+		Return
+	EndIf
 
 	self.GemLoop += 1
 
 	If(self.GemLoop < self.GemData.Length)
-		self.InsertGem(Who)
+		self.InsertGem(What as Actor)
 		Return
 	EndIf
 
-	Main.Util.ActorArmourReplace(Who)
+	Main.Util.ActorArmourReplace(What as Actor)
 	self.Done()
 	Return
 EndEvent
