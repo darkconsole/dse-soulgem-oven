@@ -9,6 +9,8 @@ dse_sgo_QuestController_Main Property Main Auto
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Actor Property MilkFrom Auto Hidden
+Int Property MilkRace Auto Hidden
+Form Property Milk Auto Hidden
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -29,6 +31,8 @@ Event OnEffectStart(Actor Who, Actor From)
 	EndIf
 
 	self.MilkFrom = Who
+	self.MilkRace = Main.Data.RaceFind(Who.GetRace())
+	self.Milk = Main.Data.RaceGetMilk(self.MilkRace)
 
 	;; determine if the actor is able to birth.
 
@@ -52,15 +56,13 @@ EndEvent
 
 Event OnSpawnGem(Form What)
 
-	;; figure out what milk to give.
-
-	;; place it in the world, disabled.
+	ObjectReference Bottle = self.MilkFrom.PlaceAtMe(self.Milk,1,FALSE,TRUE)
 
 	Main.Data.ActorMilkInc(self.MilkFrom,-1.0)
 
-	;; Milk.MoveToNode(self.MilkFrom,"AnimObjectA")
-	;; Milk.SetActorOwner(Main.Player.GetActorBase())
-	;; Milk.Enable()
+	Bottle.MoveToNode(self.MilkFrom,"AnimObjectA")
+	Bottle.SetActorOwner(Main.Player.GetActorBase())
+	Bottle.Enable()
 
 	Return
 EndEvent

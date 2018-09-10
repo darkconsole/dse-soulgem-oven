@@ -5,7 +5,7 @@ dse_sgo_QuestController_Main Property Main Auto
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
+String Property FileRaces = "../../../configs/dse-soulgem-oven/Races.json" AutoReadOnly Hidden
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -741,4 +741,52 @@ the actor is not biologically able to produce gems.}
 	;; todo: immersive messages comparing fval and nval.
 
 	Return TRUE
+EndFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Int Function RaceCount()
+{fetch how many items are in the specified thing. you should probably only
+use this on arrays.}
+
+	Return JsonUtil.PathCount(self.FileRaces,"Races")
+EndFunction
+
+Int Function RaceFind(Race What)
+{find the json index of the race. return 0, the default race, if not found.}
+
+	Int Count = JsonUtil.PathCount(self.FileRaces,"Races")
+	Int Index = 1
+	String Path
+	Race Current
+
+	While(Index < Count)
+		Path = "Races[" + Index + "].Race"
+		Current = JsonUtil.GetPathFormValue(self.FileRaces,Path) as Race
+
+		If(Current == What)
+			Return Index
+		EndIf
+
+		Index += 1
+	EndWhile
+
+	Return 0
+EndFunction
+
+Form Function RaceGetMilk(Int Index)
+{get the milk for the specified race.}
+
+	String Path = "Races[" + Index + "].Milk"
+
+	Return JsonUtil.GetPathFormValue(self.FileRaces,Path)
+EndFunction
+
+Form Function RaceGetSemen(Int Index)
+{get the semen for the specified race.}
+
+	String Path = "Races[" + Index + "].Semen"
+
+	Return JsonUtil.GetPathFormValue(self.FileRaces,Path)
 EndFunction

@@ -13,7 +13,7 @@ Bool Property DebugMode = TRUE Auto Hidden
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-String Property FileConfig = "../../../configs/dse-soulgem-oven/config.json" AutoReadOnly Hidden
+String Property FileConfig = "../../../configs/dse-soulgem-oven/Config.json" AutoReadOnly Hidden
 
 ;; Float UpdateLoopFreq (in seconds)
 ;; how often the update loop runs.
