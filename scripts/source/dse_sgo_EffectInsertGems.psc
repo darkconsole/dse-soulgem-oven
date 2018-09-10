@@ -10,8 +10,23 @@ dse_sgo_QuestController_Main Property Main Auto
 
 Event OnEffectStart(Actor Who, Actor From)
 
-	ObjectReference Box = Who.PlaceAtMe(Main.ContainInsertGems,1,FALSE,TRUE)
-	Actor Target = Game.GetCurrentCrosshairRef() as Actor
+	ObjectReference Box
+	Actor Target
+
+	;; determine if we were targeting someone.
+
+	If(Who == Main.Player)
+		Target = Game.GetCurrentCrosshairRef() as Actor
+		If(Target != None)
+			Main.SpellInsertGems.Cast(Target,Target)
+			self.Dispel()
+			Return
+		EndIf
+	EndIf
+
+	Box = Who.PlaceAtMe(Main.ContainInsertGems,1,FALSE,TRUE)
+
+	;;;;;;;;
 
 	If(Who == Main.Player && Target != None)
 		Who = Target

@@ -54,6 +54,9 @@ Actor Property Player Auto
 
 Container Property ContainInsertGems Auto
 FormList Property ListGemFilter Auto
+Spell Property SpellBirthLargest Auto
+Spell Property SpellInsertGems Auto
+Spell Property SpellMilkingAction Auto
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -1,4 +1,4 @@
-ScriptName dse_sgo_EffectBirthLargest extends ActiveMagicEffect
+ScriptName dse_sgo_EffectMilkingSingle extends ActiveMagicEffect
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8,7 +8,7 @@ dse_sgo_QuestController_Main Property Main Auto
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Actor Property BirthFrom Auto Hidden
+Actor Property MilkFrom Auto Hidden
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22,18 +22,18 @@ Event OnEffectStart(Actor Who, Actor From)
 	If(Who == Main.Player)
 		Target = Game.GetCurrentCrosshairRef() as Actor
 		If(Target != None)
-			Main.SpellBirthLargest.Cast(Target,Target)
+			Main.SpellMilkingAction.Cast(Target,Target)
 			self.Dispel()
 			Return
 		EndIf
 	EndIf
 
-	self.BirthFrom = Who
+	self.MilkFrom = Who
 
 	;; determine if the actor is able to birth.
 
-	If(!Main.Data.ActorGemReady(self.BirthFrom))
-		Main.Util.Print(self.BirthFrom.GetDisplayName() + " is not ready to birth.")
+	If(Main.Data.ActorMilkAmount(self.MilkFrom) < 1.0)
+		Main.Util.Print(self.MilkFrom.GetDisplayName() + " is not ready to milk.")
 		self.Dispel()
 		Return
 	EndIf
@@ -43,28 +43,31 @@ Event OnEffectStart(Actor Who, Actor From)
 	self.RegisterForModEvent(Main.Body.KeyEvActorSpawnGem,"OnSpawnGem")
 	self.RegisterForModEvent(Main.Body.KeyEvActorDone,"OnDone")
 
-	Main.Util.ActorArmourRemove(self.BirthFrom)
-	Main.Body.ActorAnimateSolo(self.BirthFrom,Main.Body.AniBirth01)
+	Main.Data.ActorMilkLimit(self.MilkFrom)
+	Main.Util.ActorArmourRemove(self.MilkFrom)
+	Main.Body.ActorAnimateSolo(self.MilkFrom,Main.Body.AniBirth01)
 
 	Return
 EndEvent
 
 Event OnSpawnGem(Form What)
 
-	Int TypeVal = Math.Floor(Main.Data.ActorGemRemoveLargest(self.BirthFrom))
-	Form Type = Main.Data.GemStageGet(TypeVal)
-	ObjectReference Gem = self.BirthFrom.PlaceAtMe(Type,1,FALSE,TRUE)
+	;; figure out what milk to give.
 
-	Gem.MoveToNode(self.BirthFrom,"AnimObjectA")
-	Gem.SetActorOwner(Main.Player.GetActorBase())
-	Gem.Enable()
+	;; place it in the world, disabled.
+
+	Main.Data.ActorMilkInc(self.MilkFrom,-1.0)
+
+	;; Milk.MoveToNode(self.MilkFrom,"AnimObjectA")
+	;; Milk.SetActorOwner(Main.Player.GetActorBase())
+	;; Milk.Enable()
 
 	Return
 EndEvent
 
 Event OnDone(Form What)
 
-	Main.Util.ActorArmourReplace(self.BirthFrom)
+	Main.Util.ActorArmourReplace(self.MilkFrom)
 	self.Dispel()
 
 	Return

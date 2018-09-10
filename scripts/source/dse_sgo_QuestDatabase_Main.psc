@@ -307,6 +307,7 @@ Bool Function ActorGemAdd(Actor Who, Float Val=0.0)
 
 	self.ActorTrackingAdd(Who)
 	Main.Body.ActorUpdate(Who)
+
 	Return TRUE
 EndFunction
 
@@ -314,6 +315,7 @@ Function ActorGemClear(Actor Who)
 {drop all gem data for this actor.}
 
 	StorageUtil.FloatListClear(Who,self.KeyActorGemData)
+	Main.Body.ActorUpdate(Who)
 
 	Return
 EndFunction
@@ -331,10 +333,14 @@ Float Function ActorGemGet(Actor Who, Int Index, Bool Limit=TRUE)
 	Return Gem
 EndFunction
 
-Float Function ActorGemInc(Actor Who, Int Index, Float Inc)
+Function ActorGemInc(Actor Who, Int Index, Float Inc)
 {get the value of a specific gem in an actor.}
 
-	Return StorageUtil.FloatListAdjust(Who,KeyActorGemData,Index,Inc)
+	StorageUtil.FloatListAdjust(Who,KeyActorGemData,Index,Inc)
+	self.ActorTrackingAdd(Who)
+	Main.Body.ActorUpdate(Who)
+
+	Return
 EndFunction
 
 Int Function ActorGemCount(Actor Who)
@@ -446,13 +452,34 @@ Function ActorMilkSet(Actor Who, Float Value)
 {set how much milk the actor should have.}
 
 	StorageUtil.SetFloatValue(Who,self.KeyActorMilkData,Value)
+	self.ActorTrackingAdd(Who)
+	Main.Body.ActorUpdate(Who)
+
 	Return
 EndFunction
 
 Function ActorMilkInc(Actor Who, Float Value)
 {add/sub how much milk this actor has.}
 
-	StorageUtil.AdjustFloatValue(Who,self.KeyActorMilkData,Value)
+	Float Milk = StorageUtil.AdjustFloatValue(Who,self.KeyActorMilkData,Value)
+	Main.Util.PrintDebug(Who.GetDisplayName() + " now has " + Milk + " milk.")
+
+	self.ActorTrackingAdd(Who)
+	Main.Body.ActorUpdate(Who)
+
+	Return
+EndFunction
+
+Function ActorMilkLimit(Actor Who)
+{if this actor is over the limit on maximum milk, limit it.}
+
+	Float Amount = self.ActorMilkAmount(Who,FALSE)
+	Int Max = self.ActorMilkMax(Who)
+
+	If(Amount > Max)
+		self.ActorMilkSet(Who,Max as Float)
+	EndIf
+
 	Return
 EndFunction
 
@@ -473,6 +500,8 @@ Function ActorMilkClear(Actor Who)
 {drop milk data for this actor.}
 
 	StorageUtil.SetFloatValue(Who,self.KeyActorMilkData,0.0)
+	Main.Body.ActorUpdate(Who)
+
 	Return
 EndFunction
 
@@ -533,10 +562,34 @@ Float Function ActorSemenAmount(Actor Who, Bool Limit=TRUE)
 	Return SemenVal
 EndFunction
 
+Function ActorSemenSet(Actor Who, Float Value)
+{add/sub how much semen this actor has.}
+
+	StorageUtil.SetFloatValue(Who,self.KeyActorSemenData,Value)
+	self.ActorTrackingAdd(Who)
+
+	Return
+EndFunction
+
 Function ActorSemenInc(Actor Who, Float Value)
 {add/sub how much semen this actor has.}
 
 	StorageUtil.AdjustFloatValue(Who,self.KeyActorSemenData,Value)
+	self.ActorTrackingAdd(Who)
+	
+	Return
+EndFunction
+
+Function ActorSemenLimit(Actor Who)
+{if this actor is over the limit on maximum semen, limit it.}
+
+	Float Amount = self.ActorSemenAmount(Who,FALSE)
+	Int Max = self.ActorSemenMax(Who)
+
+	If(Amount > Max)
+		self.ActorSemenSet(Who,Max as Float)
+	EndIf
+
 	Return
 EndFunction
 
