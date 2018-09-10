@@ -657,11 +657,24 @@ the actor is not biologically able to produce gems.}
 	If(FertilitySync && Who != Main.Player)
 		;; todo follower faction check not distance check.
 		If(Main.Player.GetDistance(Who) <= 750)
-			SyncDist = Math.Abs(self.ActorFertilityFactor(Who) - self.ActorFertilityFactor(Main.Player))
+			SyncDist = self.ActorFertilityFactor(Who) - self.ActorFertilityFactor(Main.Player)
 			Main.Util.PrintDebug(Who.GetDisplayName() + " fertility out of sync by " + SyncDist)
-			If((SyncDist / FertilityWindow) > 0.1)
-				Nval += (TimeSince / 24.0) * 3.0
+
+			;; trying to bring followers to be in sync within 1.5 days of eachother.
+			;; i think if someone was almost sycned, and then you fast wait multiple
+			;; days, it might be possible they overshoot and then have to compinsate
+			;; again. i am leaning towards that actually intentionally being a game
+			;; mecahnic as punishment for cheating. while actually playing they will
+			;; eventually sync.
+
+			If( Math.Abs(SyncDist) > (FertilityWindow * (1.5 / FertilityDays)) )
+				If(SyncDist > 0.0)
+					Nval += ((TimeSince / 24.0) * 3.0)
+				Else
+					Nval -= ((TimeSince / 24.0) * 4.0)
+				EndIf
 			EndIf
+
 		EndIf
 	EndIf
 
