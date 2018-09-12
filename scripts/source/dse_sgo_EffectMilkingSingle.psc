@@ -68,6 +68,7 @@ Event OnSpawnMilk(Form What)
 	Bottle.MoveToNode(self.MilkFrom,"AnimObjectA")
 	Bottle.SetActorOwner(Main.Player.GetActorBase())
 	Bottle.Enable()
+	Main.Stats.IncInt((What as Actor),Main.Stats.KeyMilksMilked,1,TRUE)
 
 	Return
 EndEvent

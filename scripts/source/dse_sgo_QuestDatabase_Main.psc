@@ -428,6 +428,8 @@ actor is physically not capable of producing this item.}
 	Float Inc = ((TimeSince * PerDay) / 24.0)
 	Int GemCount = self.ActorGemCount(Who)
 	Int GemIter = 0
+	Int GemOld
+	Int GemNew
 
 	;; todo - if not in gem faction, bail.
 
@@ -437,7 +439,14 @@ actor is physically not capable of producing this item.}
 	EndIf
 
 	While(GemIter < GemCount)
+		GemOld = Math.Floor(self.ActorGemGet(Who,GemIter))
 		self.ActorGemInc(Who,GemIter,Inc)
+		GemNew = Math.Floor(self.ActorGemGet(Who,GemIter))
+
+		If(GemOld != GemNew)
+			Main.Stats.IncInt(Who,Main.Stats.KeyGemsIncubated,(GemNew-GemOld),TRUE)
+		EndIf
+
 		GemIter += 1
 	EndWhile
 
@@ -531,6 +540,8 @@ actor is physically not capable of producing this item.}
 	Float PregNeeded = Main.Config.GetFloat("MilksPregPercent") / 100.0
 	Float PerDay = Main.Config.GetFloat("MilksPerDay")
 	Float Inc = ((TimeSince * PerDay) / 24.0)
+	Int MilkOld
+	Int MilkNew
 
 	;; todo if not in milk faction, bail.
 
@@ -540,7 +551,13 @@ actor is physically not capable of producing this item.}
 	EndIf
 
 	Inc *= PregPercent
+	MilkOld = Math.Floor(self.ActorMilkAmount(Who))
 	self.ActorMilkInc(Who,Inc)
+	MilkNew = Math.Floor(self.ActorMilkAmount(Who))
+
+	If(MilkOld != MilkNew)
+		Main.Stats.IncInt(Who,Main.Stats.KeyMilksProduced,(MilkNew-MilkOld),TRUE)
+	EndIf
 
 	Main.Util.PrintDebug(Who.GetDisplayName() + " milk has progressed " + Inc)
 	Return TRUE

@@ -222,6 +222,7 @@ Event OnAnimateInsert(Form What)
 	EndIf
 
 	Main.Data.ActorGemAdd((What as Actor),self.GemData[self.GemLoop])
+	Main.Stats.IncInt((What as Actor),Main.Stats.KeyGemsInserted,1,TRUE)
 
 	Return
 EndEvent

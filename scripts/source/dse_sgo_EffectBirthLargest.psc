@@ -66,6 +66,7 @@ Event OnSpawnGem(Form What)
 	Gem.MoveToNode(self.BirthFrom,"AnimObjectA")
 	Gem.SetActorOwner(Main.Player.GetActorBase())
 	Gem.Enable()
+	Main.Stats.IncInt((What as Actor),Main.Stats.KeyGemsBirthed,1,TRUE)
 
 	Return
 EndEvent
