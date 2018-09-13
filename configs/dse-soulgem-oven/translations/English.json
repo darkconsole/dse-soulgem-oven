@@ -4,9 +4,19 @@
 	"CannotProduceGems": "[0] cannot incubate gems.",
 	"NotReadyToBirth": "[0] is not ready to give birth.",
 	"NotReadyToMilk": "[0] is not ready to be milked.",
-	"TestRandomFlavourText": [
-		"Randomly Selected Flavour 1",
-		"Randomly Selected Flavour 2",
-		"Randomly Selected Flavour 3"
+	"FlavourPlayerGemGrowth": [
+		"The gems you are carrying feel a little heavier.",
+		"A gem you carry feels larger than it did before.",
+		"You can feel the power growing in the gems you carry."
+	],
+	"FlavourPlayerMilkFull": [
+		"Your breasts feel like they are ready to burst.",
+		"You don't think your breasts can get any heavier.",
+		"Your breasts feel so full."
+	],
+	"FlavourPlayerMilkProduced": [
+		"Your breasts feel a bit heavier.",
+		"Your breasts have gotten heavier.",
+		"You can tell your breasts are larger than before."
 	]
 }

@@ -473,6 +473,7 @@ actor is physically not capable of producing this item.}
 	Int GemIter = 0
 	Int GemOld
 	Int GemNew
+	Bool Growth = FALSE
 
 	If(!Who.IsInFaction(Main.FactionProduceGems))
 		Return FALSE
@@ -490,10 +491,17 @@ actor is physically not capable of producing this item.}
 
 		If(GemOld != GemNew)
 			Main.Stats.IncInt(Who,Main.Stats.KeyGemsIncubated,(GemNew-GemOld),TRUE)
+			Growth = TRUE
 		EndIf
 
 		GemIter += 1
 	EndWhile
+
+	If(Growth)
+		If(Who == Main.Player)
+			Main.Util.PrintLookupRandom("FlavourPlayerGemGrowth")
+		EndIf
+	EndIf
 
 	Main.Util.PrintDebug(Who.GetDisplayName() + " " + GemCount + " gems have progressed " + Inc)
 	Return TRUE
@@ -585,6 +593,7 @@ actor is physically not capable of producing this item.}
 	Float PregNeeded = Main.Config.GetFloat("MilksPregPercent") / 100.0
 	Float PerDay = Main.Config.GetFloat("MilksPerDay")
 	Float Inc = ((TimeSince * PerDay) / 24.0)
+	Int MilkMax = self.ActorMilkMax(Who)
 	Int MilkOld
 	Int MilkNew
 
@@ -604,6 +613,14 @@ actor is physically not capable of producing this item.}
 
 	If(MilkOld != MilkNew)
 		Main.Stats.IncInt(Who,Main.Stats.KeyMilksProduced,(MilkNew-MilkOld),TRUE)
+
+		If(Who == Main.Player)
+			If(MilkNew == MilkMax)
+				Main.Util.PrintLookupRandom("FlavourPlayerMilkFull")
+			Else
+				Main.Util.PrintLookupRandom("FlavourPlayerMilkProduced")
+			EndIf
+		EndIf
 	EndIf
 
 	Main.Util.PrintDebug(Who.GetDisplayName() + " milk has progressed " + Inc)

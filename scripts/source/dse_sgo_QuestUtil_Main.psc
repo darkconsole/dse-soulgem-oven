@@ -27,16 +27,6 @@ Function PrintDebug(String Msg)
 	Return
 EndFunction
 
-Function PrintLookup(String KeyName, String InputList)
-
-	self.Print(self.StringLookup(KeyName,InputList))
-EndFunction
-
-Function PrintLookupRandom(String KeyName, String InputList)
-
-	self.Print(self.StringLookupRandom(KeyName,InputList))
-EndFunction
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -100,11 +90,24 @@ String Function StringInsert(String Format, String InputList="")
 	Int Iter = 0
 	Int Pos = -1
 	String ToFind
-	String[] Inputs = PapyrusUtil.StringSplit(InputList,"|")
+	String[] Inputs
+
+	;; short short circuit if we can.
+
+	If(StringUtil.GetLength(InputList) == 0)
+		Return Format
+	EndIf
+
+	;; rebuild a full string.
+
+	Inputs = PapyrusUtil.StringSplit(InputList,"|")
 
 	While(Iter < Inputs.Length)
 		ToFind = "[" + Iter + "]"
 		Pos = StringUtil.Find(Format,ToFind)
+
+		;; substring with a length of 0 means full string so we had to test
+		;; the position in case the token was the first thing in the string.
 
 		If(Pos > -1)
 			If(Pos > 0)
@@ -134,6 +137,16 @@ String Function StringLookupRandom(String Path, String InputList="")
 	String Format = JsonUtil.GetPathStringValue(self.FileStrings,(Path + "[" + Selected + "]"))
 
 	Return self.StringInsert(Format,InputList)
+EndFunction
+
+Function PrintLookup(String KeyName, String InputList="")
+
+	self.Print(self.StringLookup(KeyName,InputList))
+EndFunction
+
+Function PrintLookupRandom(String KeyName, String InputList="")
+
+	self.Print(self.StringLookupRandom(KeyName,InputList))
 EndFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
