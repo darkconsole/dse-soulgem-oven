@@ -1,6 +1,7 @@
 {
 	"CannotFitMoreGems": "[0] cannot fit any more gems.",
 	"CannotInsertThat": "[0] cannot insert that.",
+	"CannotProduceGems": "[0] cannot incubate gems.",
 	"NotReadyToBirth": "[0] is not ready to give birth.",
 	"NotReadyToMilk": "[0] is not ready to be milked.",
 	"TestRandomFlavourText": [

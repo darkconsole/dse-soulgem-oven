@@ -122,7 +122,7 @@ EndFunction
 
 String Function StringLookup(String Path, String InputList="")
 
-	String Format = JsonUtil.GetPathStringValue(self.FileStrings,Path)
+	String Format = JsonUtil.GetPathStringValue(self.FileStrings,Path,("MISSING STRING LOL: " + Path))
 
 	Return self.StringInsert(Format,InputList)
 EndFunction

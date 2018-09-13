@@ -34,6 +34,12 @@ Event OnLoad()
 
 	Main.Data.ActorDetermineFeatures(self.InsertInto)
 
+	If(!self.InsertInto.IsInFaction(Main.FactionProduceGems))
+		Main.Util.PrintLookup("CannotProduceGems",self.InsertInto.GetDisplayName())
+		self.Done()
+		Return
+	EndIf
+
 	If(Main.Data.ActorGemCount(self.InsertInto) >= Main.Data.ActorGemMax(self.InsertInto))
 		Main.Util.PrintLookup("CannotFitMoreGems",self.InsertInto.GetDisplayName())
 		self.Done()
