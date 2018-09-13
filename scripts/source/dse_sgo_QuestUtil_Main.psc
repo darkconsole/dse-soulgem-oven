@@ -5,6 +5,8 @@ ScriptName dse_sgo_QuestUtil_Main extends Quest
 
 dse_sgo_QuestController_Main Property Main Auto
 
+String Property FileStrings = "../../../configs/dse-soulgem-oven/translations/English.json" AutoReadOnly Hidden
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -23,6 +25,16 @@ Function PrintDebug(String Msg)
 	EndIf
 
 	Return
+EndFunction
+
+Function PrintLookup(String KeyName, String InputList)
+
+	self.Print(self.StringLookup(KeyName,InputList))
+EndFunction
+
+Function PrintLookupRandom(String KeyName, String InputList)
+
+	self.Print(self.StringLookupRandom(KeyName,InputList))
 EndFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -76,6 +88,52 @@ value will be doubled.}
 	Float Base = Main.Config.GetFloat("LevelValueBase")
 
 	Return (((Level / Base) * (Value * Factor)) + Value) as Float
+EndFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; strings
+
+String Function StringInsert(String Format, String InputList="")
+
+	Int Iter = 0
+	Int Pos = -1
+	String ToFind
+	String[] Inputs = PapyrusUtil.StringSplit(InputList,"|")
+
+	While(Iter < Inputs.Length)
+		ToFind = "[" + Iter + "]"
+		Pos = StringUtil.Find(Format,ToFind)
+
+		If(Pos > -1)
+			If(Pos > 0)
+				Format = StringUtil.Substring(Format,0,Pos) + Inputs[Iter] + StringUtil.Substring(Format,(Pos+3))
+			Else
+				Format = Inputs[Iter] + StringUtil.Substring(Format,(Pos+3))
+			EndIf			
+		EndIf
+
+		Iter += 1
+	EndWhile
+
+	Return Format
+EndFunction
+
+String Function StringLookup(String Path, String InputList="")
+
+	String Format = JsonUtil.GetPathStringValue(self.FileStrings,Path)
+
+	Return self.StringInsert(Format,InputList)
+EndFunction
+
+String Function StringLookupRandom(String Path, String InputList="")
+
+	Int Count = JsonUtil.PathCount(self.FileStrings,Path)
+	Int Selected = Utility.RandomInt(0,(Count - 1))
+	String Format = JsonUtil.GetPathStringValue(self.FileStrings,(Path + "[" + Selected + "]"))
+
+	Return self.StringInsert(Format,InputList)
 EndFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

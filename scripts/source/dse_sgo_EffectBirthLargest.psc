@@ -33,7 +33,7 @@ Event OnEffectStart(Actor Who, Actor From)
 	;; determine if the actor is able to birth.
 
 	If(!Main.Data.ActorGemReady(self.BirthFrom))
-		Main.Util.Print(self.BirthFrom.GetDisplayName() + " is not ready to birth.")
+		Main.Util.PrintLookup("NotReadyToBirth",self.BirthFrom.GetDisplayName())
 		self.Dispel()
 		Return
 	EndIf

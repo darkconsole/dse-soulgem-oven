@@ -34,10 +34,10 @@ Event OnEffectStart(Actor Who, Actor From)
 	self.MilkRace = Main.Data.RaceFind(Who.GetRace())
 	self.Milk = Main.Data.RaceGetMilk(self.MilkRace)
 
-	;; determine if the actor is able to birth.
+	;; determine if the actor is able to milk.
 
 	If(Main.Data.ActorMilkAmount(self.MilkFrom) < 1.0)
-		Main.Util.Print(self.MilkFrom.GetDisplayName() + " is not ready to milk.")
+		Main.Util.PrintLookup("NotReadyToMilk",self.MilkFrom.GetDisplayName())
 		self.Dispel()
 		Return
 	EndIf

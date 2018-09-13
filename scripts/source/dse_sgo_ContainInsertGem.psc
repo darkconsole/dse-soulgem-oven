@@ -35,7 +35,7 @@ Event OnLoad()
 	Main.Data.ActorDetermineFeatures(self.InsertInto)
 
 	If(Main.Data.ActorGemCount(self.InsertInto) >= Main.Data.ActorGemMax(self.InsertInto))
-		Main.Util.Print(self.InsertInto.GetDisplayName() + " fit any more gems.")
+		Main.Util.PrintLookup("CannotFitMoreGems",self.InsertInto.GetDisplayName())
 		self.Done()
 		Return
 	EndIf
@@ -68,7 +68,7 @@ Event OnItemAdded(Form Type, Int Count, ObjectReference What, ObjectReference So
 	;; if its not a valid soulgem we don't want it in here.
 
 	If(!Main.ListGemFilter.HasForm(Type))
-		Main.Util.Print("$SGO4_CannotInsertThat")
+		Main.Util.PrintLookup("CannotInsertThat",self.InsertInto.GetDisplayName())
 
 		If(What != None)
 			self.RemoveItem(What,Count,TRUE,Source)
@@ -82,7 +82,7 @@ Event OnItemAdded(Form Type, Int Count, ObjectReference What, ObjectReference So
 	;; make sure we can even fit what they wanted.
 
 	If(self.CurrentCount >= self.MaxCount)
-		Main.Util.Print("$SGO4_CannotInsertMore")
+		Main.Util.PrintLookup("CannotFitMoreGems",self.InsertInto.GetDisplayName())
 
 		If(What != None)
 			self.RemoveItem(What,Count,TRUE,Source)
