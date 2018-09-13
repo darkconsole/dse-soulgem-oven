@@ -57,9 +57,6 @@ Int Function RoundToInt(Float Val)
 	Return Math.Floor(Val + 0.5)
 EndFunction
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 Float Function GetLeveledValue(Float Level, Float Value, Float Factor = 1.0)
 {modify a value based on a level 100 system. this means at level 100 the input
 value will be doubled.}
@@ -81,14 +78,19 @@ value will be doubled.}
 	Return (((Level / Base) * (Value * Factor)) + Value) as Float
 EndFunction
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; game utility
+
 Function ActorArmourRemove(Actor Who)
 {remove an actor's chestpiece.}
 
 	Form[] Items
 
 	If(Main.Config.GetBool("SexLabStrip"))
-		Main.Util.PrintDebug("Stripping " + Who.GetDisplayName() + " via SexLab.")
-		Items = Main.SexLab.StripActor(Who,None,FALSE,FALSE)
+		Items = Main.SexLab.StripActor(Who,None,FALSE,FALSE) as Form[]
+		Main.Util.PrintDebug("Stripping " + Who.GetDisplayName() + " via SexLab (" + Items.Length + ")")
 	Else
 		Main.Util.PrintDebug("Stripping " + Who.GetDisplayName() + " manually.")
 		If(Who.GetWornForm(0x00000004) != None)
@@ -99,7 +101,7 @@ Function ActorArmourRemove(Actor Who)
 		EndIf
 	EndIf
 
-	If((Items != None) && (Items.Length > 0))
+	If(Items.Length > 0)
 		StorageUtil.FormListCopy(Who,"SGO4.Actor.Armor",Items)
 	EndIf
 
@@ -112,11 +114,11 @@ Function ActorArmourReplace(Actor Who)
 	Form[] Items
 
 	If(StorageUtil.FormListCount(Who,"SGO4.Actor.Armor") > 0)
-		Items = StorageUtil.FormListToArray(Who,"SGO4.Actor.Armor")
+		Items = StorageUtil.FormListToArray(Who,"SGO4.Actor.Armor") as Form[]
 	EndIf
 
 	;;If(Main.Config.GetBool("SexLabStrip"))
-	If((Items != None) && (Items.Length > 0))
+	If(Items.Length > 0)
 		Main.SexLab.UnstripActor(Who,Items,FALSE)
 	EndIf
 	;;Else
@@ -212,4 +214,34 @@ mostly.}
 
 	Game.AdvanceSkill("Enchanting",self.GetLeveledValue(Level,Value,Factor))
 	Return
+EndFunction
+
+Int Function ActorGetGender(Actor Who)
+{return 0 for male, 1 for female, 2 for ftm, 3 for mtf. if you mod the value
+of this by 2 it will narrow the results to 0 or 1, which you can typically
+trust as "this actor flat out wishes to be treated as" male or female if you
+just need a snap judgement.}
+
+	Int GameSays = Who.GetLeveledActorBase().GetSex()
+	Int SexLabSays = Main.SexLab.GetGender(Who) % 2
+
+	;; if sexlab and the game agree then we will just take what it says
+	;; at face value.
+
+	If(GameSays == SexLabSays)
+		Return SexLabSays
+	EndIf
+
+	;; else the code asking the question will need to make some decisions
+	;; about what to do next.
+
+	If(GameSays == 1 && SexLabSays == 0)
+		Return 2 ;; ftm
+	EndIf
+
+	If(GameSays == 0 && SexLabSays == 1)
+		Return 3 ;; mtf
+	EndIf
+
+	Return 0
 EndFunction

@@ -110,6 +110,49 @@ EndFunction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+Function ActorDetermineFeatures(Actor Who)
+{assuming y̶o̶u̶r̶ ̶g̶e̶n̶d̶e̶r̶ direct control.}
+
+	;; the typical use case with my players are these:
+
+	;; 0 peni
+	;; 1 vagine n bobs
+	;; 2 peni n bobs
+	;; 3 peni with gems growing in teh boot
+
+	;; these are cases people will ask about but to achieve they will need
+	;; to use the wheel menu to customize the character this function will
+	;; not return these values:
+
+	;; 4 peni, bobs, vagine, all at once, greedy fucks.
+	;; 5 vagoo only
+
+	Int Gender = Main.Util.ActorGetGender(Who)
+
+	If(Gender == 0)
+		;; typical male.
+		Who.AddToFaction(Main.FactionProduceSemen)
+		Main.Util.PrintDebug(Who.GetDisplayName() + " defaulted to typical male.")
+	ElseIf(Gender == 1)
+		;; typical female.
+		Who.AddToFaction(Main.FactionProduceMilk)
+		Who.AddToFaction(Main.FactionProduceGems)
+		Main.Util.PrintDebug(Who.GetDisplayName() + " defaulted to typical female.")
+	ElseIf(Gender == 2)
+		;; traps.
+		Who.AddToFaction(Main.FactionProduceMilk)
+		Who.AddToFaction(Main.FactionProduceSemen)
+		Main.Util.PrintDebug(Who.GetDisplayName() + " defaulted to trap.")
+	Elseif(Gender == 3)
+		;; care bears.
+		Who.AddToFaction(Main.FactionProduceSemen)
+		Who.AddToFaction(Main.FactionProduceGems)
+		Main.Util.PrintDebug(Who.GetDisplayName() + " defaulted to care bear.")
+	EndIf
+
+	Return
+EndFunction
+
 Function ActorTrackingAdd(Actor Who)
 {it does not matter why we want to track the actor. for any reason they get
 added to this list.}
@@ -431,7 +474,9 @@ actor is physically not capable of producing this item.}
 	Int GemOld
 	Int GemNew
 
-	;; todo - if not in gem faction, bail.
+	If(!Who.IsInFaction(Main.FactionProduceGems))
+		Return FALSE
+	EndIf
 
 	If(GemCount == 0)
 		Main.Util.PrintDebug(Who.GetDisplayName() + " is not incubating gems.")
@@ -543,7 +588,9 @@ actor is physically not capable of producing this item.}
 	Int MilkOld
 	Int MilkNew
 
-	;; todo if not in milk faction, bail.
+	If(!Who.IsInFaction(Main.FactionProduceMilk))
+		Return FALSE
+	EndIf
 
 	If(PregPercent < PregNeeded)
 		Main.Util.PrintDebug(Who.GetDisplayName() + " is not producing milk yet.")
@@ -626,7 +673,9 @@ actor is physically not capable of producing this item.}
 	Float PerDay = Main.Config.GetFloat("SemensPerDay")
 	Float Inc = ((TimeSince * PerDay) / 24.0)
 
-	;; todo - if not in semen faction, bail.
+	If(!Who.IsInFaction(Main.FactionProduceSemen))
+		Return FALSE
+	EndIf
 
 	self.ActorSemenInc(Who,Inc)
 
@@ -701,7 +750,9 @@ the actor is not biologically able to produce gems.}
 	Float FertilityWindow = Main.Config.GetFloat("FertilityWindow")
 	Float SyncDist
 
-	;; todo - if not in gem faction, bail.
+	If(!Who.IsInFaction(Main.FactionProduceGems))
+		Return FALSE
+	EndIf
 
 	If(FertilityDays == 0)
 		;; no need to process if disabled.

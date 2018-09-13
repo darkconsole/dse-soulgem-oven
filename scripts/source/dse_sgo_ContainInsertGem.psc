@@ -32,6 +32,8 @@ Event OnLoad()
 
 	;; figure out if we even can.
 
+	Main.Data.ActorDetermineFeatures(self.InsertInto)
+
 	If(Main.Data.ActorGemCount(self.InsertInto) >= Main.Data.ActorGemMax(self.InsertInto))
 		Main.Util.Print(self.InsertInto.GetDisplayName() + " fit any more gems.")
 		self.Done()
