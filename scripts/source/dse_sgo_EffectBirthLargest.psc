@@ -65,6 +65,7 @@ Function HandleSkipAnimation()
 	Utility.Wait(2.5)
 	Main.Body.OnAnimationEvent_ActorResetFace(self.BirthFrom)
 	Utility.Wait(1.5)
+	Main.Body.ActorRelease(self.BirthFrom)
 	self.Dispel()
 
 	Return

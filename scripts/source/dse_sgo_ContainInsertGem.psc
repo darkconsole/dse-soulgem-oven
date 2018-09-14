@@ -206,6 +206,7 @@ Function Done()
 	self.UnregisterForModEvent(Main.Body.KeyEvActorInsert)
 	self.Disable()
 	self.Delete()
+	Main.Body.ActorRelease(self.InsertInto)
 	Main.Util.PrintDebug("Insertion Container Deleted")
 
 	Return

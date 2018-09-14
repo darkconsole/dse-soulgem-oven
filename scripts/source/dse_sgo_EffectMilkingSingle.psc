@@ -70,6 +70,7 @@ Function HandleSkipAnimation()
 	Utility.Wait(2.5)
 	Main.Body.OnAnimationEvent_ActorResetFace(self.MilkFrom)
 	Utility.Wait(1.5)
+	Main.Body.ActorRelease(self.MilkFrom)
 	self.Dispel()
 
 	Return
