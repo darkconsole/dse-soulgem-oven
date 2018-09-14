@@ -318,6 +318,12 @@ just need a snap judgement.}
 EndFunction
 
 Bool Function ActorHasPackageOverrides(Actor Who)
+{return if there are any package overrides on this actor and the current
+package is not one of ours.}
 
-	Return (ActorUtil.CountPackageOverride(Who) > 0)
+	If(ActorUtil.CountPackageOverride(Who) > 0)
+		Return (Who.GetCurrentPackage() != Main.PackageDoNothing)
+	EndIf
+
+	Return FALSE
 EndFunction
