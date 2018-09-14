@@ -376,14 +376,15 @@ Float Function ActorGemGet(Actor Who, Int Index, Bool Limit=TRUE)
 	Return Gem
 EndFunction
 
-Function ActorGemInc(Actor Who, Int Index, Float Inc)
+Float Function ActorGemInc(Actor Who, Int Index, Float Inc)
 {get the value of a specific gem in an actor.}
 
-	StorageUtil.FloatListAdjust(Who,KeyActorGemData,Index,Inc)
+	Float Val = StorageUtil.FloatListAdjust(Who,KeyActorGemData,Index,Inc)
+
 	self.ActorTrackingAdd(Who)
 	Main.Body.ActorUpdate(Who)
 
-	Return
+	Return Val
 EndFunction
 
 Int Function ActorGemCount(Actor Who)
@@ -470,10 +471,14 @@ actor is physically not capable of producing this item.}
 	Float PerDay = Main.Config.GetFloat("GemsPerDay")
 	Float Inc = ((TimeSince * PerDay) / 24.0)
 	Int GemCount = self.ActorGemCount(Who)
+	Int GemCurMax = GemCount * self.GemStageCount()
+	Int GemCurTotal = 0
 	Int GemIter = 0
 	Int GemOld
 	Int GemNew
 	Bool Growth = FALSE
+
+	;;;;;;;;
 
 	If(!Who.IsInFaction(Main.FactionProduceGems))
 		Return FALSE
@@ -484,10 +489,12 @@ actor is physically not capable of producing this item.}
 		Return TRUE
 	EndIf
 
+	;;;;;;;;
+
 	While(GemIter < GemCount)
 		GemOld = Math.Floor(self.ActorGemGet(Who,GemIter))
-		self.ActorGemInc(Who,GemIter,Inc)
-		GemNew = Math.Floor(self.ActorGemGet(Who,GemIter))
+		GemNew = Math.Floor(self.ActorGemInc(Who,GemIter,Inc))
+		GemCurTotal += GemNew
 
 		If(GemOld != GemNew)
 			Main.Stats.IncInt(Who,Main.Stats.KeyGemsIncubated,(GemNew-GemOld),TRUE)
@@ -497,9 +504,15 @@ actor is physically not capable of producing this item.}
 		GemIter += 1
 	EndWhile
 
+	;;;;;;;;
+
 	If(Growth)
 		If(Who == Main.Player)
 			Main.Util.PrintLookupRandom("FlavourPlayerGemGrowth")
+		EndIf
+	ElseIf(GemCurTotal >= GemCurMax)
+		If(Who == Main.Player)
+			Main.Util.PrintLookupRandom("FlavourPlayerGemFull")
 		EndIf
 	EndIf
 
