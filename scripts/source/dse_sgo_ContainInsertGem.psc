@@ -62,7 +62,7 @@ Event OnLoad()
 	;; tell the player to open us.
 
 	self.RegisterForModEvent(Main.Body.KeyEvActorDone,"OnAnimateDone")
-	self.RegisterForModEvent(Main.Body.KeyEvActorInsert,"OnAnimateInsert")
+	self.RegisterForModEvent(Main.Body.KeyEvActorInsert,"OnGemInsert")
 	self.Activate(Main.Player)
 
 	Return
@@ -175,16 +175,26 @@ Event OnActivate(ObjectReference What)
 		IterType += 1
 	EndWhile
 
-	;; trigger the insertions.
+	;; should we do anything?
 
-	self.GemLoop = 0
-
-	If(self.GemData.Length > 0)
-		self.InsertGem(self.InsertInto)
+	If(self.GemData.Length <= 0)
+		self.Done()
 		Return
 	EndIf
 
-	self.Done()
+	;; check if any other mods like display model have this actor forced
+	;; into submission. if they do we shouldn't animate them because the
+	;; packages may break us later.
+
+	If(Main.Util.ActorHasPackageOverrides(self.InsertInto))
+		self.HandleSkipAnimation()
+		Return
+	EndIf
+
+	;; else trigger the animations.
+
+	self.HandleStartAnimation()
+
 	Return
 EndEvent
 
@@ -196,7 +206,6 @@ Function Done()
 	self.UnregisterForModEvent(Main.Body.KeyEvActorInsert)
 	self.Disable()
 	self.Delete()
-
 	Main.Util.PrintDebug("Insertion Container Deleted")
 
 	Return
@@ -205,7 +214,39 @@ EndFunction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Function InsertGem(Actor Who)
+Function HandleSkipAnimation()
+
+	Main.Util.PrintLookup("CannotAnimateOverride",self.InsertInto.GetDisplayName())
+	self.GemLoop = 0
+	While(self.GemLoop < self.GemData.Length)
+		Main.Body.OnAnimationEvent_ActorMoan(self.InsertInto,50)
+		self.OnGemInsert(self.InsertInto)
+		Utility.Wait(2.5)
+		Main.Body.OnAnimationEvent_ActorResetFace(self.InsertInto)
+		Utility.Wait(1.5)
+
+		self.GemLoop += 1
+	EndWhile
+	self.Done()
+
+	Return
+EndFunction
+
+Function HandleStartAnimation()
+
+	Main.Body.ActorLockdown(self.InsertInto)
+	Main.Util.ActorArmourRemove(self.InsertInto)
+
+	self.GemLoop = 0
+	self.Animate(self.InsertInto)
+
+	Return
+EndFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Function Animate(Actor Who)
 {consume gem and kick off animation.}
 
 	String AniName
@@ -216,13 +257,12 @@ Function InsertGem(Actor Who)
 		AniName = Main.Body.AniInsert02
 	EndIf
 
-	Main.Util.ActorArmourRemove(Who)
 	Main.Body.ActorAnimateSolo(Who,AniName)
 
 	Return
 EndFunction
 
-Event OnAnimateInsert(Form What)
+Event OnGemInsert(Form What)
 {watch for insertion events to trigger adding the gem.}
 
 	If(What != self.InsertInto)
@@ -245,11 +285,12 @@ Event OnAnimateDone(Form What)
 	self.GemLoop += 1
 
 	If(self.GemLoop < self.GemData.Length)
-		self.InsertGem(What as Actor)
+		self.Animate(What as Actor)
 		Return
 	EndIf
 
 	Main.Util.ActorArmourReplace(What as Actor)
+	Main.Body.ActorRelease(self.InsertInto)
 	self.Done()
 	Return
 EndEvent

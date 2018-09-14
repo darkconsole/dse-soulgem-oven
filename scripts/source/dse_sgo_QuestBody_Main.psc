@@ -251,13 +251,27 @@ EndFunction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+Function ActorLockdown(Actor Who)
+	
+	ActorUtil.AddPackageOverride(Who,Main.PackageDoNothing,100)
+	Who.EvaluatePackage()
+	Return
+EndFunction
+
+Function ActorRelease(Actor Who)
+
+	ActorUtil.RemovePackageOverride(Who,Main.PackageDoNothing)
+	Who.EvaluatePackage()
+	Return
+EndFunction
+
 Function ActorAnimateSolo(Actor Who, String AniName)
 {force an actor to perform some sort of blocking/busy animation.}
 
 	If(Who == Main.Player)
 		Game.SetPlayerAIDriven(TRUE)
 	EndIf
-
+	
 	self.RegisterForCustomAnimationEvents(Who)
 	Debug.SendAnimationEvent(Who,AniName)
 

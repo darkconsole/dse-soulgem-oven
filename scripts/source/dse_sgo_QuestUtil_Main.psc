@@ -103,7 +103,7 @@ String Function StringInsert(String Format, String InputList="")
 	Inputs = PapyrusUtil.StringSplit(InputList,"|")
 
 	While(Iter < Inputs.Length)
-		ToFind = "[" + Iter + "]"
+		ToFind = "%" + (Iter+1)
 		Pos = StringUtil.Find(Format,ToFind)
 
 		;; substring with a length of 0 means full string so we had to test
@@ -113,7 +113,7 @@ String Function StringInsert(String Format, String InputList="")
 			If(Pos > 0)
 				Format = StringUtil.Substring(Format,0,Pos) + Inputs[Iter] + StringUtil.Substring(Format,(Pos+3))
 			Else
-				Format = Inputs[Iter] + StringUtil.Substring(Format,(Pos+3))
+				Format = Inputs[Iter] + StringUtil.Substring(Format,(Pos+2))
 			EndIf			
 		EndIf
 
@@ -315,4 +315,9 @@ just need a snap judgement.}
 	EndIf
 
 	Return 0
+EndFunction
+
+Bool Function ActorHasPackageOverrides(Actor Who)
+
+	Return (ActorUtil.CountPackageOverride(Who) > 0)
 EndFunction

@@ -19,7 +19,7 @@ Event OnEffectStart(Actor Who, Actor From)
 		Target = Game.GetCurrentCrosshairRef() as Actor
 		If(Target != None)
 			Main.SpellInsertGems.Cast(Target,Target)
-			self.Dispel()
+			;; self.Dispel() ;; spell is fire and forget with 0 duration.
 			Return
 		EndIf
 	EndIf

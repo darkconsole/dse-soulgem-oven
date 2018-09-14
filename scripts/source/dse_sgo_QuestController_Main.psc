@@ -60,6 +60,7 @@ Faction Property FactionProduceSemen Auto
 Spell Property SpellBirthLargest Auto
 Spell Property SpellInsertGems Auto
 Spell Property SpellMilkingAction Auto
+Package Property PackageDoNothing Auto
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

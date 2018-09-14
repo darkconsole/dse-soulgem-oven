@@ -42,34 +42,81 @@ Event OnEffectStart(Actor Who, Actor From)
 		Return
 	EndIf
 
-	;; get ready for a show.
+
+	;; check if any other mods like display model have this actor forced
+	;; into submission. if they do we shouldn't animate them because the
+	;; packages may break us later.
+
+	If(Main.Util.ActorHasPackageOverrides(self.MilkFrom))
+		self.HandleSkipAnimation()
+		Return
+	EndIf
+
+	;; else trigger the animations.
+
+	self.HandleStartAnimation()
+
+	Return
+EndEvent
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Function HandleSkipAnimation()
+
+	Main.Util.PrintLookup("CannotAnimateOverride",self.MilkFrom.GetDisplayName())
+	Main.Body.OnAnimationEvent_ActorMoan(self.MilkFrom,50)
+	self.HandleSpawnMilk(FALSE)
+	Utility.Wait(2.5)
+	Main.Body.OnAnimationEvent_ActorResetFace(self.MilkFrom)
+	Utility.Wait(1.5)
+	self.Dispel()
+
+	Return
+EndFunction
+
+Function HandleStartAnimation()
 
 	self.RegisterForModEvent(Main.Body.KeyEvActorSpawnMilk,"OnSpawnMilk")
 	self.RegisterForModEvent(Main.Body.KeyEvActorDone,"OnDone")
 
+	Main.Body.ActorLockdown(self.MilkFrom)
 	Main.Data.ActorMilkLimit(self.MilkFrom)
 	Main.Util.ActorArmourRemove(self.MilkFrom)
 	Main.Body.ActorAnimateSolo(self.MilkFrom,Main.Body.AniMilking01)
 
 	Return
-EndEvent
+EndFunction
 
-Event OnSpawnMilk(Form What)
+Function HandleSpawnMilk(Bool FromAni)
 
 	ObjectReference Bottle
+
+	Main.Data.ActorMilkInc(self.MilkFrom,-1.0)
+	If(FromAni)
+		Bottle = self.MilkFrom.PlaceAtMe(self.Milk,1,FALSE,TRUE)
+		Bottle.MoveToNode(self.MilkFrom,"AnimObjectA")
+		Bottle.Enable()
+	Else
+		self.MilkFrom.AddItem(self.Milk,1,TRUE)
+		Bottle = self.MilkFrom.DropObject(self.Milk,1)
+	EndIf
+
+	Bottle.SetActorOwner(Main.Player.GetActorBase())
+	Main.Stats.IncInt(self.MilkFrom,Main.Stats.KeyMilksMilked,1,TRUE)
+	Return
+EndFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Event OnSpawnMilk(Form What)
 
 	If(What != self.MilkFrom)
 		Return
 	EndIf
 
-	Bottle = self.MilkFrom.PlaceAtMe(self.Milk,1,FALSE,TRUE)
-	Main.Data.ActorMilkInc(self.MilkFrom,-1.0)
-
-	Bottle.MoveToNode(self.MilkFrom,"AnimObjectA")
-	Bottle.SetActorOwner(Main.Player.GetActorBase())
-	Bottle.Enable()
-	Main.Stats.IncInt((What as Actor),Main.Stats.KeyMilksMilked,1,TRUE)
-
+	self.HandleSpawnMilk(TRUE)
 	Return
 EndEvent
 
@@ -80,6 +127,7 @@ Event OnDone(Form What)
 	EndIf
 
 	Main.Util.ActorArmourReplace(self.MilkFrom)
+	Main.Body.ActorRelease(self.MilkFrom)
 	self.Dispel()
 
 	Return

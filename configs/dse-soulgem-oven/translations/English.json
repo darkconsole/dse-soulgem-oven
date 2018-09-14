@@ -1,22 +1,39 @@
 {
-	"CannotFitMoreGems": "[0] cannot fit any more gems.",
-	"CannotInsertThat": "[0] cannot insert that.",
-	"CannotProduceGems": "[0] cannot incubate gems.",
-	"NotReadyToBirth": "[0] is not ready to give birth.",
-	"NotReadyToMilk": "[0] is not ready to be milked.",
+	"CannotAnimateOverride": "%1 appears to be forcefully controlled by another mod, skipping the animations.",
+	"CannotFitMoreGems": "%1 cannot fit any more gems.",
+	"CannotInsertThat": "%1 cannot insert that.",
+	"CannotProduceGems": "%1 cannot incubate gems.",
+	"NotReadyToBirth": "%1 is not ready to give birth.",
+	"NotReadyToMilk": "%1 is not ready to be milked.",
 	"FlavourPlayerGemGrowth": [
 		"The gems you are carrying feel a little heavier.",
 		"A gem you carry feels larger than it did before.",
-		"You can feel the power growing in the gems you carry."
+		"You can feel the power growing in the gems you carry.",
+		"You can feel another gem has progressed.",
+		"You feel a gem has reached the next stage of development.",
+		"Ugh, some of these gems have sharp corners."
 	],
-	"FlavourPlayerMilkFull": [
-		"Your breasts feel like they are ready to burst.",
-		"You don't think your breasts can get any heavier.",
-		"Your breasts feel so full."
+	"FlavourPlayerGemFull": [
+		"It feels like all my gems are ready.",
+		"I can tell the gems I carry have hit their max potential.",
+		"Ding! Oven's done."
 	],
 	"FlavourPlayerMilkProduced": [
 		"Your breasts feel a bit heavier.",
 		"Your breasts have gotten heavier.",
-		"You can tell your breasts are larger than before."
+		"You can tell your breasts are larger than before.",
+		"Who needs a cow for milk when I've got these puppies?"
+	],
+	"FlavourPlayerMilkFull": [
+		"My breasts are sore and ready to burst!",
+		"Your breasts feel like they are ready to burst!",
+		"You don't think your breasts can get any heavier.",
+		"Your breasts feel so full.",
+		"If my breasts get any fuller they might pop!",
+		"If my breasts get any larger they are going to need their own Jarl.",
+		"I bet I could get some great deals flashing these milkshakse around.",
+		"My back is sore from supporting these things.",
+		"My boobs are so full... wonder if anyone here is thirsty.",
+		"I think my jugs are full."
 	]
 }
