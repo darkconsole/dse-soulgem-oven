@@ -11,6 +11,7 @@ dse_sgo_QuestController_Main Property Main Auto
 Actor Property MilkFrom Auto Hidden
 Int Property MilkRace Auto Hidden
 Form Property Milk Auto Hidden
+Bool Property HasMilked=FALSE Auto Hidden
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -81,6 +82,9 @@ Function HandleStartAnimation()
 	self.RegisterForModEvent(Main.Body.KeyEvActorSpawnMilk,"OnSpawnMilk")
 	self.RegisterForModEvent(Main.Body.KeyEvActorDone,"OnDone")
 
+	self.UnregisterForUpdate()
+	self.RegisterForSingleUpdate(45)
+
 	Main.Body.ActorLockdown(self.MilkFrom)
 	Main.Data.ActorMilkLimit(self.MilkFrom)
 	Main.Util.ActorArmourRemove(self.MilkFrom)
@@ -98,6 +102,8 @@ Function HandleSpawnMilk(Bool FromAni)
 		Bottle = self.MilkFrom.PlaceAtMe(self.Milk,1,FALSE,TRUE)
 		Bottle.MoveToNode(self.MilkFrom,"AnimObjectA")
 		Bottle.Enable()
+		self.UnregisterForUpdate()
+		self.RegisterForSingleUpdate(45)
 	Else
 		self.MilkFrom.AddItem(self.Milk,1,TRUE)
 		Bottle = self.MilkFrom.DropObject(self.Milk,1)
@@ -106,12 +112,26 @@ Function HandleSpawnMilk(Bool FromAni)
 	Bottle.SetActorOwner(Main.Player.GetActorBase())
 	Main.Stats.IncInt(self.MilkFrom,Main.Stats.KeyMilksMilked,1,TRUE)
 	Main.Util.ActorLevelAlchemy(self.MilkFrom)
+	self.HasMilked = TRUE
 
 	Return
 EndFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Event OnUpdate()
+{this should only tick if it got stuck somehow.}
+
+	If(!self.HasMilked)
+		self.HandleSpawnMilk(FALSE)
+		self.OnDone(self.MilkFrom)
+	EndIf
+
+	Main.Util.Print("Milk Single felt like it should do an emergency cleanup. This probably means the animation got interupted somehow.")
+	Main.Util.PrintDebug("Milk Single performed an emergency cleanup on " + self.MilkFrom.GetDisplayName())
+	Return
+EndEvent
 
 Event OnSpawnMilk(Form What)
 
@@ -131,6 +151,7 @@ Event OnDone(Form What)
 
 	Main.Util.ActorArmourReplace(self.MilkFrom)
 	Main.Body.ActorRelease(self.MilkFrom)
+	self.UnregisterForUpdate()
 	self.Dispel()
 
 	Return

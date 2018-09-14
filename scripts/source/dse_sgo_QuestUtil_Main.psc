@@ -22,6 +22,7 @@ Function PrintDebug(String Msg)
 
 	If(Main.Config.DebugMode)
 		MiscUtil.PrintConsole("[SGO] " + Msg)
+		Debug.Trace("[SGO] " + Msg)
 	EndIf
 
 	Return
@@ -319,7 +320,8 @@ EndFunction
 
 Bool Function ActorHasPackageOverrides(Actor Who)
 {return if there are any package overrides on this actor and the current
-package is not one of ours.}
+package is not one of ours. designed for detecting if other mods like
+display model are currently forcing the actor to do more important thigngs.}
 
 	If(ActorUtil.CountPackageOverride(Who) > 0)
 		Return (Who.GetCurrentPackage() != Main.PackageDoNothing)

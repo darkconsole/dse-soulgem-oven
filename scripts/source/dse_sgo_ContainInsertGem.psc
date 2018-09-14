@@ -259,10 +259,26 @@ Function Animate(Actor Who)
 		AniName = Main.Body.AniInsert02
 	EndIf
 
+	self.UnregisterForUpdate()
+	self.RegisterForSingleUpdate(45)
+
 	Main.Body.ActorAnimateSolo(Who,AniName)
 
 	Return
 EndFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Event OnUpdate()
+{this should only tick if it got stuck somehow.}
+
+	self.OnAnimateDone(self.InsertInto)
+
+	Main.Util.Print("Container Insert Gem felt like it should do an emergency cleanup. This probably means the animation got interupted somehow.")
+	Main.Util.PrintDebug("Container Insert Gem performed an emergency cleanup on " + self.InsertInto.GetDisplayName())
+	Return
+EndEvent
 
 Event OnGemInsert(Form What)
 {watch for insertion events to trigger adding the gem.}
@@ -270,6 +286,9 @@ Event OnGemInsert(Form What)
 	If(What != self.InsertInto)
 		Return
 	EndIf
+
+	self.UnregisterForUpdate()
+	self.RegisterForSingleUpdate(45)
 
 	Main.Data.ActorGemAdd((What as Actor),self.GemData[self.GemLoop])
 	Main.Stats.IncInt((What as Actor),Main.Stats.KeyGemsInserted,1,TRUE)
@@ -293,6 +312,7 @@ Event OnAnimateDone(Form What)
 
 	Main.Util.ActorArmourReplace(What as Actor)
 	Main.Body.ActorRelease(self.InsertInto)
+	self.UnregisterForUpdate()
 	self.Done()
 	Return
 EndEvent

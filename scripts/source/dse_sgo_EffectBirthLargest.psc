@@ -9,6 +9,7 @@ dse_sgo_QuestController_Main Property Main Auto
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Actor Property BirthFrom Auto Hidden
+Bool Property HasBirthed = FALSE Auto Hidden
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -76,6 +77,9 @@ Function HandleStartAnimation()
 	self.RegisterForModEvent(Main.Body.KeyEvActorSpawnGem,"OnSpawnGem")
 	self.RegisterForModEvent(Main.Body.KeyEvActorDone,"OnDone")
 
+	self.UnregisterForUpdate()
+	self.RegisterForSingleUpdate(45)
+
 	Main.Body.ActorLockdown(self.BirthFrom)
 	Main.Util.ActorArmourRemove(self.BirthFrom)
 	Main.Body.ActorAnimateSolo(self.BirthFrom,Main.Body.AniBirth01)
@@ -92,6 +96,8 @@ Function HandleSpawnGem(Bool FromAni)
 		Gem = self.BirthFrom.PlaceAtMe(Type,1,FALSE,TRUE)
 		Gem.MoveToNode(self.BirthFrom,"AnimObjectA")
 		Gem.Enable()
+		self.UnregisterForUpdate()
+		self.RegisterForSingleUpdate(45)
 	Else
 		self.BirthFrom.AddItem(Type,1,TRUE)
 		Gem = self.BirthFrom.DropObject(Type,1)
@@ -100,12 +106,26 @@ Function HandleSpawnGem(Bool FromAni)
 	Gem.SetActorOwner(Main.Player.GetActorBase())
 	Main.Stats.IncInt(self.BirthFrom,Main.Stats.KeyGemsBirthed,1,TRUE)
 	Main.Util.ActorLevelEnchanting(self.BirthFrom,TypeVal)
+	self.HasBirthed = TRUE
 
 	Return
 EndFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Event OnUpdate()
+{this should only tick if it got stuck somehow.}
+
+	If(!self.HasBirthed)
+		self.HandleSpawnGem(FALSE)
+		self.OnDone(self.BirthFrom)
+	EndIf
+
+	Main.Util.Print("Birth Largest felt like it should do an emergency cleanup. This probably means the animation got interupted somehow.")
+	Main.Util.PrintDebug("Birth Largest performed an emergency cleanup on " + self.BirthFrom.GetDisplayName())
+	Return
+EndEvent
 
 Event OnSpawnGem(Form What)
 
@@ -125,6 +145,7 @@ Event OnDone(Form What)
 
 	Main.Util.ActorArmourReplace(self.BirthFrom)
 	Main.Body.ActorRelease(self.BirthFrom)
+	self.UnregisterForUpdate()
 	self.Dispel()
 
 	Return
