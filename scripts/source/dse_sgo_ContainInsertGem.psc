@@ -63,6 +63,7 @@ Event OnLoad()
 
 	self.RegisterForModEvent(Main.Body.KeyEvActorDone,"OnAnimateDone")
 	self.RegisterForModEvent(Main.Body.KeyEvActorInsert,"OnGemInsert")
+	self.SetActorOwner(Main.Player.GetActorBase())
 	self.Activate(Main.Player)
 
 	Return
