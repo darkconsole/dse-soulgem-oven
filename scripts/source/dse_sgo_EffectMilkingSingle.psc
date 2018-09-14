@@ -105,6 +105,8 @@ Function HandleSpawnMilk(Bool FromAni)
 
 	Bottle.SetActorOwner(Main.Player.GetActorBase())
 	Main.Stats.IncInt(self.MilkFrom,Main.Stats.KeyMilksMilked,1,TRUE)
+	Main.Util.ActorLevelAlchemy(self.MilkFrom)
+
 	Return
 EndFunction
 

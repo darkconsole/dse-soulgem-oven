@@ -99,6 +99,8 @@ Function HandleSpawnGem(Bool FromAni)
 
 	Gem.SetActorOwner(Main.Player.GetActorBase())
 	Main.Stats.IncInt(self.BirthFrom,Main.Stats.KeyGemsBirthed,1,TRUE)
+	Main.Util.ActorLevelEnchanting(self.BirthFrom,TypeVal)
+
 	Return
 EndFunction
 
