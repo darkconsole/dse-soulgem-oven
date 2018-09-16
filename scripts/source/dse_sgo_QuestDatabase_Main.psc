@@ -51,13 +51,10 @@ Function GemStagePopulate()
 
 	StorageUtil.FormListClear(None,self.KeyGemStageData)
 
-	If(Mode == 1)
-		StorageUtil.FormListCopy(None,self.KeyGemStageData,self.GetGemStagesFilled())
-	ElseIf(Mode == 0)
+	If(Mode == 0)
 		StorageUtil.FormListCopy(None,self.KeyGemStageData,self.GetGemStagesEmpty())
-	ElseIf(Mode == -1)
-		;; i still need to work out how you can generate a custom
-		;; list of things to birth.
+	ElseIf(Mode == 1)
+		StorageUtil.FormListCopy(None,self.KeyGemStageData,self.GetGemStagesFilled())
 	EndIf
 
 	Return
@@ -126,6 +123,7 @@ Function ActorDetermineFeatures(Actor Who)
 
 	;; 4 peni, bobs, vagine, all at once, greedy fucks.
 	;; 5 vagoo only
+	;; 6 the same as 2 but with a strap on instead of a real penor.
 
 	Int Gender = Main.Util.ActorGetGender(Who)
 
@@ -441,6 +439,8 @@ Float Function ActorGemRemoveLargest(Actor Who)
 
 	StorageUtil.FloatListSort(Who,self.KeyActorGemData)
 	Out = self.ActorGemGet(Who,(Len - 1))
+
+	;; todo return negative if unable
 
 	StorageUtil.FloatListRemoveAt(Who,self.KeyActorGemData,(Len - 1))
 
