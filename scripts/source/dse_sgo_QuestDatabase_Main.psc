@@ -31,6 +31,9 @@ String Property KeyActorTimeUpdated = "SGO4.Actor.UpdateTime" AutoReadOnly Hidde
 String Property KeyActorFertilityData = "SGO4.Actor.Fertility" AutoReadOnly Hidden
 {Actor.FloatValue}
 
+String Property KeyActorFeaturesCached = "SGO4.Actor.FeaturesCached" AutoReadOnly Hidden
+{Actor.IntValue}
+
 String Property KeyActorModListPrefix = "SGO4.Actor.Mod." AutoReadOnly Hidden
 {Generates Actor.StringLists}
 
@@ -123,7 +126,11 @@ Function ActorDetermineFeatures(Actor Who)
 
 	;; 4 peni, bobs, vagine, all at once, greedy fucks.
 	;; 5 vagoo only
-	;; 6 the same as 2 but with a strap on instead of a real penor.
+	;; 6 the same as 2 but with a strap on instead of a real penor no semen.
+
+	If(StorageUtil.GetIntValue(Who,self.KeyActorFeaturesCached) == 1)
+		Return
+	EndIf
 
 	Int Gender = Main.Util.ActorGetGender(Who)
 
@@ -147,6 +154,8 @@ Function ActorDetermineFeatures(Actor Who)
 		Who.AddToFaction(Main.FactionProduceGems)
 		Main.Util.PrintDebug(Who.GetDisplayName() + " defaulted to care bear.")
 	EndIf
+
+	StorageUtil.SetIntValue(Who,self.KeyActorFeaturesCached,1)
 
 	Return
 EndFunction
