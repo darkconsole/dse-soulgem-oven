@@ -36,13 +36,13 @@ Event OnLoad()
 
 	If(!self.InsertInto.IsInFaction(Main.FactionProduceGems))
 		Main.Util.PrintLookup("CannotProduceGems",self.InsertInto.GetDisplayName())
-		self.Done()
+		self.HandleShutdown()
 		Return
 	EndIf
 
 	If(Main.Data.ActorGemCount(self.InsertInto) >= Main.Data.ActorGemMax(self.InsertInto))
 		Main.Util.PrintLookup("CannotFitMoreGems",self.InsertInto.GetDisplayName())
-		self.Done()
+		self.HandleShutdown()
 		Return
 	EndIf
 
@@ -61,8 +61,8 @@ Event OnLoad()
 
 	;; tell the player to open us.
 
-	self.RegisterForModEvent(Main.Body.KeyEvActorDone,"OnAnimateDone")
-	self.RegisterForModEvent(Main.Body.KeyEvActorInsert,"OnGemInsert")
+	self.RegisterForModEvent(Main.Body.KeyEvActorDone,"OnDone")
+	self.RegisterForModEvent(Main.Body.KeyEvActorInsert,"OnInsertGem")
 	self.SetActorOwner(Main.Player.GetActorBase())
 	self.Activate(Main.Player)
 
@@ -179,7 +179,7 @@ Event OnActivate(ObjectReference What)
 	;; should we do anything?
 
 	If(self.GemData.Length <= 0)
-		self.Done()
+		self.HandleShutdown()
 		Return
 	EndIf
 
@@ -199,70 +199,71 @@ Event OnActivate(ObjectReference What)
 	Return
 EndEvent
 
-Function Done()
-{handle cleanup of this container.}
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-	self.RemoveAllItems(None)
-	self.UnregisterForModEvent(Main.Body.KeyEvActorDone)
-	self.UnregisterForModEvent(Main.Body.KeyEvActorInsert)
-	self.Disable()
-	self.Delete()
-	Main.Body.ActorRelease(self.InsertInto)
-	Main.Util.PrintDebug("Insertion Container Deleted")
+Function HandleTimeoutRenew()
+{handle kicking the timeout timer down the street.}
+
+	self.UnregisterForUpdate()
+	self.RegisterForSingleUpdate(30)
 
 	Return
 EndFunction
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 Function HandleSkipAnimation()
+{handle inserting gems without animating.}
 
 	Main.Util.PrintLookup("CannotAnimateOverride",self.InsertInto.GetDisplayName())
 	self.GemLoop = 0
 	While(self.GemLoop < self.GemData.Length)
 		Main.Body.OnAnimationEvent_ActorMoan(self.InsertInto,50)
-		self.OnGemInsert(self.InsertInto)
+		self.HandleInsertGem()
 		Utility.Wait(2.5)
 		Main.Body.OnAnimationEvent_ActorResetFace(self.InsertInto)
 		Utility.Wait(1.5)
 
 		self.GemLoop += 1
 	EndWhile
-	self.Done()
+	self.HandleShutdown()
 
 	Return
 EndFunction
 
 Function HandleStartAnimation()
-
-	Main.Body.ActorLockdown(self.InsertInto)
-	Main.Util.ActorArmourRemove(self.InsertInto)
+{handle inserting gems via animating.}
 
 	self.GemLoop = 0
-	self.Animate(self.InsertInto)
+	Main.Util.ActorArmourRemove(self.InsertInto)
+	Main.Body.ActorLockdown(self.InsertInto)
+	Main.Body.ActorAnimateSolo(self.InsertInto,Main.Body.AniInsert01)
 
 	Return
 EndFunction
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Function HandleInsertGem()
+{handle inserting gem data into the actor.}
 
-Function Animate(Actor Who)
-{consume gem and kick off animation.}
+	Main.Data.ActorGemAdd(self.InsertInto,self.GemData[self.GemLoop])
+	Main.Stats.IncInt(self.InsertInto,Main.Stats.KeyGemsInserted,1,TRUE)
 
-	String AniName
+	Return
+EndFunction
 
-	If((self.GemLoop % 2) == 0)
-		AniName = Main.Body.AniInsert01
-	Else
-		AniName = Main.Body.AniInsert02
-	EndIf
+Function HandleShutdown()
+{terminate gracefully.}
 
+	Main.Body.ActorRelease(self.InsertInto)
+	Main.Util.ActorArmourReplace(self.InsertInto)
+
+	self.RemoveAllItems(None)
 	self.UnregisterForUpdate()
-	self.RegisterForSingleUpdate(45)
+	self.UnregisterForModEvent(Main.Body.KeyEvActorDone)
+	self.UnregisterForModEvent(Main.Body.KeyEvActorInsert)
+	self.Disable()
+	self.Delete()
 
-	Main.Body.ActorAnimateSolo(Who,AniName)
+	Main.Util.PrintDebug("Insertion Container Deleted")
 
 	Return
 EndFunction
@@ -273,46 +274,46 @@ EndFunction
 Event OnUpdate()
 {this should only tick if it got stuck somehow.}
 
-	self.OnAnimateDone(self.InsertInto)
+	While(self.GemLoop < self.GemData.Length)
+		self.HandleInsertGem()
+		self.GemLoop += 1
+	EndWhile
 
-	Main.Util.Print("Container Insert Gem felt like it should do an emergency cleanup. This probably means the animation got interupted somehow.")
-	Main.Util.PrintDebug("Container Insert Gem performed an emergency cleanup on " + self.InsertInto.GetDisplayName())
+	self.HandleShutdown()
+
+	Main.Util.Print("Container Insert Gem performed fallback cleanup on " + self.InsertInto.GetDisplayName())
+	Main.Util.PrintDebug("Container Insert Gem performed fallback cleanup on " + self.InsertInto.GetDisplayName())
 	Return
 EndEvent
 
-Event OnGemInsert(Form What)
+Event OnInsertGem(Form What)
 {watch for insertion events to trigger adding the gem.}
 
 	If(What != self.InsertInto)
 		Return
 	EndIf
 
-	self.UnregisterForUpdate()
-	self.RegisterForSingleUpdate(45)
-
-	Main.Data.ActorGemAdd((What as Actor),self.GemData[self.GemLoop])
-	Main.Stats.IncInt((What as Actor),Main.Stats.KeyGemsInserted,1,TRUE)
-
+	self.HandleTimeoutRenew()
+	self.HandleInsertGem()
 	Return
 EndEvent
 
-Event OnAnimateDone(Form What)
+Event OnDone(Form What)
 {watch for finish events to find out if we need to insert more or to stop.}
 
 	If(What != self.InsertInto)
 		Return
 	EndIf
 
-	self.GemLoop += 1
+	;; should we go for another round?
 
+	self.GemLoop += 1
 	If(self.GemLoop < self.GemData.Length)
-		self.Animate(What as Actor)
+		self.HandleTimeoutRenew()
+		Main.Body.ActorAnimateSolo(self.InsertInto,Main.Body.AniInsert01)
 		Return
 	EndIf
 
-	Main.Util.ActorArmourReplace(What as Actor)
-	Main.Body.ActorRelease(self.InsertInto)
-	self.UnregisterForUpdate()
-	self.Done()
+	self.HandleShutdown()
 	Return
 EndEvent

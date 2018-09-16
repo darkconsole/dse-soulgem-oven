@@ -58,7 +58,17 @@ EndEvent
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+Function HandleTimeoutRenew()
+{handle kicking the timeout timer down the street.}
+
+	self.UnregisterForUpdate()
+	self.RegisterForSingleUpdate(30)
+
+	Return
+EndFunction
+
 Function HandleSkipAnimation()
+{handle birthing gems without animating.}
 
 	Main.Util.PrintLookup("CannotAnimateOverride",self.BirthFrom.GetDisplayName())
 	Main.Body.OnAnimationEvent_ActorMoan(self.BirthFrom,100)
@@ -73,12 +83,11 @@ Function HandleSkipAnimation()
 EndFunction
 
 Function HandleStartAnimation()
+{handle birthing gems via animating.}
 
 	self.RegisterForModEvent(Main.Body.KeyEvActorSpawnGem,"OnSpawnGem")
 	self.RegisterForModEvent(Main.Body.KeyEvActorDone,"OnDone")
-
-	self.UnregisterForUpdate()
-	self.RegisterForSingleUpdate(45)
+	self.HandleTimeoutRenew()
 
 	Main.Body.ActorLockdown(self.BirthFrom)
 	Main.Util.ActorArmourRemove(self.BirthFrom)
@@ -88,16 +97,17 @@ Function HandleStartAnimation()
 EndFunction
 
 Function HandleSpawnGem(Bool FromAni)
+{handle placing a soulgem in the gameworld.}
+
 	Int TypeVal = Math.Floor(Main.Data.ActorGemRemoveLargest(self.BirthFrom))
 	Form Type = Main.Data.GemStageGet(TypeVal)
 	ObjectReference Gem
 
 	If(FromAni)
+		self.HandleTimeoutRenew()
 		Gem = self.BirthFrom.PlaceAtMe(Type,1,FALSE,TRUE)
 		Gem.MoveToNode(self.BirthFrom,"AnimObjectA")
 		Gem.Enable()
-		self.UnregisterForUpdate()
-		self.RegisterForSingleUpdate(45)
 	Else
 		self.BirthFrom.AddItem(Type,1,TRUE)
 		Gem = self.BirthFrom.DropObject(Type,1)
@@ -111,6 +121,20 @@ Function HandleSpawnGem(Bool FromAni)
 	Return
 EndFunction
 
+Function HandleShutdown()
+{terminate gracefully.}
+
+	Main.Body.ActorRelease(self.BirthFrom)
+	Main.Util.ActorArmourReplace(self.BirthFrom)
+
+	self.UnregisterForUpdate()
+	self.Dispel()
+
+	Main.Util.PrintDebug("Birth Largest Complete")
+
+	Return
+EndFunction
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -119,11 +143,11 @@ Event OnUpdate()
 
 	If(!self.HasBirthed)
 		self.HandleSpawnGem(FALSE)
-		self.OnDone(self.BirthFrom)
+		self.HandleShutdown()
 	EndIf
 
-	Main.Util.Print("Birth Largest felt like it should do an emergency cleanup. This probably means the animation got interupted somehow.")
-	Main.Util.PrintDebug("Birth Largest performed an emergency cleanup on " + self.BirthFrom.GetDisplayName())
+	Main.Util.Print("Birth Largest performed fallback cleanup on " + self.BirthFrom.GetDisplayName())
+	Main.Util.PrintDebug("Birth Largest performed fallback cleanup on " + self.BirthFrom.GetDisplayName())
 	Return
 EndEvent
 
@@ -143,10 +167,6 @@ Event OnDone(Form What)
 		Return
 	EndIf
 
-	Main.Util.ActorArmourReplace(self.BirthFrom)
-	Main.Body.ActorRelease(self.BirthFrom)
-	self.UnregisterForUpdate()
-	self.Dispel()
-
+	self.HandleShutdown()
 	Return
 EndEvent

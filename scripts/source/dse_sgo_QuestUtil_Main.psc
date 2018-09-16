@@ -323,8 +323,14 @@ Bool Function ActorHasPackageOverrides(Actor Who)
 package is not one of ours. designed for detecting if other mods like
 display model are currently forcing the actor to do more important thigngs.}
 
+	Package Pkg = StorageUtil.GetFormValue(Who,"SGO4.Actor.Lockdown") as Package
+
 	If(ActorUtil.CountPackageOverride(Who) > 0)
-		Return (Who.GetCurrentPackage() != Main.PackageDoNothing)
+		If(Pkg != None)
+			Return (Who.GetCurrentPackage() != Pkg)
+		Else
+			Return (Who.GetCurrentPackage() != Main.PackageDoNothing)
+		EndIf
 	EndIf
 
 	Return FALSE

@@ -63,7 +63,17 @@ EndEvent
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+Function HandleTimeoutRenew()
+{handle kicking the timeout timer down the street.}
+
+	self.UnregisterForUpdate()
+	self.RegisterForSingleUpdate(30)
+
+	Return
+EndFunction
+
 Function HandleSkipAnimation()
+{handle milking without animating.}
 
 	Main.Util.PrintLookup("CannotAnimateOverride",self.MilkFrom.GetDisplayName())
 	Main.Body.OnAnimationEvent_ActorMoan(self.MilkFrom,50)
@@ -78,15 +88,14 @@ Function HandleSkipAnimation()
 EndFunction
 
 Function HandleStartAnimation()
+{handle milking via animating.}
 
 	self.RegisterForModEvent(Main.Body.KeyEvActorSpawnMilk,"OnSpawnMilk")
 	self.RegisterForModEvent(Main.Body.KeyEvActorDone,"OnDone")
-
-	self.UnregisterForUpdate()
-	self.RegisterForSingleUpdate(45)
-
-	Main.Body.ActorLockdown(self.MilkFrom)
+	self.HandleTimeoutRenew()
+	
 	Main.Data.ActorMilkLimit(self.MilkFrom)
+	Main.Body.ActorLockdown(self.MilkFrom)
 	Main.Util.ActorArmourRemove(self.MilkFrom)
 	Main.Body.ActorAnimateSolo(self.MilkFrom,Main.Body.AniMilking01)
 
@@ -98,12 +107,12 @@ Function HandleSpawnMilk(Bool FromAni)
 	ObjectReference Bottle
 
 	Main.Data.ActorMilkInc(self.MilkFrom,-1.0)
+
 	If(FromAni)
+		self.HandleTimeoutRenew()
 		Bottle = self.MilkFrom.PlaceAtMe(self.Milk,1,FALSE,TRUE)
 		Bottle.MoveToNode(self.MilkFrom,"AnimObjectA")
 		Bottle.Enable()
-		self.UnregisterForUpdate()
-		self.RegisterForSingleUpdate(45)
 	Else
 		self.MilkFrom.AddItem(self.Milk,1,TRUE)
 		Bottle = self.MilkFrom.DropObject(self.Milk,1)
@@ -117,6 +126,20 @@ Function HandleSpawnMilk(Bool FromAni)
 	Return
 EndFunction
 
+Function HandleShutdown()
+{terminate gracefully.}
+
+	Main.Body.ActorRelease(self.MilkFrom)
+	Main.Util.ActorArmourReplace(self.MilkFrom)
+
+	self.UnregisterForUpdate()
+	self.Dispel()
+
+	Main.Util.PrintDebug("Milk Single Complete")
+
+	Return
+EndFunction
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -125,11 +148,11 @@ Event OnUpdate()
 
 	If(!self.HasMilked)
 		self.HandleSpawnMilk(FALSE)
-		self.OnDone(self.MilkFrom)
+		self.HandleShutdown()
 	EndIf
 
-	Main.Util.Print("Milk Single felt like it should do an emergency cleanup. This probably means the animation got interupted somehow.")
-	Main.Util.PrintDebug("Milk Single performed an emergency cleanup on " + self.MilkFrom.GetDisplayName())
+	Main.Util.Print("Milk Single performed fallback cleanup on " + self.MilkFrom.GetDisplayName())
+	Main.Util.PrintDebug("Milk Single performed fallback cleanup on " + self.MilkFrom.GetDisplayName())
 	Return
 EndEvent
 
@@ -149,10 +172,6 @@ Event OnDone(Form What)
 		Return
 	EndIf
 
-	Main.Util.ActorArmourReplace(self.MilkFrom)
-	Main.Body.ActorRelease(self.MilkFrom)
-	self.UnregisterForUpdate()
-	self.Dispel()
-
+	self.HandleShutdown()
 	Return
 EndEvent

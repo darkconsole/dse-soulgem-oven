@@ -172,9 +172,9 @@ Function OnAnimationEvent_ActorReset(Actor Who)
 
 	sslBaseExpression.ClearMFG(Who)
 
-	If(Who == Main.Player)
-		Game.SetPlayerAIDriven(FALSE)
-	EndIf
+	;;If(Who == Main.Player)
+	;;	Game.SetPlayerAIDriven(FALSE)
+	;;EndIf
 
 	Debug.SendAnimationEvent(Who,self.AniDefault)
 
@@ -247,32 +247,55 @@ Function OnAnimationEvent_ActorSpawnMilk(Actor Who)
 	Return
 EndFunction
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Function ActorLockdown(Actor Who)
+Function ActorLockdown(Actor Who, Package Pkg=NONE)
+
+	If(Pkg == None)
+		Pkg = Main.PackageDoNothing
+	EndIf
+
+	If(Who == Main.Player)
+		Game.SetPlayerAIDriven(TRUE)
+		Game.DisablePlayerControls()
+	EndIf
 	
-	ActorUtil.AddPackageOverride(Who,Main.PackageDoNothing,100)
+	StorageUtil.SetFormValue(Who,"SGO4.Actor.Lockdown",Pkg)
+
+	ActorUtil.AddPackageOverride(Who,Pkg,100)
 	Who.EvaluatePackage()
+
+	self.RegisterForCustomAnimationEvents(Who)
+	Debug.SendAnimationEvent(Who,self.AniDefault)
 	Return
 EndFunction
 
 Function ActorRelease(Actor Who)
+	
+	Package Pkg = StorageUtil.GetFormValue(Who,"SGO4.Actor.Lockdown") as Package
 
-	ActorUtil.RemovePackageOverride(Who,Main.PackageDoNothing)
+	If(Pkg == None)
+		Pkg = Main.PackageDoNothing
+	EndIf
+
+	ActorUtil.RemovePackageOverride(Who,Pkg)
 	Who.EvaluatePackage()
+
+	self.UnregisterForCustomAnimationEvents(Who)
+	Debug.SendAnimationEvent(Who,self.AniDefault)
+
+	If(Who == Main.Player)
+		Game.SetPlayerAIDriven(FALSE)
+		Game.EnablePlayerControls()
+	EndIf
+
 	Return
 EndFunction
 
 Function ActorAnimateSolo(Actor Who, String AniName)
 {force an actor to perform some sort of blocking/busy animation.}
 
-	If(Who == Main.Player)
-		Game.SetPlayerAIDriven(TRUE)
-	EndIf
-	
-	self.RegisterForCustomAnimationEvents(Who)
 	Debug.SendAnimationEvent(Who,AniName)
 
 	Return
