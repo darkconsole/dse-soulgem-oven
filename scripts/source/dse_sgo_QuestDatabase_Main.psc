@@ -441,6 +441,7 @@ Float Function ActorGemRemoveLargest(Actor Who)
 	Out = self.ActorGemGet(Who,(Len - 1))
 
 	;; todo return negative if unable
+	;; original idea may be unneded due to ActorGemReady doing a >1 check.
 
 	StorageUtil.FloatListRemoveAt(Who,self.KeyActorGemData,(Len - 1))
 
