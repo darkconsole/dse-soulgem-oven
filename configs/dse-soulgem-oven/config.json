@@ -1,5 +1,5 @@
 {
-	"UpdateLoopFreq": 10.0,
+	"UpdateLoopFreq": 60.0,
 	"UpdateLoopDelay": 0.25,
 	"UpdateGameHours": 1.0,
 	"BirthGemsFilled": 1,
@@ -14,6 +14,7 @@
 	"LevelAlchFactor": 1.0,
 	"LevelEnchFactor": 1.0,
 	"LevelValueBase": 100.0,
+	"FertilityChance": 50.0,
 	"FertilityDays": 28,
 	"FertilityWindow": 2.0,
 	"FertilitySync": true,

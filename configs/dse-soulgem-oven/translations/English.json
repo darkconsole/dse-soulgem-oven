@@ -5,6 +5,14 @@
 	"CannotProduceGems": "%1 cannot incubate gems.",
 	"NotReadyToBirth": "%1 is not ready to give birth.",
 	"NotReadyToMilk": "%1 is not ready to be milked.",
+	"FlavourActorGemGain": [
+		"%1 is now incubating another gem.",
+		"Another gem has begun to grow within %1."
+	],
+	"FlavourPlayerGemGain": [
+		"You are now incubating another gem.",
+		"Another gem has begun to grow within you."
+	],
 	"FlavourPlayerGemGrowth": [
 		"The gems you are carrying feel a little heavier.",
 		"A gem you carry feels larger than it did before.",
