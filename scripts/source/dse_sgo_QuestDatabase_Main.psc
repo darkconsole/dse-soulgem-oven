@@ -666,6 +666,15 @@ Float Function ActorSemenAmount(Actor Who, Bool Limit=TRUE)
 	Return SemenVal
 EndFunction
 
+Function ActorSemenClear(Actor Who)
+{add/sub how much semen this actor has.}
+
+	StorageUtil.SetFloatValue(Who,self.KeyActorSemenData,0.0)
+	Main.Body.ActorUpdate(Who)
+
+	Return
+EndFunction
+
 Function ActorSemenSet(Actor Who, Float Value)
 {add/sub how much semen this actor has.}
 

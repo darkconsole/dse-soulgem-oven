@@ -135,6 +135,27 @@ Event OnOptionSelect(Int Item)
 
 	;;;;;;;;
 
+	ElseIf(Item == ItemDebugPlayerSemenEmpty)
+		Val = TRUE
+		Main.Data.ActorSemenClear(Main.Player)
+		Main.Util.PrintDebug(Main.Player.GetDisplayName() + " has been emptied of their semen.")
+
+	;;;;;;;;
+
+	ElseIf(Item == ItemDebugPlayerSemenHalf)
+		Val = TRUE
+		Main.Data.ActorSemenSet(Main.Player,(Main.Data.ActorSemenMax(Main.Player)/2))
+		Main.Util.PrintDebug(Main.Player.GetDisplayName() + " has been filled half way with semen.")
+
+	;;;;;;;;
+
+	ElseIf(Item == ItemDebugPlayerSemenMax)
+		Val = TRUE
+		Main.Data.ActorSemenSet(Main.Player,Main.Data.ActorSemenMax(Main.Player))
+		Main.Util.PrintDebug(Main.Player.GetDisplayName() + " has been filled full with semen.")
+
+	;;;;;;;;
+
 	EndIf
 
 	self.SetToggleOptionValue(Item,Val)
@@ -203,8 +224,22 @@ Int ItemDebugPlayerGemsMax
 Int ItemDebugPlayerMilkEmpty
 Int ItemDebugPlayerMilkHalf
 Int ItemDebugPlayerMilkMax
+Int ItemDebugPlayerSemenEmpty
+Int ItemDebugPlayerSemenHalf
+Int ItemDebugPlayerSemenMax
 
 Function ShowPageDebug()
+
+	Actor Who = Game.GetCurrentCrosshairRef() as Actor
+	Int GemCount
+	Int GemIter
+
+	If(Who == None)
+		Who = Main.Player
+	EndIf
+
+	GemCount = Main.Data.ActorGemCount(Who)
+
 	self.SetTitleText("Debugging")
 	self.SetCursorFillMode(TOP_TO_BOTTOM)
 	self.SetCursorPosition(0)
@@ -216,6 +251,22 @@ Function ShowPageDebug()
 	ItemDebugPlayerMilkEmpty = AddToggleOption("Empty Player Milk",FALSE)
 	ItemDebugPlayerMilkHalf = AddToggleOption("Fill Player Milk Half",FALSE)
 	ItemDebugPlayerMilkMax = AddToggleOption("Fill Player Milk Full",FALSE)
+	ItemDebugPlayerSemenEmpty = AddToggleOption("Empty Player Semen",FALSE)
+	ItemDebugPlayerSemenHalf = AddToggleOption("Fill Player Semen Half",FALSE)
+	ItemDebugPlayerSemenMax = AddToggleOption("Fill Player Semen Full",FALSE)
+
+	self.SetCursorPosition(1)
+	AddHeaderOption(Who.GetDisplayName() + " Dataset")
+
+	GemIter = 0
+	While(GemIter < GemCount)
+		AddTextOption(("Gem " + (GemIter+1)), (Main.Data.ActorGemGet(Who,GemIter) as String))
+		GemIter += 1
+	EndWhile
+
+	AddTextOption("Milk",(Main.Data.ActorMilkAmount(Who) as String))
+	AddTextOption("Semen",(Main.Data.ActorMilkAmount(Who) as String))
+
 
 	Return
 EndFunction
