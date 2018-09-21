@@ -75,6 +75,7 @@ EndFunction
 Function HandleSkipAnimation()
 {handle milking without animating.}
 
+	Main.Data.ActorMilkLimit(self.MilkFrom)
 	Main.Util.PrintLookup("CannotAnimateOverride",self.MilkFrom.GetDisplayName())
 	Main.Body.OnAnimationEvent_ActorMoan(self.MilkFrom,50)
 	self.HandleSpawnMilk(FALSE)
