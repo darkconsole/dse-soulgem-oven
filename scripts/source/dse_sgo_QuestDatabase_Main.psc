@@ -481,7 +481,8 @@ actor is physically not capable of producing this item.}
 	Float PerDay = Main.Config.GetFloat("GemsPerDay")
 	Float Inc = ((TimeSince * PerDay) / 24.0)
 	Int GemCount = self.ActorGemCount(Who)
-	Int GemCurMax = GemCount * self.GemStageCount()
+	Int GemStages = self.GemStageCount()
+	Int GemCurMax = GemCount * GemStages
 	Int GemCurTotal = 0
 	Int GemIter = 0
 	Int GemOld
@@ -506,7 +507,8 @@ actor is physically not capable of producing this item.}
 		GemNew = Math.Floor(self.ActorGemInc(Who,GemIter,Inc))
 		GemCurTotal += GemNew
 
-		If(GemOld != GemNew)
+		If(GemOld != GemNew && GemNew <= GemStages)
+			Main.Util.PrintDebug("Gem Inc " + GemOld + " => " + GemNew)
 			Main.Stats.IncInt(Who,Main.Stats.KeyGemsIncubated,(GemNew-GemOld),TRUE)
 			Growth = TRUE
 		EndIf
