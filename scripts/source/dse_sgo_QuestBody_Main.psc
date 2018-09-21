@@ -283,7 +283,10 @@ Function ActorRelease(Actor Who)
 	Who.EvaluatePackage()
 
 	self.UnregisterForCustomAnimationEvents(Who)
-	Debug.SendAnimationEvent(Who,self.AniDefault)
+
+	If(!Main.Util.ActorHasPackageOverrides(Who))
+		Debug.SendAnimationEvent(Who,self.AniDefault)
+	EndIf
 
 	If(Who == Main.Player)
 		Game.SetPlayerAIDriven(FALSE)
