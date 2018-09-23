@@ -267,7 +267,7 @@ Function ActorLockdown(Actor Who, Package Pkg=NONE)
 	Who.EvaluatePackage()
 
 	self.RegisterForCustomAnimationEvents(Who)
-	Debug.SendAnimationEvent(Who,self.AniDefault)
+	;;Debug.SendAnimationEvent(Who,self.AniDefault)
 	Return
 EndFunction
 

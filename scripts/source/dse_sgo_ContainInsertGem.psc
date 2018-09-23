@@ -236,6 +236,7 @@ Function HandleStartAnimation()
 	self.GemLoop = 0
 	Main.Util.ActorArmourRemove(self.InsertInto)
 	Main.Body.ActorLockdown(self.InsertInto)
+	Utility.Wait(0.25)
 	Main.Body.ActorAnimateSolo(self.InsertInto,Main.Body.AniInsert01)
 
 	Return

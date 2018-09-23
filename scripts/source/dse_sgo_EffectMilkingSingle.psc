@@ -96,8 +96,9 @@ Function HandleStartAnimation()
 	self.HandleTimeoutRenew()
 	
 	Main.Data.ActorMilkLimit(self.MilkFrom)
-	Main.Body.ActorLockdown(self.MilkFrom)
 	Main.Util.ActorArmourRemove(self.MilkFrom)
+	Main.Body.ActorLockdown(self.MilkFrom)
+	Utility.Wait(0.25)
 	Main.Body.ActorAnimateSolo(self.MilkFrom,Main.Body.AniMilking01)
 
 	Return
