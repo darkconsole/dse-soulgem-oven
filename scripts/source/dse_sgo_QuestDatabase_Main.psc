@@ -410,8 +410,10 @@ event with mods its a fraction of a gem.}
 	Return Main.Util.RoundToInt(Val)
 EndFunction
 
-Float Function ActorGemTotalPercent(Actor Who)
-{get the current state of fullness of the gems.}
+Float Function ActorGemTotalPercent(Actor Who, Bool Relative=FALSE)
+{get the current state of fullness of the gems. if Relative is true then
+the percent will be calculated against how many gems they currently have
+instead of the max they can have.}
 
 	;; if we get values larger than expected gracefully roll them down to
 	;; their max. this could happen in the event if like a buff had expired
@@ -423,6 +425,10 @@ Float Function ActorGemTotalPercent(Actor Who)
 	Int GemIter = 0
 	Float Value = 0.0
 	Float Current = 0.0
+
+	If(Relative == TRUE)
+		ValueMax = GemCount * GemStages
+	EndIf
 
 	While(GemIter < GemCount)
 		Current = self.ActorGemGet(Who,GemIter)
