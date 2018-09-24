@@ -112,7 +112,7 @@ String Function StringInsert(String Format, String InputList="")
 
 		If(Pos > -1)
 			If(Pos > 0)
-				Format = StringUtil.Substring(Format,0,Pos) + Inputs[Iter] + StringUtil.Substring(Format,(Pos+3))
+				Format = StringUtil.Substring(Format,0,Pos) + Inputs[Iter] + StringUtil.Substring(Format,(Pos+2))
 			Else
 				Format = Inputs[Iter] + StringUtil.Substring(Format,(Pos+2))
 			EndIf			
