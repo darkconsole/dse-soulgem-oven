@@ -24,6 +24,7 @@ Event OnUpdate()
 	Int ActorIter
 	Bool ActorCull
 	Actor Who
+	Int Ev
 
 	;;;;;;;;
 	;;;;;;;;
@@ -59,6 +60,9 @@ Event OnUpdate()
 
 	;;;;;;;;
 	;;;;;;;;
+
+	Ev = ModEvent.Create("SGO4.UpdateLoop.Done")
+	ModEvent.Send(Ev)
 
 	If(self.IsRunning())
 		Main.Util.PrintDebug("Update Loop Renewed")
