@@ -14,6 +14,8 @@ Int Property CurrentCount Auto Hidden
 Actor Property InsertInto Auto Hidden
 Float[] Property GemData Auto Hidden
 Int Property GemLoop Auto Hidden
+Int Property GemStageLen Auto Hidden
+Int Property GemActorMax Auto Hidden
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -40,7 +42,9 @@ Event OnLoad()
 		Return
 	EndIf
 
-	If(Main.Data.ActorGemCount(self.InsertInto) >= Main.Data.ActorGemMax(self.InsertInto))
+	self.GemActorMax = Main.Data.ActorGemMax(self.InsertInto)
+
+	If(Main.Data.ActorGemCount(self.InsertInto) >= self.GemActorMax)
 		Main.Util.PrintLookup("CannotFitMoreGems",self.InsertInto.GetDisplayName())
 		self.HandleShutdown()
 		Return
@@ -48,15 +52,16 @@ Event OnLoad()
 
 	;; build a list of acceptable items.
 	;; this may need to be tweaked if the custom item system ever
-	;; comes to fruitition.
+	;; comes to fruitition. see also the TypeVal comment in OnActivate.
 
 	Main.ListGemFilter.Revert()
 	Main.ListGemFilter.AddForms(Main.Data.GetGemStagesEmpty())
+	self.GemStageLen = Main.ListGemFilter.GetSize()
 	Main.ListGemFilter.AddForms(Main.Data.GetGemStagesFilled())
 
 	;; determine how many gems we can add.
 
-	self.MaxCount = (Main.Data.ActorGemMax(self.InsertInto) - Main.Data.ActorGemCount(self.InsertInto))
+	self.MaxCount = (self.GemActorMax - Main.Data.ActorGemCount(self.InsertInto))
 	self.CurrentCount = 0
 
 	;; tell the player to open us.
@@ -161,7 +166,19 @@ Event OnActivate(ObjectReference What)
 	IterType = 0
 	While(IterType < CountType)
 		Type = self.GetNthForm(IterType)
-		TypeVal = (Main.ListGemFilter.Find(Type) % Main.Data.GemStageCount()) + 1
+
+		;;;;;;;;
+
+		;; if we want to be able to insert the items on the custom list then this needs
+		;; to be re-written as its math that depends on the gem lists being equal length.
+
+		;; if we yield to staying as "insert gems, get whatever" back then we can leave this
+		;; as it is. which tbh is the direction i am leaning anyway.
+
+		TypeVal = (Main.ListGemFilter.Find(Type) % self.GemStageLen) + 1
+
+		;;;;;;;;
+
 		CountItem = self.GetItemCount(Type)
 		IterItem = 0
 

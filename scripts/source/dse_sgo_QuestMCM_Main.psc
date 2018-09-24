@@ -99,7 +99,7 @@ Event OnOptionSelect(Int Item)
 	ElseIf(Item == ItemDebugPlayerGemsHalf)
 		Val = TRUE
 		Main.Data.ActorGemClear(Main.Player)
-		While(Main.Data.ActorGemAdd(Main.Player,(Main.Data.GemStageCount()/2)))
+		While(Main.Data.ActorGemAdd(Main.Player,(Main.Data.GemStageCount(Main.Player)/2)))
 		EndWhile
 		Main.Util.PrintDebug(Main.Player.GetDisplayName() + " has been filled with half level gems.")
 
@@ -108,7 +108,7 @@ Event OnOptionSelect(Int Item)
 	ElseIf(Item == ItemDebugPlayerGemsMax)
 		Val = TRUE
 		Main.Data.ActorGemClear(Main.Player)
-		While(Main.Data.ActorGemAdd(Main.Player,Main.Data.GemStageCount()))
+		While(Main.Data.ActorGemAdd(Main.Player,Main.Data.GemStageCount(Main.Player)))
 		EndWhile
 		Main.Util.PrintDebug(Main.Player.GetDisplayName() + " has been filled with max level gems.")
 

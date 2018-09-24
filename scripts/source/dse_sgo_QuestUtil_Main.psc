@@ -271,7 +271,7 @@ mostly.}
 	;; normal enchanting works as 1xp per item enchanted and it seems enchanting levels fast
 	;; so we will use small numbers here.
 
-	Base = Main.Data.GemStageCount()
+	Base = Main.Data.GemStageCount(Who)
 	Level = Who.GetLevel()
 
 	If(ItemValue == -1.0)

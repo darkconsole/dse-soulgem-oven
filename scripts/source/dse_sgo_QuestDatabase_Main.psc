@@ -47,6 +47,19 @@ String Property KeyActorModValuePrefix = "SGO4.Actor.ModValue." AutoReadOnly Hid
 ;; lists to each actor so they can birth different things. in the case of
 ;; get and count if no data exists fallback to the global data.
 
+Form[] Function GemStageGetList(Actor Who)
+{get the list of of things this actor is producing.}
+
+	Form[] Dataset = StorageUtil.FormListToArray(Who,self.KeyGemStageData)
+
+	If(Dataset.Length == 0)
+		;; fetch the default global list if actor list was empty.
+		Dataset = StorageUtil.FormListToArray(None,self.KeyGemStageData)
+	EndIf
+
+	Return Dataset
+EndFunction
+
 Function GemStagePopulate()
 {populate the gem dataset based on the the configuration.}
 
@@ -91,10 +104,20 @@ Form[] Function GetGemStagesEmpty()
 	Return Gems
 EndFunction
 
-Int Function GemStageCount()
+Int Function GemStageCount(Actor Who=None)
 {count how many gems are in the dataset.}
 
-	Return StorageUtil.FormListCount(None,KeyGemStageData)
+	Int Count
+
+	If(Who != None)
+		Count = StorageUtil.FormListCount(Who,KeyGemStageData)
+	EndIf
+
+	If(Count == 0)
+		Count = StorageUtil.FormListCount(None,KeyGemStageData)
+	EndIf
+
+	Return Count
 EndFunction
 
 Form Function GemStageGet(Int Val)
@@ -373,7 +396,7 @@ EndFunction
 Float Function ActorGemGet(Actor Who, Int Index, Bool Limit=TRUE)
 {get the value of a specific gem in an actor.}
 
-	Int Max = self.GemStageCount()
+	Int Max = self.GemStageCount(Who)
 	Float Gem = StorageUtil.FloatListGet(Who,KeyActorGemData,Index)
 
 	If(Limit && Gem > Max)
@@ -419,7 +442,7 @@ instead of the max they can have.}
 	;; their max. this could happen in the event if like a buff had expired
 	;; right before updating.
 
-	Int GemStages = self.GemStageCount()
+	Int GemStages = self.GemStageCount(Who)
 	Int GemCount = self.ActorGemCount(Who)
 	Int ValueMax = (self.ActorGemMax(Who) * GemStages)
 	Int GemIter = 0
@@ -487,7 +510,7 @@ actor is physically not capable of producing this item.}
 	Float PerDay = Main.Config.GetFloat("GemsPerDay")
 	Float Inc = ((TimeSince * PerDay) / 24.0)
 	Int GemCount = self.ActorGemCount(Who)
-	Int GemStages = self.GemStageCount()
+	Int GemStages = self.GemStageCount(Who)
 	Int GemCurMax = GemCount * GemStages
 	Int GemCurTotal = 0
 	Int GemIter = 0
