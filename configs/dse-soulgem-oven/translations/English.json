@@ -5,6 +5,7 @@
 	"CannotProduceGems": "%1 cannot incubate gems.",
 	"NotReadyToBirth": "%1 is not ready to give birth.",
 	"NotReadyToMilk": "%1 is not ready to be milked.",
+	"ActorDataScanGemText": "%1 has %2 gems (max %3)",
 	"FlavourActorGemGain": [
 		"%1 is now incubating another gem.",
 		"Another gem has begun to grow within %1."

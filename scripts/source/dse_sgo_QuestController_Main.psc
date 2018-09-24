@@ -43,6 +43,10 @@ dse_sgo_QuestUtil_Main Property Util Auto
 dse_sgo_QuestBody_Main Property Body Auto
 dse_sgo_QuestStats_Main Property Stats Auto
 
+;; ui api
+
+dse_sgo_QuestGemBar_Main Property GemBar Auto
+
 ;; third party libraries.
 
 SexLabFramework Property SexLab Auto Hidden
