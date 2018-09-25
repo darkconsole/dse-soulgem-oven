@@ -183,14 +183,32 @@ Function ActorDetermineFeatures(Actor Who)
 	Return
 EndFunction
 
-Function ActorTrackingAdd(Actor Who)
+Bool Function ActorTrackingAdd(Actor Who)
 {it does not matter why we want to track the actor. for any reason they get
 added to this list.}
 
+	Int Ev = ModEvent.Create("SGO4.Actor.Inspect")
+
+	;; when we attempt to track an actor, regardless of if we already have
+	;; or not, this is also a good time to notify other mods that they
+	;; may want to inspect the actor if they intend to mod any of their
+	;; datasets.
+
+	ModEvent.PushForm(Ev,Who)
+
+	self.ActorDetermineFeatures(Who)
+
+	;;;;;;;;
+
 	If(self.IsActorTracked(Who))
-		;; if we are already tracking this actor give up now.
-		Return
+		;; if we are already tracking this actor give up now. send the
+		;; inspection event in case a fourth party mod was installed
+		;; after the game was running.
+		ModEvent.Send(Ev)
+		Return FALSE
 	EndIf
+
+	;;;;;;;;
 
 	StorageUtil.FormListAdd(None,KeyActorTracking,Who,FALSE)
 
@@ -199,7 +217,9 @@ added to this list.}
 	Who.RegisterForUpdate(600)
 
 	Main.Util.PrintDebug(Who.GetDisplayName() + " is now being tracked.")
-	Return
+	ModEvent.Send(Ev)
+
+	Return TRUE
 EndFunction
 
 Function ActorTrackingRemove(Actor Who)
