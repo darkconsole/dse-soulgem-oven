@@ -61,6 +61,8 @@ FormList Property ListGemFilter Auto
 Faction Property FactionProduceGems Auto
 Faction Property FactionProduceMilk Auto
 Faction Property FactionProduceSemen Auto
+Spell Property SpellActorDataScan Auto
+Spell Property SpellActorDataScanToggle Auto
 Spell Property SpellBirthLargest Auto
 Spell Property SpellInsertGems Auto
 Spell Property SpellMilkingAction Auto
