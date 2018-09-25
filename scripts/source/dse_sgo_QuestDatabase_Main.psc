@@ -183,6 +183,13 @@ Function ActorDetermineFeatures(Actor Who)
 	Return
 EndFunction
 
+Function ActorReleaseFeatures(Actor Who)
+{delete the cache to allow an actor to be redetermined.}
+
+	StorageUtil.UnsetIntValue(Who,self.KeyActorFeaturesCached)
+	Return
+EndFunction
+
 Bool Function ActorTrackingAdd(Actor Who)
 {it does not matter why we want to track the actor. for any reason they get
 added to this list.}
