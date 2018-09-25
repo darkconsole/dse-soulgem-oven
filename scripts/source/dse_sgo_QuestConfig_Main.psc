@@ -14,6 +14,7 @@ Bool Property DebugMode = TRUE Auto Hidden
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 String Property FileConfig = "../../../configs/dse-soulgem-oven/Config.json" AutoReadOnly Hidden
+String Property FileCustom = "../../../configs/dse-soulgem-oven/Custom.json" AutoReadOnly Hidden
 
 ;; Float UpdateLoopFreq (in seconds)
 ;; how often the update loop runs.
@@ -106,11 +107,21 @@ Function ReloadConfigFile()
 	JsonUtil.Unload(self.FileConfig,FALSE,FALSE)
 	JsonUtil.Load(self.FileConfig)
 
+	JsonUtil.Unload(self.FileCustom,FALSE,FALSE)
+	JsonUtil.Load(self.FileCustom)
+
 	Return
 EndFunction
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 Bool Function GetBool(String Path)
 {fetch an integer from the json config.}
+
+	If(JsonUtil.CanResolvePath(self.FileCustom,Path))
+		Return JsonUtil.GetPathBoolValue(self.FileCustom,Path)
+	EndIf
 
 	Return JsonUtil.GetPathBoolValue(self.FileConfig,Path)
 EndFunction
@@ -118,17 +129,29 @@ EndFunction
 Int Function GetInt(String Path)
 {fetch an integer from the json config.}
 
+	If(JsonUtil.CanResolvePath(self.FileCustom,Path))
+		Return JsonUtil.GetPathIntValue(self.FileCustom,Path)
+	EndIf
+
 	Return JsonUtil.GetPathIntValue(self.FileConfig,Path)
 EndFunction
 
 Float Function GetFloat(String Path)
 {fetch an float from the json config.}
 
+	If(JsonUtil.CanResolvePath(self.FileCustom,Path))
+		Return JsonUtil.GetPathFloatValue(self.FileCustom,Path)
+	EndIf
+
 	Return JsonUtil.GetPathFloatValue(self.FileConfig,Path)
 EndFunction
 
 String Function GetString(String Path)
 {fetch a string from the json config.}
+
+	If(JsonUtil.CanResolvePath(self.FileCustom,Path))
+		Return JsonUtil.GetPathStringValue(self.FileCustom,Path)
+	EndIf
 
 	Return JsonUtil.GetPathStringValue(self.FileConfig,Path)
 EndFunction
@@ -137,5 +160,45 @@ Int Function GetCount(String Path)
 {fetch how many items are in the specified thing. you should probably only
 use this on arrays.}
 
+	If(JsonUtil.CanResolvepath(self.FileCustom,Path))
+		Return JsonUtil.PathCount(self.FileCustom,Path)
+	EndIf
+
 	Return JsonUtil.PathCount(self.FileConfig,Path)
 EndFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Function SetBool(String Path, Bool Value)
+
+	JsonUtil.SetPathIntValue(self.FileCustom,Path,(Value as Int))
+	;;JsonUtil.Save(self.FileCustom)
+	
+	Return
+EndFunction
+
+Function SetInt(String Path, Int Value)
+
+	JsonUtil.SetPathIntValue(self.FileCustom,Path,Value)
+	;;JsonUtil.Save(self.FileCustom)
+	
+	Return
+EndFunction
+
+Function SetFloat(String Path, Float Value)
+
+	JsonUtil.SetPathFloatValue(self.FileCustom,Path,Value)
+	;;JsonUtil.Save(self.FileCustom)
+	
+	Return
+EndFunction
+
+Function SetString(String Path, String Value)
+
+	JsonUtil.SetPathStringValue(self.FileCustom,Path,Value)
+	;;JsonUtil.Save(self.FileCustom)
+	
+	Return
+EndFunction
+
