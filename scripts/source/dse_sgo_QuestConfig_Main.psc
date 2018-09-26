@@ -119,7 +119,7 @@ EndFunction
 Bool Function GetBool(String Path)
 {fetch an integer from the json config.}
 
-	If(JsonUtil.CanResolvePath(self.FileCustom,Path))
+	If(JsonUtil.IsPathNumber(self.FileCustom,Path) || JsonUtil.IsPathBool(self.FileCustom,Path))
 		Return JsonUtil.GetPathBoolValue(self.FileCustom,Path)
 	EndIf
 
@@ -129,7 +129,7 @@ EndFunction
 Int Function GetInt(String Path)
 {fetch an integer from the json config.}
 
-	If(JsonUtil.CanResolvePath(self.FileCustom,Path))
+	If(JsonUtil.IsPathNumber(self.FileCustom,Path))
 		Return JsonUtil.GetPathIntValue(self.FileCustom,Path)
 	EndIf
 
@@ -139,7 +139,7 @@ EndFunction
 Float Function GetFloat(String Path)
 {fetch an float from the json config.}
 
-	If(JsonUtil.CanResolvePath(self.FileCustom,Path))
+	If(JsonUtil.IsPathNumber(self.FileCustom,Path))
 		Return JsonUtil.GetPathFloatValue(self.FileCustom,Path)
 	EndIf
 
@@ -149,7 +149,7 @@ EndFunction
 String Function GetString(String Path)
 {fetch a string from the json config.}
 
-	If(JsonUtil.CanResolvePath(self.FileCustom,Path))
+	If(JsonUtil.IsPathString(self.FileCustom,Path))
 		Return JsonUtil.GetPathStringValue(self.FileCustom,Path)
 	EndIf
 

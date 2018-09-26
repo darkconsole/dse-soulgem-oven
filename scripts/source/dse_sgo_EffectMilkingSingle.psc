@@ -9,7 +9,7 @@ dse_sgo_QuestController_Main Property Main Auto
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Actor Property MilkFrom Auto Hidden
-Int Property MilkRace Auto Hidden
+Int[] Property MilkRace Auto Hidden
 Form Property Milk Auto Hidden
 Bool Property HasMilked=FALSE Auto Hidden
 
@@ -32,8 +32,8 @@ Event OnEffectStart(Actor Who, Actor From)
 	EndIf
 
 	self.MilkFrom = Who
-	self.MilkRace = Main.Data.RaceFind(Who.GetRace())
-	self.Milk = Main.Data.RaceGetMilk(self.MilkRace)
+	self.MilkRace = Main.Data.RaceFind2(Who.GetRace())
+	self.Milk = Main.Data.RaceGetMilk2(self.MilkRace[0],self.MilkRace[1])
 
 	;; determine if the actor is able to milk.
 
