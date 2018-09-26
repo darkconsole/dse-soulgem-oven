@@ -60,6 +60,40 @@ Int Function RoundToInt(Float Val)
 	Return Math.Floor(Val + 0.5)
 EndFunction
 
+Float Function RoundTo(Float Val, Int Dec=0)
+
+	Float Bump = Math.Pow(10,Dec) As Float
+
+	Return (Math.Floor((Val * Bump) + 0.5) As Float) / Bump
+EndFunction
+
+Float Function FloorTo(Float Val, Int Dec=0)
+
+	Float Bump = Math.Pow(10,Dec) As Float
+
+	Return (Math.Floor(Val * Bump) As Float) / Bump
+EndFunction
+
+String Function FloatToString(Float Val, Int Dec=0)
+
+	Int Last = Math.Floor(Val)
+	String Output = Last As String
+
+	If(Dec > 0 && Val != Last)
+		Output += "."
+
+		While(Dec > 0)
+			Val = (Val - Last) * 10
+			Last = Math.Floor(Val)
+			Output += Last As String
+
+			Dec -= 1
+		EndWhile
+	EndIf
+
+	Return Output
+EndFunction
+
 Float Function GetLeveledValue(Float Level, Float Value, Float Factor = 1.0)
 {modify a value based on a level 100 system. this means at level 100 the input
 value will be doubled.}

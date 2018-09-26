@@ -46,6 +46,7 @@ dse_sgo_QuestStats_Main Property Stats Auto
 ;; ui api
 
 dse_sgo_QuestGemBar_Main Property GemBar Auto
+dse_sgo_QuestMilkBar_Main Property MilkBar Auto
 
 ;; third party libraries.
 

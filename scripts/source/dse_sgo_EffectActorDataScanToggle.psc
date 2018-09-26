@@ -20,6 +20,7 @@ Event OnEffectStart(Actor Who, Actor From)
 		EndIf
 	Else
 		Main.Player.RemoveSpell(Main.SpellActorDataScan)
+		Utility.Wait(0.5)
 		Main.Player.AddSpell(Main.SpellActorDataScan,FALSE)
 	EndIf
 

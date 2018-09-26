@@ -123,11 +123,11 @@ Int Function GemStageCount(Actor Who=None)
 	Int Count
 
 	If(Who != None)
-		Count = StorageUtil.FormListCount(Who,KeyGemStageData)
+		Count = StorageUtil.FormListCount(Who,self.KeyGemStageData)
 	EndIf
 
 	If(Count == 0)
-		Count = StorageUtil.FormListCount(None,KeyGemStageData)
+		Count = StorageUtil.FormListCount(None,self.KeyGemStageData)
 	EndIf
 
 	Return Count
@@ -491,6 +491,10 @@ instead of the max they can have.}
 
 	If(Relative == TRUE)
 		ValueMax = GemCount * GemStages
+
+		If(ValueMax == 0)
+			Return 0.0
+		EndIf
 	EndIf
 
 	While(GemIter < GemCount)
