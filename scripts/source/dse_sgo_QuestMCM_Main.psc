@@ -16,7 +16,7 @@ Event OnGameReload()
 {things to do when the game is loaded from disk.}
 
 	parent.OnGameReload()
-
+	Main.Data.RaceLoadFiles()
 	;; do a dependency check every launch.
 	;;Main.ResetMod_Prepare()
 

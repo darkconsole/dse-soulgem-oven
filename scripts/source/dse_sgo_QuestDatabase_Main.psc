@@ -49,7 +49,7 @@ String Property KeyActorModValuePrefix = "SGO4.Actor.ModValue." AutoReadOnly Hid
 
 Event OnPlayerLoadGame()
 
-	self.RaceLoadFiles()
+	;;self.RaceLoadFiles()
 	Return
 EndEvent
 
@@ -956,10 +956,22 @@ EndFunction
 Function RaceLoadFiles()
 {index all the race files available to scan.}
 
+	Int Iter
+
 	self.RaceFiles = JsonUtil.JsonInFolder(self.RaceDirectory)
-	self.RaceCount = self.RaceCount()
 	PapyrusUtil.SortStringArray(self.RaceFiles)
 
+	;; flesh out the full file path.
+
+	Iter = 0
+	While(Iter < self.RaceFiles.Length)
+		self.RaceFiles[Iter] = self.RaceDirectory + "/" + self.RaceFiles[Iter]
+		Iter += 1
+	EndWhile
+
+	;; cache the race count. runs through all the files.
+
+	self.RaceCount = self.RaceCount()
 	Main.Util.PrintDebug("Found " + self.RaceFiles.Length + " race files with " + self.RaceCount + " total races.")
 
 	Return
@@ -973,6 +985,7 @@ automatically done and cached on game load.}
 	Int Iter = 0
 
 	While(Iter < self.RaceFiles.Length)
+		Main.Util.PrintDebug(self.RaceFiles[Iter])
 		Total += JsonUtil.PathCount(self.RaceFiles[Iter],"Races")
 		Iter += 1
 	EndWhile
@@ -980,29 +993,7 @@ automatically done and cached on game load.}
 	Return Total
 EndFunction
 
-Int Function RaceFind(Race What)
-{find the json index of the race. return 0, the default race, if not found.}
-
-	Int Count = JsonUtil.PathCount(self.FileRaces,"Races")
-	Int Index = 1
-	String Path
-	Race Current
-
-	While(Index < Count)
-		Path = "Races[" + Index + "].Race"
-		Current = JsonUtil.GetPathFormValue(self.FileRaces,Path) as Race
-
-		If(Current == What)
-			Return Index
-		EndIf
-
-		Index += 1
-	EndWhile
-
-	Return 0
-EndFunction
-
-Int[] Function RaceFind2(Race What)
+Int[] Function RaceFind(Race What)
 {returns an array len of 2, first number is which race file we found the race
 in and the second number is which array item was the race.}
 
@@ -1037,15 +1028,7 @@ in and the second number is which array item was the race.}
 	Return Offset
 EndFunction
 
-Form Function RaceGetMilk(Int Index)
-{get the milk for the specified race.}
-
-	String Path = "Races[" + Index + "].Milk"
-
-	Return JsonUtil.GetPathFormValue(self.FileRaces,Path)
-EndFunction
-
-Form Function RaceGetMilk2(Int FileIndex, Int RaceIndex)
+Form Function RaceGetMilk(Int FileIndex, Int RaceIndex)
 {get the milk for the specified race.}
 
 	String Path = "Races[" + RaceIndex + "].Milk"

@@ -32,8 +32,8 @@ Event OnEffectStart(Actor Who, Actor From)
 	EndIf
 
 	self.MilkFrom = Who
-	self.MilkRace = Main.Data.RaceFind2(Who.GetRace())
-	self.Milk = Main.Data.RaceGetMilk2(self.MilkRace[0],self.MilkRace[1])
+	self.MilkRace = Main.Data.RaceFind(Who.GetRace())
+	self.Milk = Main.Data.RaceGetMilk(self.MilkRace[0],self.MilkRace[1])
 
 	;; determine if the actor is able to milk.
 
@@ -42,7 +42,6 @@ Event OnEffectStart(Actor Who, Actor From)
 		self.Dispel()
 		Return
 	EndIf
-
 
 	;; check if any other mods like display model have this actor forced
 	;; into submission. if they do we shouldn't animate them because the
