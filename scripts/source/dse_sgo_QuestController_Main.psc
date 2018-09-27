@@ -47,6 +47,7 @@ dse_sgo_QuestStats_Main Property Stats Auto
 
 dse_sgo_QuestGemBar_Main Property GemBar Auto
 dse_sgo_QuestMilkBar_Main Property MilkBar Auto
+dse_sgo_QuestSemenBar_Main Property SemenBar Auto
 
 ;; third party libraries.
 

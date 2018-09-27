@@ -732,7 +732,13 @@ Float Function ActorSemenAmount(Actor Who, Bool Limit=TRUE)
 {return how much semen an actor has.}
 
 	Int SemenMax = self.ActorSemenMax(Who)
-	Float SemenVal = StorageUtil.GetFloatValue(Who,self.KeyActorSemenData)
+	Float SemenVal = StorageUtil.GetFloatValue(Who,self.KeyActorSemenData,-1.0)
+
+	If(SemenVal < 0)
+		;; if no data assume they never been wanked before.
+		StorageUtil.SetFloatValue(Who,self.KeyActorSemenData,SemenMax)
+		SemenVal = SemenMax
+	EndIf
 
 	If(Limit && SemenVal > SemenMax)
 		SemenVal = SemenMax as Float
@@ -788,6 +794,15 @@ Int Function ActorSemenMax(Actor Who)
 	Float Val = self.ActorModGetFinal(Who,"SemenMax",Base)
 
 	Return Main.Util.RoundToInt(Val)
+EndFunction
+
+Float Function ActorSemenTotalPercent(Actor Who)
+{get the current state of fullness of milk.}
+
+	Float SemenAmount = self.ActorSemenAmount(Who)
+	Int ValueMax = self.ActorSemenMax(Who)
+
+	Return (SemenAmount / (ValueMax as Float))
 EndFunction
 
 Bool Function ActorSemenUpdateData(Actor Who, Float TimeSince)

@@ -1,4 +1,4 @@
-Scriptname dse_sgo_QuestMilkBar_Main extends dse_sgo_QuestGemBar_Main
+Scriptname dse_sgo_QuestSemenBar_Main extends dse_sgo_QuestGemBar_Main
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6,8 +6,8 @@ Scriptname dse_sgo_QuestMilkBar_Main extends dse_sgo_QuestGemBar_Main
 Event OnWidgetReset()
 {override: when a widget is turned on.}
 
-	self.ColourRight = 0x858585
-	self.ColourLeft = 0xF2F2F2
+	self.ColourRight = 0x858560
+	self.ColourLeft = 0xf4f4f0
 	self.ColourFlash = -1
 
 	self.WidgetBaseReset()
@@ -21,12 +21,12 @@ Event OnWidgetReset()
 	self.SetTitle(self.Title)
 	self.SetText(self.Text)
 
-	self.WidgetReady("SGO4.MilkBar.Ready")
+	self.WidgetReady("SGO4.SemenBar.Ready")
 	Return
 EndEvent
 
 String function GetWidgetType()
 {override: specify the class of the ui element.}
 
-	return "SGO4MilkBar"
+	Return "SGO4SemenBar"
 EndFunction

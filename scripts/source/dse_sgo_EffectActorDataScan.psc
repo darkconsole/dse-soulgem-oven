@@ -24,6 +24,7 @@ Event OnEffectStart(Actor Who, Actor From)
 	self.RegisterForModEvent("SGO4.UpdateLoop.Done","OnUpdateLoop")
 	self.RegisterForModEvent("SGO4.GemBar.Ready","OnBarReady")
 	self.RegisterForModEvent("SGO4.MilkBar.Ready","OnBarReady")
+	self.RegisterForModEvent("SGO4.SemenBar.Ready","OnBarReady")
 
 	;;;;;;;;
 
@@ -40,13 +41,17 @@ Event OnEffectFinish(Actor Who, Actor From)
 	Main.GemBar.SetText("")
 	Main.MilkBar.SetTitle("")
 	Main.MilkBar.SetText("")
+	Main.SemenBar.SetTitle("")
+	Main.SemenBar.SetText("")
 
 	Main.GemBar.FadeTo(0.0,0.25)
 	Main.MilkBar.FadeTo(0.0,0.25)
+	Main.SemenBar.FadeTo(0.0,0.25)
 	Return
 EndEvent
 
 Event OnPlayerLoadGame()
+
 	self.Ready = 0
 	Return
 EndEvent
@@ -55,7 +60,7 @@ Event OnBarReady()
 
 	self.Ready += 1
 
-	If(self.Ready < 2)
+	If(self.Ready < 3)
 		Return
 	EndIf
 
@@ -80,77 +85,138 @@ Function ActorScan()
 	Bool ShowGems = self.Target.IsInFaction(Main.FactionProduceGems)
 	Bool ShowSemen = self.Target.IsInFaction(Main.FactionProduceSemen)
 
-	Float GemRelPercent
+	Float GemPercent
 	Int GemCount
 	Int GemMax
+	String GemString
+	Float GemOffset
 
 	Float MilkPercent
 	Float MilkCount
 	Int MilkMax
+	String MilkString
+	Float MilkOffset
 
-	String DataString
+	Float SemenPercent
+	Float SemenCount
+	Int SemenMax
+	String SemenString
+	Float SemenOffset
+
 	Float Offset = 0.0
-
-	;; reset all the bars.
-
-	Main.MilkBar.SetAlpha(0.0)
-	Main.MilkBar.SetPercent(0.0)
-	Main.GemBar.SetAlpha(0.0)
-	Main.GemBar.SetPercent(0.0)
+	Float OffsetFactor = 0.5
 	
-	;; position the bars and fetch any data we need for them.
+	;; fetch and calculate some data for positioning.
 
 	If(ShowMilk)
-		Main.MilkBar.SetPosition(0.0,Offset)
-		Offset += Main.MilkBar.H
+		MilkOffset = Offset
+		Offset += Main.MilkBar.SetH * OffsetFactor
 
 		MilkPercent = Main.Data.ActorMilkTotalPercent(self.Target) * 100
 		MilkCount = Main.Util.FloorTo(Main.Data.ActorMilkAmount(self.Target,TRUE),1)
 		MilkMax = Main.Data.ActorMilkMax(self.Target)
+
+		MilkString = self.Target.GetDisplayName()
+		MilkString += "|" + Main.Util.FloatToString(MilkCount,1)
+		MilkString += "|" + MilkMax
 	EndIf
 
 	If(ShowGems)
-		Main.GemBar.SetPosition(0.0,Offset)
-		Offset += Main.GemBar.H
+		GemOffset = Offset
+		Offset += Main.GemBar.SetH * OffsetFactor
 
-		GemRelPercent = Main.Data.ActorGemTotalPercent(self.Target,TRUE) * 100
+		GemPercent = Main.Data.ActorGemTotalPercent(self.Target,TRUE) * 100
 		GemCount = Math.Floor(Main.Data.ActorGemCount(self.Target))
 		GemMax = Math.Floor(Main.Data.ActorGemMax(self.Target))
+
+		GemString = self.Target.GetDisplayName()
+		GemString += "|" + GemCount 
+		GemString += "|" + GemMax
 	EndIf
 
-	;; now i want to fill their data.
+	If(ShowSemen)
+		SemenOffset = Offset
+		Offset += Main.SemenBar.SetH * OffsetFactor
+
+		SemenPercent = Main.Data.ActorSemenTotalPercent(self.Target) * 100
+		SemenCount = Main.Util.FloorTo(Main.Data.ActorSemenAmount(self.Target,TRUE),1)
+		SemenMax = Main.Data.ActorSemenMax(self.Target)
+
+		SemenString = self.Target.GetDisplayName()
+		SemenString += "|" + Main.Util.FloatToString(SemenCount,1)
+		SemenString += "|" + SemenMax
+	EndIf
+
+	;; figure out how to reorder them based on their anchor points.
+
+	If(Main.GemBar.VAnchor == "bottom")
+		If(ShowMilk)
+			Offset -= Main.MilkBar.SetH * OffsetFactor
+			MilkOffset = Offset
+		EndIf
+		If(ShowGems)
+			Offset -= Main.GemBar.SetH * OffsetFactor
+			GemOffset = Offset
+		EndIf
+		If(ShowSemen)
+			Offset -= Main.SemenBar.SetH * OffsetFactor
+			SemenOffset = Offset
+		EndIf
+	ElseIf(Main.GemBar.VAnchor == "center")
+		;; todo
+	EndIf
+
+	;; figure out which bar should get the nameplate.
 
 	If(ShowMilk)
-		DataString = self.Target.GetDisplayName()
-		DataString += "|" + Main.Util.FloatToString(MilkCount,1)
-		DataString += "|" + MilkMax
-
 		Main.MilkBar.SetTitle(self.Target.GetDisplayName())
-		Main.MilkBar.SetText(Main.Util.StringLookup("ActorDataScanMilkText",DataString))
-	EndIf
-
-	If(ShowGems)
-		DataString = self.Target.GetDisplayName()
-		DataString += "|" + GemCount 
-		DataString += "|" + GemMax
-
+	ElseIf(ShowGems)
 		Main.GemBar.SetTitle(self.Target.GetDisplayName())
-		Main.GemBar.SetText(Main.Util.StringLookup("ActorDataScanGemText",DataString))
+	ElseIf(ShowSemen)
+		Main.SemenBar.SetTitle(self.Target.GetDisplayName())
 	EndIf
 
 	;; now i want to show them.
 
 	If(ShowMilk)
+		Main.MilkBar.SetText(Main.Util.StringLookup("ActorDataScanMilkText",MilkString))
+		Main.MilkBar.SetPosition(Main.MilkBar.PosX,MilkOffset,0.25)
 		Main.MilkBar.FadeTo(100.0,0.25)
 		Main.MilkBar.SetPercent(MilkPercent)
 	EndIf
 
 	If(ShowGems)
+		Main.GemBar.SetText(Main.Util.StringLookup("ActorDataScanGemText",GemString))
+		Main.GemBar.SetPosition(Main.GemBar.PosX,GemOffset,0.25)
 		Main.GemBar.FadeTo(100.0,0.25)
-		Main.GemBar.SetPercent(GemRelPercent)
+		Main.GemBar.SetPercent(GemPercent)
+	EndIf
+
+	If(ShowSemen)
+		Main.SemenBar.SetText(Main.Util.StringLookup("ActorDataScanSemenText",SemenString))
+		Main.SemenBar.SetPosition(Main.SemenBar.PosX,SemenOffset,0.25)
+		Main.SemenBar.FadeTo(100.0,0.25)
+		Main.SemenBar.SetPercent(SemenPercent)
 	EndIf
 
 	Return
 EndFunction
 
+Function ResetAllBars()
+
+	Main.MilkBar.SetTitle("")
+	Main.MilkBar.SetText("")
+	Main.MilkBar.SetAlpha(0.0)
+	Main.MilkBar.SetPercent(0.0)
+	Main.GemBar.SetTitle("")
+	Main.GemBar.SetText("")
+	Main.GemBar.SetAlpha(0.0)
+	Main.GemBar.SetPercent(0.0)
+	Main.SemenBar.SetTitle("")
+	Main.SemenBar.SetText("")
+	Main.SemenBar.SetAlpha(0.0)
+	Main.SemenBar.SetPercent(0.0)
+
+	Return
+EndFunction
 
