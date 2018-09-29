@@ -21,7 +21,8 @@ Event OnEffectStart(Actor Who, Actor From)
 
 	;;;;;;;;
 
-	self.RegisterForModEvent("SGO4.UpdateLoop.Done","OnUpdateLoop")
+	self.RegisterForModEvent("SGO4.Body.ActorUpdate","OnActorUpdate")
+	;;self.RegisterForModEvent("SGO4.UpdateLoop.Done","OnUpdateLoop")
 	self.RegisterForModEvent("SGO4.GemBar.Ready","OnBarReady")
 	self.RegisterForModEvent("SGO4.MilkBar.Ready","OnBarReady")
 	self.RegisterForModEvent("SGO4.SemenBar.Ready","OnBarReady")
@@ -75,6 +76,18 @@ Event OnUpdateLoop()
 	self.ActorScan()
 	Return
 EndEvent
+
+Event OnActorUpdate(Form What)
+
+	If(What != self.Target)
+		Return
+	EndIf
+
+	Main.Util.PrintDebug("Bars Update Event For " + self.Target.GetDisplayName())
+	self.ActorScan()	
+	Return
+EndEvent
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

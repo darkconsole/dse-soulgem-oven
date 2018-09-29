@@ -29,9 +29,14 @@ String Property AniMilking01 = "dse-sgo-milking01-01" AutoReadOnly Hidden
 Function ActorUpdate(Actor Who)
 {force the actor's body into the state described by its current dataset.}
 
+	Int Ev = ModEvent.Create("SGO4.Body.ActorUpdate")
+
 	self.ActorUpdateGems(Who)
 	self.ActorUpdateMilk(Who)
 	NiOverride.UpdateModelWeight(Who)
+
+	ModEvent.PushForm(Ev,Who)
+	ModEvent.Send(Ev)
 
 	Return
 EndFunction
