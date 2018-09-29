@@ -284,3 +284,24 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 
 	Return
 EndFunction
+
+Event OnMenuOpen(String Name)
+{handler for our menu hack}
+
+	If(Name == "Sleep/Wait Menu")
+
+	EndIf
+
+	Return
+EndEvent
+
+Event OnMenuClose(String Name)
+{handler for our menu hack}
+
+	If(Name == "Sleep/Wait Menu")
+		Loop.UnregisterForUpdate()
+		Loop.OnUpdate()
+	EndIf
+
+	Return
+EndEvent

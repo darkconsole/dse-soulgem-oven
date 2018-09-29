@@ -20,6 +20,9 @@ Event OnGameReload()
 	;; do a dependency check every launch.
 	;;Main.ResetMod_Prepare()
 
+	Main.UnregisterForMenu("Sleep/Wait Menu")
+	Main.RegisterForMenu("Sleep/Wait Menu")
+
 	Return
 EndEvent
 
