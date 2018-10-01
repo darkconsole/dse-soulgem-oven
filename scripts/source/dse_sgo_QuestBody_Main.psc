@@ -33,7 +33,12 @@ Function ActorUpdate(Actor Who)
 
 	self.ActorUpdateGems(Who)
 	self.ActorUpdateMilk(Who)
-	NiOverride.UpdateModelWeight(Who)
+
+	If(Who.Is3dLoaded())
+		;; allow our data to have gotten updated, but there is no need to
+		;; update an actor that is not loaded.
+		NiOverride.UpdateModelWeight(Who)
+	EndIf
 
 	ModEvent.PushForm(Ev,Who)
 	ModEvent.Send(Ev)
