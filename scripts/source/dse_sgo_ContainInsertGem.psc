@@ -50,14 +50,7 @@ Event OnLoad()
 		Return
 	EndIf
 
-	;; build a list of acceptable items.
-	;; this may need to be tweaked if the custom item system ever
-	;; comes to fruitition. see also the TypeVal comment in OnActivate.
-
-	Main.ListGemFilter.Revert()
-	Main.ListGemFilter.AddForms(Main.Data.GetGemStagesEmpty())
-	self.GemStageLen = Main.ListGemFilter.GetSize()
-	Main.ListGemFilter.AddForms(Main.Data.GetGemStagesFilled())
+	self.GemStageLen = Main.Data.ListGemFilterPrepare()
 
 	;; determine how many gems we can add.
 

@@ -8,6 +8,9 @@
 	"ActorDataScanGemText": "%2 of %3 gems",
 	"ActorDataScanMilkText": "%2 of %3 bottles",
 	"ActorDataScanSemenText": "%2 of %3 bottles",
+	"MenuGemCount": "Gems: %1",
+	"MenuMilkCount": "Milk: %1",
+	"MenuSemenCount": "Semen: %1",
 	"FlavourActorGemGain": [
 		"%1 is now incubating another gem.",
 		"Another gem has begun to grow within %1."

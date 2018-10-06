@@ -143,6 +143,23 @@ Form Function GemStageGet(Int Val)
 	Return StorageUtil.FormListGet(None,KeyGemStageData,(Val - 1))
 EndFunction
 
+Int Function ListGemFilterPrepare()
+{prepare the filter list for gem filtering.}
+
+	;; build a list of acceptable items.
+	;; this may need to be tweaked if the custom item system ever
+	;; comes to fruitition. see also the TypeVal comment in OnActivate.
+
+	Int StageLen
+
+	Main.ListGemFilter.Revert()
+	Main.ListGemFilter.AddForms(Main.Data.GetGemStagesEmpty())
+	StageLen = Main.ListGemFilter.GetSize()
+	Main.ListGemFilter.AddForms(Main.Data.GetGemStagesFilled())
+
+	Return StageLen
+EndFunction
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -656,6 +673,12 @@ Float Function ActorMilkAmount(Actor Who, Bool Limit=TRUE)
 	Return MilkVal
 EndFunction
 
+Int Function ActorMilkCount(Actor Who, Bool Limit=TRUE)
+{return how many complete bottles an actor has.}
+
+	Return Math.Floor(self.ActorMilkAmount(Who,Limit))
+EndFunction
+
 Function ActorMilkClear(Actor Who)
 {drop milk data for this actor.}
 
@@ -745,6 +768,12 @@ Float Function ActorSemenAmount(Actor Who, Bool Limit=TRUE)
 	EndIf
 
 	Return SemenVal
+EndFunction
+
+Int Function ActorSemenCount(Actor Who, Bool Limit=TRUE)
+{return how many complete bottles an actor has.}
+
+	Return Math.Floor(self.ActorSemenAmount(Who,Limit))
 EndFunction
 
 Function ActorSemenClear(Actor Who)

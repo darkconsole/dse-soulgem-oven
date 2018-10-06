@@ -67,6 +67,7 @@ Spell Property SpellActorDataScan Auto
 Spell Property SpellActorDataScanToggle Auto
 Spell Property SpellBirthLargest Auto
 Spell Property SpellInsertGems Auto
+Spell Property SpellMenuMainOpen Auto
 Spell Property SpellMilkingAction Auto
 Package Property PackageDoNothing Auto
 
@@ -138,6 +139,7 @@ Event OnInit()
 	self.UnregisterForModEvent("SexLabOrgasm")
 	self.RegisterForModEvent("SexLabOrgasm","OnModEvent_SexLabOrgasm")
 
+	self.Player.AddSpell(self.SpellMenuMainOpen)
 	self.Util.Print("Soulgem Oven 4 has started.")
 	Return
 EndEvent
@@ -305,3 +307,168 @@ Event OnMenuClose(String Name)
 
 	Return
 EndEvent
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Actor Function MenuTargetGet(Actor Who=None)
+{determine if we should target someone.}
+
+	If(Who == None)
+		Who = Game.GetCurrentCrosshairRef() as Actor
+	EndIf
+
+	If(Who == None)
+		Who = self.Player
+	EndIf
+
+	Return Who
+EndFunction
+
+Function MenuWheelSetItem(Int Num, String Label, String Text, Bool Enabled=True)
+{assign an item to the uiextensions wheel menu.}
+
+	UIExtensions.SetMenuPropertyIndexString("UIWheelMenu","optionLabelText",Num,Label)
+	UIExtensions.SetMenuPropertyIndexString("UIWheelMenu","optionText",Num,Text)
+	UIExtensions.SetMenuPropertyIndexBool("UIWheelMenu","optionEnabled",Num,Enabled)
+
+	If(!Enabled)
+		UIExtensions.SetMenuPropertyIndexInt("UIWheelMenu","optionTextColor",Num,0x555555)
+	EndIf
+
+	Return
+EndFunction
+
+Function MenuMainOpen(Actor Who=None)
+{open up the primary sgo menu.}
+
+	String[] ItemText = new String[8]
+	String[] ItemDesc = new String[8]
+	Bool[] ItemShow = new Bool[8]
+	Int Iter
+	Int Result
+
+	Int GemCount
+	Int GemMax
+	Int MilkCount
+	Int SemenCount
+
+	Who = self.MenuTargetGet(Who)
+	self.Data.ActorDetermineFeatures(Who)
+
+	;;;;;;;;
+
+	;; 0 insert gems | 4 gem status
+	;; 1 xfer gems   | 5 milk status
+	;; 2 insert sem  | 6 semen status
+	;; 3 actor opts  | 7 actor stats
+
+	ItemText[0] = "$SGO4_MenuInsertGemsText"
+	ItemDesc[0] = "$SGO4_MenuInsertGemsDesc"
+	ItemShow[0] = Who.IsInFaction(self.FactionProduceGems)
+
+	ItemText[1] = "$SGO4_MenuTransferGemsText"
+	ItemDesc[1] = "$SGO4_MenuTransferGemsDesc"
+	ItemShow[1] = Who.IsInFaction(self.FactionProduceGems)
+
+	ItemText[2] = "$SGO4_MenuInsertSemenText"
+	ItemDesc[2] = "$SGO4_MenuInsertSemenDesc"
+	ItemShow[2] = Who.IsInFaction(self.FactionProduceGems)
+
+	ItemText[3] = "$SGO4_MenuActorOptionsText"
+	ItemDesc[3] = "$SGO4_MenuActorOptionsDesc"
+	ItemShow[3] = TRUE
+
+	ItemText[4] = "$SGO4_MenuActorGemsEmptyText"
+	ItemDesc[4] = "$SGO4_MenuActorGemsEmptyDesc"
+	ItemShow[4] = FALSE
+
+	ItemText[5] = "$SGO4_MenuActorMilkEmptyText"
+	ItemDesc[5] = "$SGO4_MenuActorMilkEmptyDesc"
+	ItemShow[5] = FALSE
+
+	ItemText[6] = "$SGO4_MenuActorSemenEmptyText"
+	ItemDesc[6] = "$SGO4_MenuActorSemenEmptyDesc"
+	ItemShow[6] = FALSE
+
+	ItemText[7] = "$SGO4_MenuActorStatsText"
+	ItemDesc[7] = "$SGO4_MenuActorStatsDesc"
+	ItemShow[7] = TRUE
+
+	GemCount = self.Data.ActorGemCount(Who)
+	GemMax = self.Data.ActorGemMax(Who)
+	MilkCount = self.Data.ActorMilkCount(Who)
+	SemenCount = self.Data.ActorSemenCount(Who)
+
+	If(Who.IsInFaction(self.FactionProduceGems) && GemCount > 0)
+		ItemText[4] = self.Util.StringLookup("MenuGemCount",GemCount)
+		ItemDesc[4] = "$SGO4_MenuActorGemsSelectDesc"
+		ItemShow[4] = TRUE
+
+		If(GemCount >= GemMax)
+			ItemShow[0] = FALSE
+			ItemShow[2] = FALSE
+		EndIf
+	EndIf
+
+	If(Who.IsInFaction(self.FactionProduceMilk) && MilkCount > 0)
+		ItemText[5] = self.Util.StringLookup("MenuMilkCount",MilkCount)
+		ItemDesc[5] = "$SGO4_MenuActorMilkSelectDesc"
+		ItemShow[5] = TRUE
+	EndIf
+
+	If(Who.IsInFaction(self.FactionProduceSemen) && SemenCount > 0)
+		ItemText[6] = self.Util.StringLookup("MenuSemenCount",SemenCount)
+		ItemDesc[6] = "$SGO4_MenuActorSemenSelectDesc"
+		ItemShow[6] = TRUE
+	EndIf
+
+	;;;;;;;;
+
+	UIExtensions.InitMenu("UIWheelMenu")
+
+	Iter = 0
+	While(Iter < ItemShow.Length)
+		self.MenuWheelSetItem(Iter,ItemText[Iter],ItemDesc[Iter],ItemShow[Iter])
+		Iter += 1
+	EndWhile
+
+	;;;;;;;;
+
+	Result = UIExtensions.OpenMenu("UIWheelMenu",Who)
+	self.Util.PrintDebug("Selected " + Result + ": " + ItemText[Result])
+
+	If(Result == 0)
+		;; insert gems
+		self.SpellInsertGems.Cast(self.Player,self.Player)
+	ElseIf(Result == 1)
+		;; xfer gems
+		Debug.MessageBox("TODO")
+	ElseIf(Result == 2)
+		;; inseminate
+		Debug.MessageBox("TODO")
+	ElseIf(Result == 3)
+		;; actor options
+		Debug.MessageBox("TODO")
+	ElseIf(Result == 4)
+		;; birth
+		self.SpellBirthLargest.Cast(self.Player,self.Player)
+	ElseIf(Result == 5)
+		;; milk
+		self.SpellMilkingAction.Cast(self.Player,self.Player)
+	ElseIf(Result == 6)
+		;; wank
+		Debug.MessageBox("TODO")
+	ElseIf(Result == 7)
+		;; stats
+		Debug.MessageBox("TODO")
+	EndIf
+
+	Return
+EndFunction
+
+Function MenuTransferGemsOpen(Actor Who=None)
+{open the gem transfer menu.}
+
+	Return
+EndFunction
