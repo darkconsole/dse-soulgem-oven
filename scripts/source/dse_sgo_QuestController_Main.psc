@@ -90,7 +90,7 @@ Event OnInit()
 		Return
 	EndIf
 
-	If(!self.CheckForDeps())
+	If(!self.CheckForDeps(TRUE))
 		self.Reset()
 		self.Stop()
 		Return
@@ -132,7 +132,6 @@ Event OnInit()
 
 	;; not for real things just hack testing.
 
-	SexLab = Util.GetFormFrom("SexLab.esm",0xd62) As SexLabFramework
 	self.Data.ActorTrackingAdd(self.Player)
 	
 	;;;;;;;;
@@ -174,14 +173,46 @@ EndFunction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Bool Function CheckForDeps()
+Bool Function CheckForDeps(Bool Popup)
 {make sure we have everything we need installed.}
 
 	Bool Output = TRUE
 
-	;; todo
+	If(!self.CheckForDeps_SexLab(Popup))
+		self.SexLab = NONE
+		Output = FALSE
+	EndIf
 
 	Return Output
+EndFunction
+
+Bool Function CheckForDeps_SexLab(Bool Popup)
+{make sure we have sexlab installed and minimum version.}
+
+	self.SexLab = Util.GetFormFrom("SexLab.esm",0xd62) As SexLabFramework
+
+	;; check we even have sexlab.
+
+	If(self.SexLab == NONE)
+		If(Popup)
+			self.Util.PopupError("SexLab is not installed.")
+		EndIf
+
+		Return FALSE
+	EndIf
+
+	;; check that the version of sexlab is good enough.
+
+	If(self.SexLab.GetVersion() < 16203)
+		If(Popup)
+			self.Util.PopupError("Your SexLab needs to be updated. Install 1.63 SE dev 3 or newer.")
+		EndIf
+
+		self.SexLab = NONE
+		Return FALSE
+	EndIf
+
+	Return TRUE
 EndFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

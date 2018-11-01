@@ -28,6 +28,18 @@ Function PrintDebug(String Msg)
 	Return
 EndFunction
 
+Function PopupError(String Msg)
+{display an error message that the user must address.}
+
+	String Output = ""
+
+	Output += "Soulgem Oven Error:\n"
+	Output += Msg
+
+	Debug.MessageBox(Output)
+	Return
+EndFunction
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -61,6 +73,7 @@ Int Function RoundToInt(Float Val)
 EndFunction
 
 Float Function RoundTo(Float Val, Int Dec=0)
+{round a float to a specified number of decimal places.}
 
 	Float Bump = Math.Pow(10,Dec) As Float
 
@@ -68,6 +81,7 @@ Float Function RoundTo(Float Val, Int Dec=0)
 EndFunction
 
 Float Function FloorTo(Float Val, Int Dec=0)
+{floor a float to a specified number of decimal places.}
 
 	Float Bump = Math.Pow(10,Dec) As Float
 
@@ -75,6 +89,9 @@ Float Function FloorTo(Float Val, Int Dec=0)
 EndFunction
 
 String Function FloatToString(Float Val, Int Dec=0)
+{"convert" a float into a string - e.g. get a printable float
+that cuts off all the ending zeroes the game adds when casting
+a float into a string directly.}
 
 	Int Last = Math.Floor(Val)
 	String Output = Last As String
