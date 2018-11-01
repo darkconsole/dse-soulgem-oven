@@ -1065,15 +1065,7 @@ Form Function RaceGetMilk(Int FileIndex, Int RaceIndex)
 	Return JsonUtil.GetPathFormValue(self.RaceFiles[FileIndex],Path)
 EndFunction
 
-Form Function RaceGetSemen(Int Index)
-{get the semen for the specified race.}
-
-	String Path = "Races[" + Index + "].Semen"
-
-	Return JsonUtil.GetPathFormValue(self.FileRaces,Path)
-EndFunction
-
-Form Function RaceGetSemen2(Int FileIndex, Int RaceIndex)
+Form Function RaceGetSemen(Int FileIndex, Int RaceIndex)
 {get the semen for the specified race.}
 
 	String Path = "Races[" + RaceIndex + "].Semen"

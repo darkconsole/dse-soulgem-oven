@@ -69,6 +69,7 @@ Spell Property SpellBirthLargest Auto
 Spell Property SpellInsertGems Auto
 Spell Property SpellMenuMainOpen Auto
 Spell Property SpellMilkingAction Auto
+Spell Property SpellWankingAction Auto
 Package Property PackageDoNothing Auto
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -458,7 +459,7 @@ Function MenuMainOpen(Actor Who=None)
 		self.SpellMilkingAction.Cast(self.Player,self.Player)
 	ElseIf(Result == 6)
 		;; wank
-		Debug.MessageBox("TODO")
+		self.SpellWankingAction.Cast(self.Player,self.Player)
 	ElseIf(Result == 7)
 		;; stats
 		Debug.MessageBox("TODO")

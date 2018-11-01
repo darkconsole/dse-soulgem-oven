@@ -16,12 +16,14 @@ String Property KeyEvActorDone = "SGO4.ActorDone" AutoReadOnly Hidden
 String Property KeyEvActorInsert = "SGO4.ActorInsert" AutoReadOnly Hidden
 String Property KeyEvActorSpawnGem = "SGO4.ActorSpawnGem" AutoReadOnly Hidden
 String Property KeyEvActorSpawnMilk = "SGO4.ActorSpawnMilk" AutoReadOnly Hidden
+String Property KeyEvActorSpawnSemen = "SGO4.ActorSpawnSemen" AutoReadOnly Hidden
 
 String Property AniDefault = "IdleForceDefaultState" AutoReadOnly Hidden
 String Property AniInsert01 = "dse-sgo-insert01-01" AutoReadOnly Hidden
 String Property AniInsert02 = "dse-sgo-insert02-01" AutoReadOnly Hidden
 String Property AniBirth01 = "dse-sgo-birth01-01" AutoReadOnly Hidden
 String Property AniMilking01 = "dse-sgo-milking01-01" AutoReadOnly Hidden
+String Property AniWanking01 = "dse-sgo-milking01-01" AutoReadOnly Hidden
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
