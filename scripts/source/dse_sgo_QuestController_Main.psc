@@ -371,6 +371,32 @@ Function MenuWheelSetItem(Int Num, String Label, String Text, Bool Enabled=True)
 	Return
 EndFunction
 
+Function MenuWheelPopulate(String[] ItemText, String[] ItemDesc, Bool[] ItemShow)
+{populate the wheel menu from some data arrays.}
+	
+	Int Iter
+
+	;;;;;;;;
+
+	UIExtensions.InitMenu("UIWheelMenu")
+
+	Iter = 0
+	While(Iter < ItemShow.Length)
+		self.MenuWheelSetItem(Iter,ItemText[Iter],ItemDesc[Iter],ItemShow[Iter])
+		Iter += 1
+	EndWhile
+
+	Return
+EndFunction
+
+Int Function MenuWheelPopulateOpen(Actor Who, String[] ItemText, String[] ItemDesc, Bool[] ItemShow)
+{populate and open the wheel menu.}
+
+	self.MenuWheelPopulate(ItemText,ItemDesc,ItemShow)
+
+	Return UIExtensions.OpenMenu("UIWheelMenu",Who)
+EndFunction
+
 Function MenuMainOpen(Actor Who=None)
 {open up the primary sgo menu.}
 
@@ -457,17 +483,7 @@ Function MenuMainOpen(Actor Who=None)
 
 	;;;;;;;;
 
-	UIExtensions.InitMenu("UIWheelMenu")
-
-	Iter = 0
-	While(Iter < ItemShow.Length)
-		self.MenuWheelSetItem(Iter,ItemText[Iter],ItemDesc[Iter],ItemShow[Iter])
-		Iter += 1
-	EndWhile
-
-	;;;;;;;;
-
-	Result = UIExtensions.OpenMenu("UIWheelMenu",Who)
+	Result = self.MenuWheelPopulateOpen(Who,ItemText,ItemDesc,ItemShow)
 	self.Util.PrintDebug("Selected " + Result + ": " + ItemText[Result])
 
 	If(Result == 0)
@@ -475,13 +491,13 @@ Function MenuMainOpen(Actor Who=None)
 		self.SpellInsertGems.Cast(self.Player,self.Player)
 	ElseIf(Result == 1)
 		;; xfer gems
-		Debug.MessageBox("TODO")
+		Debug.MessageBox("Cumming Soon (tm)")
 	ElseIf(Result == 2)
 		;; inseminate
 		Debug.MessageBox("TODO")
 	ElseIf(Result == 3)
 		;; actor options
-		Debug.MessageBox("TODO")
+		self.MenuActorOptionsOpen(Who)
 	ElseIf(Result == 4)
 		;; birth
 		self.SpellBirthLargest.Cast(self.Player,self.Player)
@@ -494,6 +510,71 @@ Function MenuMainOpen(Actor Who=None)
 	ElseIf(Result == 7)
 		;; stats
 		Debug.MessageBox("TODO")
+	EndIf
+
+	Return
+EndFunction
+
+Function MenuActorOptionsOpen(Actor Who=None)
+{open up the primary sgo menu.}
+
+	String[] ItemText = new String[8]
+	String[] ItemDesc = new String[8]
+	Bool[] ItemShow = new Bool[8]
+	Int Result
+	Bool CanGem
+	Bool CanMilk
+	Bool CanSemen
+
+	Who = self.MenuTargetGet(Who)
+	self.Data.ActorDetermineFeatures(Who)
+
+	CanGem = Who.IsInFaction(self.FactionProduceGems)
+	CanMilk = Who.IsInFaction(self.FactionProduceMilk)
+	CanSemen = Who.IsInFaction(self.FactionProduceSemen)
+
+	;;;;;;;;
+
+	;; 0 toggle gems  | 4
+	;; 1 toggle milk  | 5
+	;; 2 toggle semen | 6
+	;; 3              | 7
+
+	ItemText[0] = "$SGO4_MenuProduceGemsOff"
+	ItemDesc[0] = "$SGO4_MenuProduceGemsDesc"
+	ItemShow[0] = TRUE
+
+	ItemText[1] = "$SGO4_MenuProduceMilkOff"
+	ItemDesc[1] = "$SGO4_MenuProduceMilkDesc"
+	ItemShow[1] = TRUE
+
+	ItemText[2] = "$SGO4_MenuProduceSemenOff"
+	ItemDesc[2] = "$SGO4_MenuProduceSemenDesc"
+	ItemShow[2] = TRUE
+
+	If(CanGem)
+		ItemText[0] = "$SGO4_MenuProduceGemsOn"
+	EndIf
+
+	If(CanMilk)
+		ItemText[0] = "$SGO4_MenuProduceMilkOn"
+	EndIf
+
+	If(CanSemen)
+		ItemText[0] = "$SGO4_MenuProduceSemenOn"
+	EndIf
+
+	;;;;;;;;
+
+	Result = self.MenuWheelPopulateOpen(Who,ItemText,ItemDesc,ItemShow)
+	self.Util.PrintDebug("Selected " + Result + ": " + ItemText[Result])
+
+	If(Result == 0)
+		self.Util.ActorToggleFaction(Who,self.FactionProduceGems)
+	ElseIf(Result == 1)
+		self.Util.ActorToggleFaction(Who,self.FactionProduceMilk)
+	ElseIf(Result == 2)
+		self.Util.ActorToggleFaction(Who,self.FactionProduceSemen)
 	EndIf
 
 	Return

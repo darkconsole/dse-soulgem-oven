@@ -386,3 +386,15 @@ display model are currently forcing the actor to do more important thigngs.}
 
 	Return FALSE
 EndFunction
+
+Function ActorToggleFaction(Actor Who, Faction What)
+{add the actor to a faction if not in it, remove them from it if they are.}
+
+	If(Who.IsInFaction(What))
+		Who.RemoveFromFaction(What)
+	Else
+		Who.AddToFaction(What)
+	EndIf
+
+	Return
+EndFunction
