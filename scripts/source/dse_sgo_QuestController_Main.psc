@@ -509,7 +509,7 @@ Function MenuMainOpen(Actor Who=None)
 		self.SpellWankingAction.Cast(self.Player,self.Player)
 	ElseIf(Result == 7)
 		;; stats
-		Debug.MessageBox("TODO")
+		self.MenuActorStatsOpen(Who)
 	EndIf
 
 	Return
@@ -585,3 +585,53 @@ Function MenuTransferGemsOpen(Actor Who=None)
 
 	Return
 EndFunction
+
+Function MenuActorStatsOpen(Actor Who=None)
+{open the actor stats menu.}
+
+	UIListMenu Menu = UIExtensions.GetMenu("UIListMenu",TRUE) as UIListMenu
+	Int NoParent = -1
+
+	;;;;;;;;
+
+	Who = self.MenuTargetGet(Who)
+	self.Data.ActorDetermineFeatures(Who)
+
+	;;;;;;;;
+
+	Menu.AddEntryItem("$SGO4_MenuStatGemsIncubated",NoParent)
+	Menu.AddEntryItem(Stats.GetInt(Who,Stats.KeyGemsIncubated),NoParent)
+	Menu.AddEntryItem(" ",NoParent)
+
+	Menu.AddEntryItem("$SGO4_MenuStatGemsBirthed",NoParent)
+	Menu.AddEntryItem(Stats.GetInt(Who,Stats.KeyGemsBirthed),NoParent)
+	Menu.AddEntryItem(" ",NoParent)
+
+	Menu.AddEntryItem("$SGO4_MenuStatGemsInseminated",NoParent)
+	Menu.AddEntryItem(Stats.GetInt(Who,Stats.KeyGemsInseminated),NoParent)
+	Menu.AddEntryItem(" ",NoParent)
+
+	Menu.AddEntryItem("$SGO4_MenuStatGemsInserted",NoParent)
+	Menu.AddEntryItem(Stats.GetInt(Who,Stats.KeyGemsInserted),NoParent)
+	Menu.AddEntryItem(" ",NoParent)
+
+	Menu.AddEntryItem("$SGO4_MenuStatMilksProduced",NoParent)
+	Menu.AddEntryItem(Stats.GetInt(Who,Stats.KeyMilksProduced),NoParent)
+	Menu.AddEntryItem(" ",NoParent)
+
+	Menu.AddEntryItem("$SGO4_MenuStatMilksMilked",NoParent)
+	Menu.AddEntryItem(Stats.GetInt(Who,Stats.KeyMilksMilked),NoParent)
+	Menu.AddEntryItem(" ",NoParent)
+
+	Menu.AddEntryItem("$SGO4_MenuStatSemensProduced",NoParent)
+	Menu.AddEntryItem(Stats.GetInt(Who,Stats.KeySemensProduced),NoParent)
+	Menu.AddEntryItem(" ",NoParent)
+
+	Menu.AddEntryItem("$SGO4_MenuStatSemensWanked",NoParent)
+	Menu.AddEntryItem(Stats.GetInt(Who,Stats.KeySemensWanked),NoParent)
+	Menu.AddEntryItem(" ",NoParent)
+
+	UIExtensions.OpenMenu("UIListMenu",Who)
+	Return
+EndFunction
+
