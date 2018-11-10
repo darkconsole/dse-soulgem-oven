@@ -160,6 +160,33 @@ Int Function ListGemFilterPrepare()
 	Return StageLen
 EndFunction
 
+Int Function ListSemenFilterPrepare()
+{prepare the filter list for semen filtering.}
+
+	Int FileIter
+	Int FileRaceCount
+	Int FileRaceIter
+
+	Main.ListSemenFilter.Revert()
+
+	;;;;;;;;
+
+	FileIter = 0
+	While(FileIter < self.RaceFiles.Length)
+		FileRaceCount = JsonUtil.PathCount(self.RaceFiles[FileIter],"Races")
+		FileRaceIter = 0
+
+		While(FileRaceIter < FileRaceCount)
+			Main.ListSemenFilter.AddForm(self.RaceGetSemen(FileIter,FileRaceIter))
+			FileRaceIter += 1
+		EndWhile
+
+		FileIter += 1
+	EndWhile
+
+	Return Main.ListSemenFilter.GetSize()
+EndFunction
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

@@ -60,6 +60,7 @@ Actor Property Player Auto
 
 Container Property ContainInsertGems Auto
 FormList Property ListGemFilter Auto
+FormList property ListSemenFilter Auto
 Faction Property FactionProduceGems Auto
 Faction Property FactionProduceMilk Auto
 Faction Property FactionProduceSemen Auto
