@@ -558,11 +558,11 @@ Function MenuActorOptionsOpen(Actor Who=None)
 	EndIf
 
 	If(CanMilk)
-		ItemText[0] = "$SGO4_MenuProduceMilkOn"
+		ItemText[1] = "$SGO4_MenuProduceMilkOn"
 	EndIf
 
 	If(CanSemen)
-		ItemText[0] = "$SGO4_MenuProduceSemenOn"
+		ItemText[2] = "$SGO4_MenuProduceSemenOn"
 	EndIf
 
 	;;;;;;;;
