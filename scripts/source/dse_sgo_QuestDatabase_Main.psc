@@ -817,6 +817,7 @@ Function ActorSemenSet(Actor Who, Float Value)
 
 	StorageUtil.SetFloatValue(Who,self.KeyActorSemenData,Value)
 	self.ActorTrackingAdd(Who)
+	Main.Body.ActorUpdate(Who)
 
 	Return
 EndFunction
@@ -824,8 +825,11 @@ EndFunction
 Function ActorSemenInc(Actor Who, Float Value)
 {add/sub how much semen this actor has.}
 
-	StorageUtil.AdjustFloatValue(Who,self.KeyActorSemenData,Value)
+	Float Semen = StorageUtil.AdjustFloatValue(Who,self.KeyActorSemenData,Value)
+	Main.Util.PrintDebug(Who.GetDisplayName() + " now has " + Semen + " semen.")
+
 	self.ActorTrackingAdd(Who)
+	Main.Body.ActorUpdate(Who)
 	
 	Return
 EndFunction
