@@ -95,6 +95,7 @@ Function HandleStartAnimation()
 {handle Semening via animating.}
 
 	self.RegisterForModEvent(Main.Body.KeyEvActorSpawnSemen,"OnSpawnSemen")
+	self.RegisterForModEvent(Main.Body.KeyEvActorSpawnMilk,"OnSpawnSemen")
 	self.RegisterForModEvent(Main.Body.KeyEvActorDone,"OnDone")
 	self.HandleTimeoutRenew()
 	
