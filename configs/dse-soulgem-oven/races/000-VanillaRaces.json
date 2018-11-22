@@ -8,107 +8,107 @@
 		{	"Name": "Argonian",
 			"Race": "79680|Skyrim.esm",
 			"Milk": "17232|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37942|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Argonian Vampire",
 			"Race": "559162|Skyrim.esm",
 			"Milk": "17232|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37942|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Breton",
 			"Race": "79681|Skyrim.esm",
 			"Milk": "004353|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37944|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Breton Vampire",
 			"Race": "559164|Skyrim.esm",
 			"Milk": "17235|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37944|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Dunmer",
 			"Race": "79682|Skyrim.esm",
 			"Milk": "17237|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37945|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Dunmer Vampire",
 			"Race": "79680|Skyrim.esm",
 			"Milk": "17237|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37945|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Altmer",
 			"Race": "79683|Skyrim.esm",
 			"Milk": "17220|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37941|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Altmer Vampire",
 			"Race": "559168|Skyrim.esm",
 			"Milk": "17220|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37941|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Imperial",
 			"Race": "79684|Skyrim.esm",
 			"Milk": "17239|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37946|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Imperial Vampire",
 			"Race": "559172|Skyrim.esm",
 			"Milk": "17239|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37946|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Khajiit",
 			"Race": "79685|Skyrim.esm",
 			"Milk": "17241|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37947|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Khajiit Vampire",
 			"Race": "559173|Skyrim.esm",
 			"Milk": "17241|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37947|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Nord",
 			"Race": "79686|Skyrim.esm",
 			"Milk": "17243|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37948|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Nord Vampire",
 			"Race": "558996|Skyrim.esm",
 			"Milk": "17243|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37948|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Nord Astrid",
 			"Race": "518899|Skyrim.esm",
 			"Milk": "17243|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37948|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Orc",
 			"Race": "79687|Skyrim.esm",
 			"Milk": "17245|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37949|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Orc Vampire",
 			"Race": "688825|Skyrim.esm",
 			"Milk": "17245|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37949|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Redguard",
 			"Race": "79688|Skyrim.esm",
 			"Milk": "17247|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37950|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Redguard Vampire",
 			"Race": "559174|Skyrim.esm",
 			"Milk": "17247|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37950|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Bosmer",
 			"Race": "79689|Skyrim.esm",
 			"Milk": "17233|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37943|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Bosmer Vampire",
 			"Race": "79689|Skyrim.esm",
 			"Milk": "17233|dse-soulgem-oven.esp",
-			"Semen": "15842|dse-soulgem-oven.esp"
+			"Semen": "37943|dse-soulgem-oven.esp"
 		}
 	]
 }
