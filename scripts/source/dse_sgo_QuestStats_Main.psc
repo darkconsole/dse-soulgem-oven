@@ -14,6 +14,7 @@ String Property KeyGemsIncubated = "SGO4.Stats.Gem.Incubated" AutoReadOnly Hidde
 String Property KeyGemsInseminated = "SGO4.Stats.Gem.Inseminated" AutoReadOnly Hidden
 String Property KeyMilksMilked = "SGO4.Stats.Milk.Milked" AutoReadOnly Hidden
 String Property KeyMilksProduced = "SGO4.Stats.Milk.Produced" AutoReadOnly Hidden
+String Property KeySemensInserted = "SGO4.Stats.Semen.Inserted" AutoReadOnly Hidden
 String Property KeySemensWanked = "SGO4.Stats.Semen.Wanked" AutoReadOnly Hidden
 String Property KeySemensProduced = "SGO4.Stats.Semen.Produced" AutoReadOnly Hidden
 

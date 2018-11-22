@@ -59,6 +59,7 @@ SexLabFramework Property SexLab Auto Hidden
 Actor Property Player Auto
 
 Container Property ContainInsertGems Auto
+Container Property ContainInsertSemens Auto
 FormList Property ListGemFilter Auto
 FormList property ListSemenFilter Auto
 Faction Property FactionProduceGems Auto
@@ -68,6 +69,7 @@ Spell Property SpellActorDataScan Auto
 Spell Property SpellActorDataScanToggle Auto
 Spell Property SpellBirthLargest Auto
 Spell Property SpellInsertGems Auto
+Spell Property SpellInsertSemens Auto
 Spell Property SpellMenuMainOpen Auto
 Spell Property SpellMilkingAction Auto
 Spell Property SpellWankingAction Auto
@@ -485,6 +487,11 @@ Function MenuMainOpen(Actor Who=None)
 	;;;;;;;;
 
 	Result = self.MenuWheelPopulateOpen(Who,ItemText,ItemDesc,ItemShow)
+	If(Result < 0)
+		self.Util.PrintDebug("Main Menu Canceled")
+		Return
+	EndIf
+
 	self.Util.PrintDebug("Selected " + Result + ": " + ItemText[Result])
 
 	If(Result == 0)
@@ -495,7 +502,7 @@ Function MenuMainOpen(Actor Who=None)
 		Debug.MessageBox("Cumming Soon (tm)")
 	ElseIf(Result == 2)
 		;; inseminate
-		Debug.MessageBox("TODO")
+		self.SpellInsertSemens.Cast(self.Player,self.Player)
 	ElseIf(Result == 3)
 		;; actor options
 		self.MenuActorOptionsOpen(Who)
