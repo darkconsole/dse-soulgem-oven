@@ -9,9 +9,9 @@ dse_sgo_QuestController_Main Property Main Auto
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Int Property MaxCount Auto Hidden
-Int Property CurrentCount Auto Hidden
 
 Actor Property InsertInto Auto Hidden
+Form[] Property GemForm Auto Hidden
 Float[] Property GemData Auto Hidden
 Int Property GemLoop Auto Hidden
 Int Property GemStageLen Auto Hidden
@@ -55,7 +55,6 @@ Event OnLoad()
 	;; determine how many gems we can add.
 
 	self.MaxCount = (self.GemActorMax - Main.Data.ActorGemCount(self.InsertInto))
-	self.CurrentCount = 0
 
 	;; tell the player to open us.
 
@@ -84,31 +83,11 @@ Event OnItemAdded(Form Type, Int Count, ObjectReference What, ObjectReference So
 		Return
 	EndIf
 
-	;; make sure we can even fit what they wanted.
-
-	If(self.CurrentCount >= self.MaxCount)
-		Main.Util.PrintLookup("CannotFitMoreGems",self.InsertInto.GetDisplayName())
-
-		If(What != None)
-			self.RemoveItem(What,Count,TRUE,Source)
-		Else
-			self.RemoveItem(Type,Count,TRUE,Source)
-		EndIf
-
-		Return
-	EndIf
-
-	;; consider the following.
-
-	self.CurrentCount += Count
-
 	Return
 EndEvent
 
 Event OnItemRemoved(Form Type, int Count, ObjectReference What, ObjectReference Dest)
 {when an item is removed from this container.}
-
-	self.CurrentCount -= Count
 
 	Return
 EndEvent
@@ -143,39 +122,32 @@ Event OnActivate(ObjectReference What)
 		IterType += 1
 	EndWhile
 
-	;;;;;;;;
-
-	;; todo if CountItem > self.MaxCount 
-	;; because the add item event seems flakey at best.
-
-	;;;;;;;;
+	;; clamp if they exceeded the insertion count.
 
 	Main.Util.PrintDebug(Main.Player.GetDisplayName() + " added " + CountItem + " gems.")
-	self.GemData = Utility.CreateFloatArray(CountItem,0.0)
-	Iter = 0
+
+	If(CountItem > self.MaxCount)
+		CountItem = self.MaxCount
+	EndIf
 
 	;;;;;;;;
 
+	;; populate the data arrays with the values we want to add to the actor.
+
+	self.GemData = Utility.CreateFloatArray(CountItem,0.0)
+	self.GemForm = Utility.CreateFormArray(CountItem)
+
+	Iter = 0
 	IterType = 0
-	While(IterType < CountType)
+
+	While(Iter < self.GemForm.Length && IterType < CountType)
 		Type = self.GetNthForm(IterType)
-
-		;;;;;;;;
-
-		;; if we want to be able to insert the items on the custom list then this needs
-		;; to be re-written as its math that depends on the gem lists being equal length.
-
-		;; if we yield to staying as "insert gems, get whatever" back then we can leave this
-		;; as it is. which tbh is the direction i am leaning anyway.
-
 		TypeVal = (Main.ListGemFilter.Find(Type) % self.GemStageLen) + 1
-
-		;;;;;;;;
-
 		CountItem = self.GetItemCount(Type)
 		IterItem = 0
 
-		While(IterItem < CountItem)
+		While(Iter < self.GemForm.Length && IterItem < CountItem)
+			self.GemForm[Iter] = Type
 			self.GemData[Iter] = TypeVal as Float
 			Main.Util.PrintDebug(self.InsertInto.GetDisplayName() + " " + Type.GetName() + ": " + self.GemData[Iter])
 
@@ -185,6 +157,8 @@ Event OnActivate(ObjectReference What)
 
 		IterType += 1
 	EndWhile
+
+	self.ReturnUnusedItems()
 
 	;; should we do anything?
 
@@ -208,6 +182,45 @@ Event OnActivate(ObjectReference What)
 
 	Return
 EndEvent
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Function ReturnUnusedItems()
+{return any objects in this box back to the player.}
+
+	Int Iter
+	Form Type
+
+	;; first remove the items we are going to use from this container.
+
+	Iter = self.GemForm.Length
+
+	While(Iter > 0)
+		Iter -= 1
+
+		If(self.GemForm[Iter] != None)
+			self.RemoveItem(self.GemForm[Iter],1)
+		EndIf
+	EndWhile
+
+	;; then return everything that remains in this container.
+
+	Iter = self.GetNumItems()
+
+	If(Iter > 0)
+		Main.Util.Print("Returning unused items to your inventory...")
+	EndIf
+
+	While(Iter > 0)
+		Iter -= 1
+		Type = self.GetNthForm(Iter)
+
+		Main.Player.AddItem(Type,self.GetItemCount(Type))
+	EndWhile
+
+	Return
+EndFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

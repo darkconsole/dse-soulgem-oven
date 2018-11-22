@@ -49,7 +49,6 @@ String Property KeyActorModValuePrefix = "SGO4.Actor.ModValue." AutoReadOnly Hid
 
 Event OnPlayerLoadGame()
 
-	;;self.RaceLoadFiles()
 	Return
 EndEvent
 
