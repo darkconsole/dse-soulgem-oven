@@ -95,13 +95,14 @@ Function HandleStartAnimation()
 {handle Semening via animating.}
 
 	self.RegisterForModEvent(Main.Body.KeyEvActorSpawnSemen,"OnSpawnSemen")
-	self.RegisterForModEvent(Main.Body.KeyEvActorSpawnMilk,"OnSpawnSemen")
 	self.RegisterForModEvent(Main.Body.KeyEvActorDone,"OnDone")
 	self.HandleTimeoutRenew()
 	
 	Main.Data.ActorSemenLimit(self.SemenFrom)
 	Main.Util.ActorArmourRemove(self.SemenFrom)
 	Main.Body.ActorLockdown(self.SemenFrom)
+	Utility.Wait(0.25)
+	Debug.SendAnimationEvent(self.SemenFrom,"SOSFastErect")
 	Utility.Wait(0.25)
 	Main.Body.ActorAnimateSolo(self.SemenFrom,Main.Body.AniWanking01)
 

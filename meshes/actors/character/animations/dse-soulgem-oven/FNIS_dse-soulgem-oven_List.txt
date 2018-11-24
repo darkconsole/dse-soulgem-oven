@@ -32,3 +32,7 @@ b -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable,TSGO4.ActorMoan/2.0,TSGO4.Act
 '' simple single milking.
 
 b -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable,TSGO4.ActorMoan/1.5,TSGO4.ActorMoan/3.30,TSGO4.ActorSpawnMilk/3.33,TSGO4.ActorDone/-0.1 dse-sgo-milking01-01 milking01-01.hkx
+
+'' simple single wanking.
+
+b -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable,TSGO4.ActorMoan/2.0,TSGO4.ActorSpawnSemen/2.0,TSGO4.ActorDone/-0.1 dse-sgo-wanking01-01 wanking01-01.hkx

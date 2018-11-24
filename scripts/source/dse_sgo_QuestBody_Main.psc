@@ -24,7 +24,7 @@ String Property AniInseminate01 = "dse-sgo-insert01-01" AutoReadOnly Hidden
 String Property AniInsert02 = "dse-sgo-insert02-01" AutoReadOnly Hidden
 String Property AniBirth01 = "dse-sgo-birth01-01" AutoReadOnly Hidden
 String Property AniMilking01 = "dse-sgo-milking01-01" AutoReadOnly Hidden
-String Property AniWanking01 = "dse-sgo-milking01-01" AutoReadOnly Hidden
+String Property AniWanking01 = "dse-sgo-wanking01-01" AutoReadOnly Hidden
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -121,6 +121,7 @@ Function RegisterForCustomAnimationEvents(Actor Who)
 	self.RegisterForAnimationEvent(Who,self.KeyEvActorInsert)
 	self.RegisterForAnimationEvent(Who,self.KeyEvActorSpawnGem)
 	self.RegisterForAnimationEvent(Who,self.KeyEvActorSpawnMilk)
+	self.RegisterForAnimationEvent(Who,self.KeyEvActorSpawnSemen)
 
 	Return
 EndFunction
@@ -136,6 +137,7 @@ Function UnregisterForCustomAnimationEvents(Actor Who)
 	self.UnregisterForAnimationEvent(Who,self.KeyEvActorInsert)
 	self.UnregisterForAnimationEvent(Who,self.KeyEvActorSpawnGem)
 	self.UnregisterForAnimationEvent(Who,self.KeyEvActorSpawnMilk)
+	self.UnregisterForAnimationEvent(Who,self.KeyEvActorSpawnSemen)
 
 	Return
 EndFunction
@@ -162,6 +164,8 @@ Event OnAnimationEvent(ObjectReference What, String EvName)
 			self.OnAnimationEvent_ActorSpawnGem(What as Actor)
 		ElseIf(EvName == self.KeyEvActorSpawnMilk)
 			self.OnAnimationEvent_ActorSpawnMilk(What as Actor)
+		ElseIf(EvName == self.KeyEvActorSpawnSemen)
+			self.OnAnimationEvent_ActorSpawnSemen(What as Actor)
 		EndIf
 	EndIf
 
@@ -247,13 +251,27 @@ Function OnAnimationEvent_ActorSpawnGem(Actor Who)
 EndFunction
 
 Function OnAnimationEvent_ActorSpawnMilk(Actor Who)
-{a gem spawn happened in the animation.}
+{a milk spawn happened in the animation.}
 
 	Int Ev
 
 	Main.Util.PrintDebug("ModEvent: " + self.KeyEvActorSpawnMilk)
 
  	Ev = ModEvent.Create(self.KeyEvActorSpawnMilk)
+	ModEvent.PushForm(Ev,Who)
+	ModEvent.Send(Ev)
+
+	Return
+EndFunction
+
+Function OnAnimationEvent_ActorSpawnSemen(Actor Who)
+{a semen spawn happened in the animation.}
+
+	Int Ev
+
+	Main.Util.PrintDebug("ModEvent: " + self.KeyEvActorSpawnSemen)
+
+ 	Ev = ModEvent.Create(self.KeyEvActorSpawnSemen)
 	ModEvent.PushForm(Ev,Who)
 	ModEvent.Send(Ev)
 
