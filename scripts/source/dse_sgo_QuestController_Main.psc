@@ -143,6 +143,7 @@ Event OnInit()
 	self.RegisterForModEvent("SexLabOrgasm","OnModEvent_SexLabOrgasm")
 
 	self.Player.AddSpell(self.SpellMenuMainOpen)
+	self.Player.AddSpell(self.SpellActorDataScanToggle)
 	self.Util.Print("Soulgem Oven 4 has started.")
 	Return
 EndEvent
