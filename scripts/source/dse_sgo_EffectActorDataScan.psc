@@ -29,6 +29,7 @@ Event OnEffectStart(Actor Who, Actor From)
 
 	;;;;;;;;
 
+	Main.Data.ActorDetermineFeatures(self.Target)
 	Main.Util.Print("Scanning " + self.Target.GetDisplayName())
 
 	self.ActorScan()
