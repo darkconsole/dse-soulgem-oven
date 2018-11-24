@@ -181,12 +181,58 @@ Bool Function CheckForDeps(Bool Popup)
 
 	Bool Output = TRUE
 
+	If(!self.CheckForDeps_SKSE(Popup))
+		Output = FALSE
+	EndIf
+
+	If(!self.CheckForDeps_SkyUI(Popup))
+		Output = FALSE
+	EndIf
+
 	If(!self.CheckForDeps_SexLab(Popup))
-		self.SexLab = NONE
+		Output = FALSE
+	EndIf
+
+	If(!self.CheckForDeps_PapyrusUtil(Popup))
+		Output = FALSE
+	EndIf
+
+	If(!self.CheckForDeps_RaceMenu(Popup))
+		Output = FALSE
+	EndIf
+
+	If(!self.CheckForDeps_UIExtensions(Popup))
 		Output = FALSE
 	EndIf
 
 	Return Output
+EndFunction
+
+Bool Function CheckForDeps_SKSE(Bool Popup)
+{make sure skse is new enough.}
+
+	If(SKSE.GetScriptVersionRelease() < 57)
+		If(Popup)
+			self.Util.PopupError("You need to update your SKSE to 2.0.7 or newer.")
+		EndIf
+
+		Return FALSE
+	EndIf
+
+	Return TRUE
+EndFunction
+
+Bool Function CheckForDeps_SkyUI(Bool Popup)
+{make sure we have ui extensions installed and up to date.}
+
+	If(!self.Util.IsPluginInstalled("SkyUI_SE.esp"))
+		If(Popup)
+			self.Util.PopupError("SkyUI SE 5.2 or newer must be installed.")
+		EndIf
+		Return FALSE
+	EndIf
+
+	Return TRUE
 EndFunction
 
 Bool Function CheckForDeps_SexLab(Bool Popup)
@@ -198,7 +244,7 @@ Bool Function CheckForDeps_SexLab(Bool Popup)
 
 	If(self.SexLab == NONE)
 		If(Popup)
-			self.Util.PopupError("SexLab is not installed.")
+			self.Util.PopupError("SexLab SE 1.63 Beta 2 or newer must be installed.")
 		EndIf
 
 		Return FALSE
@@ -208,10 +254,69 @@ Bool Function CheckForDeps_SexLab(Bool Popup)
 
 	If(self.SexLab.GetVersion() < 16203)
 		If(Popup)
-			self.Util.PopupError("Your SexLab needs to be updated. Install 1.63 SE dev 3 or newer.")
+			self.Util.PopupError("Your SexLab needs to be updated. Install 1.63 SE Beta 2 or newer.")
 		EndIf
 
 		self.SexLab = NONE
+		Return FALSE
+	EndIf
+
+	Return TRUE
+EndFunction
+
+Bool Function CheckForDeps_PapyrusUtil(Bool Popup)
+{make sure papyrus util is new enough. mostly to detect if someone overwrote
+the one that comes in sexlab with an old version.}
+
+	If(PapyrusUtil.GetScriptVersion() < 35)
+		If(Popup)
+			self.Util.PopupError("Your PapyrusUtil is out of date. It is likely some other mod overwrote the version that came in SexLab.")
+			Return FALSE
+		EndIf
+	EndIf
+
+	Return TRUE
+EndFunction
+
+Bool Function CheckForDeps_RaceMenu(Bool Popup)
+{make sure we have racemenu installed and up to date.}
+
+	Bool Output = TRUE
+
+	;; hard fail if no racemenu.
+
+	If(!self.Util.IsPluginInstalled("RaceMenu.esp"))
+		If(Popup)
+			self.Util.PopupError("RaceMenu SE 0.2.4 or newer must be installed.")
+		EndIf
+		Output = FALSE
+	EndIf
+
+	If(NiOverride.GetScriptVersion() < 6)
+		If(Popup)
+			self.Util.PopupError("NiOverride is out of date. Install Racemenu SE 0.2.4 newer and make sure nothing has overwritten it with older versions.")
+		EndIf
+		Output = FALSE
+	EndIf
+
+	;; soft fail if no morph sliders.
+	
+	If(!self.Util.IsPluginInstalled("RaceMenuMorphsCBBE.esp") && !self.Util.IsPluginInstalled("RaceMenuMorphsTBD.esp"))
+		If(Popup)
+			self.Util.PopupError("You have no BodyMorphs installed. Currently the only known ones are CBBE and TBD. You will not see any body scaling until you fix this.")
+		EndIf
+	EndIf
+
+	Return Output
+EndFunction
+
+Bool Function CheckForDeps_UIExtensions(Bool Popup)
+{make sure we have ui extensions installed and up to date.}
+
+	If(!self.Util.IsPluginInstalled("UIExtensions.esp"))
+		If(Popup)
+			self.Util.PopupError("UI Extensions 1.2.0+ must be installed.")
+		EndIf
 		Return FALSE
 	EndIf
 

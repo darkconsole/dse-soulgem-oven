@@ -54,11 +54,23 @@ EndFunction
 Form Function GetFormFrom(String ModName, Int FormID)
 {gets a form from a specific mod.}
 
-	If(Game.GetModByName(ModName) == 255)
+	If(!self.IsPluginInstalled(ModName))
 		Return NONE
 	EndIf
 
 	Return Game.GetFormFromFile(FormID,ModName)
+EndFunction
+
+Bool Function IsPluginInstalled(String ModName)
+{check if an esp is installed.}
+
+	Int Result = Game.GetModByName(ModName)
+
+	If(Result == -1 || Result == 255)
+		Return FALSE
+	EndIf
+
+	Return TRUE
 EndFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
