@@ -170,35 +170,35 @@ EndFunction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Function SetBool(String Path, Bool Value)
+Bool Function SetBool(String Path, Bool Value)
 
 	JsonUtil.SetPathIntValue(self.FileCustom,Path,(Value as Int))
-	;;JsonUtil.Save(self.FileCustom)
+	JsonUtil.Save(self.FileCustom)
 	
-	Return
+	Return Value
 EndFunction
 
-Function SetInt(String Path, Int Value)
+Int Function SetInt(String Path, Int Value)
 
 	JsonUtil.SetPathIntValue(self.FileCustom,Path,Value)
-	;;JsonUtil.Save(self.FileCustom)
+	JsonUtil.Save(self.FileCustom)
 	
-	Return
+	Return Value
 EndFunction
 
-Function SetFloat(String Path, Float Value)
+Float Function SetFloat(String Path, Float Value)
 
 	JsonUtil.SetPathFloatValue(self.FileCustom,Path,Value)
-	;;JsonUtil.Save(self.FileCustom)
+	JsonUtil.Save(self.FileCustom)
 	
-	Return
+	Return Value
 EndFunction
 
-Function SetString(String Path, String Value)
+String Function SetString(String Path, String Value)
 
 	JsonUtil.SetPathStringValue(self.FileCustom,Path,Value)
-	;;JsonUtil.Save(self.FileCustom)
+	JsonUtil.Save(self.FileCustom)
 	
-	Return
+	Return Value
 EndFunction
 

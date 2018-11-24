@@ -26,6 +26,7 @@ Event OnEffectStart(Actor Who, Actor From)
 	self.RegisterForModEvent("SGO4.GemBar.Ready","OnBarReady")
 	self.RegisterForModEvent("SGO4.MilkBar.Ready","OnBarReady")
 	self.RegisterForModEvent("SGO4.SemenBar.Ready","OnBarReady")
+	self.RegisterForModEvent("SGO4.Widget.Scanner.Update","OnForceUpdate")
 
 	;;;;;;;;
 
@@ -89,6 +90,12 @@ Event OnActorUpdate(Form What)
 	Return
 EndEvent
 
+Event OnForceUpdate()
+
+	Main.Util.PrintDebug("Bars Force Update Event For " + self.Target.GetDisplayName())
+	self.ActorScan()	
+	Return
+EndEvent
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -117,12 +124,18 @@ Function ActorScan()
 	String SemenString
 	Float SemenOffset
 
-	Float Offset = 0.0
+	Float Scale = Main.Config.GetFloat("WidgetScale")
+	Float PosX = Main.Config.GetFloat("WidgetOffsetX")
+	Float Offset = Main.Config.GetFloat("WidgetOffsetY")
 	Float OffsetFactor = 0.5
-	
+	String PosH = Main.Config.GetString("WidgetAnchorH")
+	String PosV = Main.Config.GetString("WidgetAnchorV")
+
 	;; fetch and calculate some data for positioning.
 
 	If(ShowMilk)
+		Main.MilkBar.SetScale(Scale)
+		
 		MilkOffset = Offset
 		Offset += Main.MilkBar.SetH * OffsetFactor
 
@@ -136,6 +149,8 @@ Function ActorScan()
 	EndIf
 
 	If(ShowGems)
+		Main.GemBar.SetScale(Scale)
+
 		GemOffset = Offset
 		Offset += Main.GemBar.SetH * OffsetFactor
 
@@ -149,6 +164,8 @@ Function ActorScan()
 	EndIf
 
 	If(ShowSemen)
+		Main.SemenBar.SetScale(Scale)
+
 		SemenOffset = Offset
 		Offset += Main.SemenBar.SetH * OffsetFactor
 
@@ -194,21 +211,24 @@ Function ActorScan()
 
 	If(ShowMilk)
 		Main.MilkBar.SetText(Main.Util.StringLookup("ActorDataScanMilkText",MilkString))
-		Main.MilkBar.SetPosition(Main.MilkBar.PosX,MilkOffset,0.25)
+		Main.MilkBar.SetAnchor(PosH,PosV)
+		Main.MilkBar.SetPosition(PosX,MilkOffset,0.25)
 		Main.MilkBar.FadeTo(100.0,0.25)
 		Main.MilkBar.SetPercent(MilkPercent)
 	EndIf
 
 	If(ShowGems)
 		Main.GemBar.SetText(Main.Util.StringLookup("ActorDataScanGemText",GemString))
-		Main.GemBar.SetPosition(Main.GemBar.PosX,GemOffset,0.25)
+		Main.GemBar.SetAnchor(PosH,PosV)
+		Main.GemBar.SetPosition(PosX,GemOffset,0.25)
 		Main.GemBar.FadeTo(100.0,0.25)
 		Main.GemBar.SetPercent(GemPercent)
 	EndIf
 
 	If(ShowSemen)
 		Main.SemenBar.SetText(Main.Util.StringLookup("ActorDataScanSemenText",SemenString))
-		Main.SemenBar.SetPosition(Main.SemenBar.PosX,SemenOffset,0.25)
+		Main.SemenBar.SetAnchor(PosH,PosV)
+		Main.SemenBar.SetPosition(PosX,SemenOffset,0.25)
 		Main.SemenBar.FadeTo(100.0,0.25)
 		Main.SemenBar.SetPercent(SemenPercent)
 	EndIf

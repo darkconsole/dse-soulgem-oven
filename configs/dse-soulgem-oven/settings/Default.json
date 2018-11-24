@@ -18,6 +18,11 @@
 	"FertilityDays": 28,
 	"FertilityWindow": 2.0,
 	"FertilitySync": true,
+	"WidgetOffsetX": 0.0,
+	"WidgetOffsetY": 0.0,
+	"WidgetAnchorH": "left",
+	"WidgetAnchorV": "bottom",
+	"WidgetScale": 0.75,
 	"Sliders": {
 		"Gems": [
 			{ "Name": "PregnancyBelly", "Max": 0.65 },

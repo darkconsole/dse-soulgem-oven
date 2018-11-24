@@ -37,10 +37,13 @@ Event OnConfigInit()
 	self.Pages[0] = "$SGO4_Menu_General"
 	;; info, enable/disable, uninstall.
 
-	self.Pages[1] = "$SGO4_Menu_Debug"
+	self.Pages[1] = "$SGO4_Menu_Widgets"
+	;; widget settings utilities
+
+	self.Pages[2] = "$SGO4_Menu_Debug"
 	;; testing utilities
 
-	self.Pages[2] = "$SGO4_Menu_Splash"
+	self.Pages[3] = "$SGO4_Menu_Splash"
 	;; splash screen
 
 	Return
@@ -56,6 +59,11 @@ EndEvent
 Event OnConfigClose()
 {things to do when the menu closes.}
 
+	Int Ev
+
+	Ev = ModEvent.Create("SGO4.Widget.Scanner.Update")
+	ModEvent.Send(Ev)
+
 	Return
 EndEvent
 
@@ -66,6 +74,8 @@ Event OnPageReset(string page)
 
 	If(Page == "$SGO4_Menu_General")
 		self.ShowPageGeneral()
+	ElseIf(Page == "$SGO4_Menu_Widgets")
+		self.ShowPageWidgets()
 	ElseIf(Page == "$SGO4_Menu_Debug")
 		self.ShowPageDebug()
 	Else
@@ -159,6 +169,22 @@ Event OnOptionSelect(Int Item)
 
 	;;;;;;;;
 
+	ElseIf(Item == ItemModStatus)
+		Debug.MessageBox("$SGO4_Dialog_PleaseCloseMCM")
+		Utility.Wait(0.1)
+
+		If(Main.IsRunning())
+			Main.Reset()
+			Main.Stop()
+			Main.Util.Print("Shutting down.")
+		Else
+			Main.Start()
+		EndIf
+
+		Return
+
+	;;;;;;;;
+
 	EndIf
 
 	self.SetToggleOptionValue(Item,Val)
@@ -174,6 +200,38 @@ Event OnOptionSliderOpen(Int Item)
 	Float Max = 0.0
 	Float Interval = 0.0
 
+	If(Item == ItemWidgetOffsetX)
+		Val = Main.Config.GetFloat("WidgetOffsetX")
+		Min = 0.0
+		Max = 1280.0
+		Interval = 0.1
+	ElseIf(Item == ItemWidgetOffsetY)
+		Val = Main.Config.GetFloat("WidgetOffsetY")
+		Min = 0.0
+		Max = 720.0
+		Interval = 0.1
+	ElseIf(Item == ItemWidgetScale)
+		Val = Main.Config.GetFloat("WidgetScale")
+		Min = 0.1
+		Max = 1.0
+		Interval = 0.05
+	ElseIf(Item == ItemActorGemsMax)
+		Val = Main.Config.GetFloat("ActorGemsMax")
+		Min = 1.0
+		Max = 12.0
+		Interval = 1.0
+	ElseIf(Item == ItemActorMilkMax)
+		Val = Main.Config.GetFloat("ActorMilkMax")
+		Min = 1.0
+		Max = 4.0
+		Interval = 1.0
+	ElseIf(Item == ItemActorSemenMax)
+		Val = Main.Config.GetFloat("ActorSemenMax")
+		Min = 1.0
+		Max = 3.0
+		Interval = 1.0
+	EndIf
+
 	SetSliderDialogStartValue(Val)
 	SetSliderDialogRange(Min,Max)
 	SetSliderDialogInterval(Interval)
@@ -186,7 +244,101 @@ EndEvent
 Event OnOptionSliderAccept(Int Item, Float Val)
 	String Fmt = "{0}"
 
+	If(Item == ItemWidgetOffsetX)
+		Fmt = "{1}"
+		Main.Config.SetFloat("WidgetOffsetX",Val)
+	ElseIf(Item == ItemWidgetOffsetY)
+		Fmt = "{1}"
+		Main.Config.SetFloat("WidgetOffsetY",Val)
+	ElseIf(Item == ItemWidgetScale)
+		Fmt = "{2}"
+		Main.Config.SetFloat("WidgetScale",Val)
+	ElseIf(Item == ItemActorGemsMax)
+		Fmt = "{0}"
+		Main.Config.SetInt("ActorGemsMax",(Val as Int))
+	ElseIf(Item == ItemActorMilkMax)
+		Fmt = "{0}"
+		Main.Config.SetInt("ActorMilkMax",(Val as Int))
+	ElseIf(Item == ItemActorSemenMax)
+		Fmt = "{0}"
+		Main.Config.SetInt("ActorSemenMax",(Val as Int))
+	EndIf
+
 	SetSliderOptionValue(Item,Val,Fmt)
+	Return
+EndEvent
+
+;/*****************************************************************************
+*****************************************************************************/;
+
+Event OnOptionMenuOpen(Int Item)
+
+	String[] Opts
+	Int Select = 0
+	Int Iter
+
+	If(Item == ItemWidgetAnchorH)
+		Opts = Utility.CreateStringArray(3)
+		Opts[0] = "left"
+		Opts[1] = "center"
+		Opts[2] = "right"
+
+		Iter = Opts.Length
+		While(Iter > 0)
+			Iter -= 1
+			If(Opts[Iter] == Main.Config.GetString("WidgetAnchorH"))
+				Select = Iter
+				Iter = 0
+			EndIf
+		EndWhile
+	ElseIf(Item == ItemWidgetAnchorV)
+		Opts = Utility.CreateStringArray(3)
+		Opts[0] = "top"
+		Opts[1] = "center"
+		Opts[2] = "bottom"
+
+		Iter = Opts.Length
+		While(Iter > 0)
+			Iter -= 1
+			If(Opts[Iter] == Main.Config.GetString("WidgetAnchorV"))
+				Select = Iter
+				Iter = 0
+			EndIf
+		EndWhile
+	EndIf
+
+	SetMenuDialogDefaultIndex(0)
+	SetMenuDialogStartIndex(Select)
+	SetMenuDialogOptions(Opts)
+	Return
+EndEvent
+
+;/*****************************************************************************
+*****************************************************************************/;
+
+Event OnOptionMenuAccept(Int Item, Int Selected)
+
+	String Val = ""
+
+	If(Item == ItemWidgetAnchorH)
+		If(Selected == 0)
+			Val = Main.Config.SetString("WidgetAnchorH","left")
+		ElseIf(Selected == 1)
+			Val = Main.Config.SetString("WidgetAnchorH","center")
+		ElseIf(Selected == 2)
+			Val = Main.Config.SetString("WidgetAnchorH","right")
+		EndIf
+	ElseIf(Item == ItemWidgetAnchorV)
+		If(Selected == 0)
+			Val = Main.Config.SetString("WidgetAnchorV","top")
+		ElseIf(Selected == 1)
+			Val = Main.Config.SetString("WidgetAnchorV","center")
+		ElseIf(Selected == 2)
+			Val = Main.Config.SetString("WidgetAnchorV","bottom")
+		EndIf
+	EndIf
+
+	SetMenuOptionValue(Item,Val)
 	Return
 EndEvent
 
@@ -195,8 +347,23 @@ EndEvent
 
 Event OnOptionHighlight(Int Item)
 	
-	;;self.SetInfoText("$SGO4_Mod_TitleFull")
+	String Txt = "$SGO4_Mod_TitleFull"
 
+	If(Item == ItemWidgetOffsetX)
+		Txt = "$SGO4_MenuTip_WidgetOffsetX"
+	ElseIf(Item == ItemWidgetOffsetY)
+		Txt = "$SGO4_MenuTip_WidgetOffsetY"
+	ElseIf(Item == ItemWidgetAnchorH)
+		Txt = "$SGO4_MenuTip_WidgetAnchorH"
+	ElseIf(Item == ItemWidgetAnchorV)
+		Txt = "$SGO4_MenuTip_WidgetAnchorV"
+	ElseIf(Item == ItemWidgetScale)
+		Txt = "$SGO4_MenuTip_WidgetScale"
+	ElseIf(Item == ItemModStatus)
+		Txt = "$SGO4_MenuTip_IsModActive"
+	EndIf
+
+	self.SetInfoText(Txt)
 	Return
 EndEvent
 
@@ -212,7 +379,54 @@ EndFunction
 ;/*****************************************************************************
 *****************************************************************************/;
 
+Int ItemModStatus
+Int ItemActorGemsMax
+Int ItemActorMilkMax
+Int ItemActorSemenMax
+
 Function ShowPageGeneral()
+
+	self.SetTitleText("$SGO4_MenuTitle_General")
+	self.SetCursorFillMode(LEFT_TO_RIGHT)
+	self.SetCursorPosition(0)
+
+	AddHeaderOption("$SGO4_MenuOpt_ModStatus")
+	AddHeaderOption("")
+	ItemModStatus = AddToggleOption("$SGO4_MenuOpt_IsModActive",Main.IsRunning())
+	AddEmptyOption()
+
+	AddHeaderOption("$SGO4_MenuOpt_ActorOptions")
+	AddHeaderOption("")
+
+	ItemActorGemsMax = AddSliderOption("$SGO4_MenuOpt_ActorGemsMax",Main.Config.GetInt("ActorGemsMax"),"{0}")
+	ItemActorMilkMax = AddSliderOption("$SGO4_MenuOpt_ActorMilkMax",Main.Config.GetInt("ActorMilkMax"),"{0}")
+	ItemActorSemenMax = AddSliderOption("$SGO4_MenuOpt_ActorSemenMax",Main.Config.GetInt("ActorSemenMax"),"{0}")
+
+	Return
+EndFunction
+
+;/*****************************************************************************
+*****************************************************************************/;
+
+Int ItemWidgetScale
+Int ItemWidgetOffsetX
+Int ItemWidgetOffsetY
+Int ItemWidgetAnchorH
+Int ItemWidgetAnchorV
+
+Function ShowPageWidgets()
+
+	self.SetTitleText("$SGO4_MenuTitle_Widgets")
+	self.SetCursorFillMode(LEFT_TO_RIGHT)
+	self.SetCursorPosition(0)
+
+	AddHeaderOption("$SGO4_MenuOpt_ScannerWidget")
+	AddHeaderOption("")
+	ItemWidgetOffsetX = AddSliderOption("$SGO4_MenuOpt_WidgetOffsetX",Main.Config.GetFloat("WidgetOffsetX"),"{1}")
+	ItemWidgetAnchorH = AddMenuOption("$SGO4_MenuOpt_WidgetAnchorH",Main.Config.GetString("WidgetAnchorH"))
+	ItemWidgetOffsetY = AddSliderOption("$SGO4_MenuOpt_WidgetOffsetY",Main.Config.GetFloat("WidgetOffsetY"),"{1}")
+	ItemWidgetAnchorV = AddMenuOption("$SGO4_MenuOpt_WidgetAnchorV",Main.Config.GetString("WidgetAnchorV"))
+	ItemWidgetScale = AddSliderOption("$SGO4_MenuOpt_WidgetScale",Main.Config.GetFloat("WidgetScale"),"{2}")
 
 	Return
 EndFunction
@@ -243,7 +457,7 @@ Function ShowPageDebug()
 
 	GemCount = Main.Data.ActorGemCount(Who)
 
-	self.SetTitleText("Debugging")
+	self.SetTitleText("$SGO4_MenuTitle_Debugging")
 	self.SetCursorFillMode(TOP_TO_BOTTOM)
 	self.SetCursorPosition(0)
 
