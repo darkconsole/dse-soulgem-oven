@@ -19,6 +19,12 @@ Event OnEffectStart(Actor Who, Actor From)
 		self.Target = Who
 	EndIf
 
+	If(!Main.Util.ActorIsValid(self.Target))
+		Main.Util.PrintLookup("ActorNotValid",Who.GetDisplayName())
+		self.Dispel()
+		Return
+	EndIf
+
 	;;;;;;;;
 
 	self.RegisterForModEvent("SGO4.Body.ActorUpdate","OnActorUpdate")

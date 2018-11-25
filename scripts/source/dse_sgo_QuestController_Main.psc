@@ -80,6 +80,7 @@ Package Property PackageDoNothing Auto
 
 String Property KeyESP = "dse-soulgem-oven.esp" AutoReadOnly Hidden
 String Property KeySplashGraphic = "dse-soulgem-oven/splash.dds" AutoReadOnly Hidden
+Bool Property OptValidateActor = TRUE Auto Hidden
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -521,6 +522,12 @@ Function MenuMainOpen(Actor Who=None)
 	Int SemenCount
 
 	Who = self.MenuTargetGet(Who)
+
+	If(!self.Util.ActorIsValid(Who))
+		self.Util.PrintLookup("ActorNotValid",Who.GetDisplayName())
+		Return
+	EndIf
+
 	self.Data.ActorDetermineFeatures(Who)
 
 	;;;;;;;;

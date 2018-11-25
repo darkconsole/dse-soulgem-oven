@@ -410,3 +410,20 @@ Function ActorToggleFaction(Actor Who, Faction What)
 
 	Return
 EndFunction
+
+Bool Function ActorIsValid(Actor Who)
+{check if the actor is valid for use.}
+
+	Int SexLabSays
+
+	If(Main.OptValidateActor)
+		SexLabSays = Main.SexLab.ValidateActor(Who)
+
+		If(SexLabSays < 0)
+			self.PrintDebug(Who.GetDisplayName() + " did not pass sexlab's test: " + SexLabSays)
+			Return FALSE
+		EndIf
+	EndIf
+
+	Return TRUE
+EndFunction

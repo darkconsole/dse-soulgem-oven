@@ -9,6 +9,7 @@
 	"ActorDataScanGemText": "%2 of %3 gems",
 	"ActorDataScanMilkText": "%2 of %3 bottles",
 	"ActorDataScanSemenText": "%2 of %3 bottles",
+	"ActorNotValid": "%1 is not valid for targeting.",
 	"MenuGemCount": "Gems: %1",
 	"MenuMilkCount": "Milk: %1",
 	"MenuSemenCount": "Semen: %1",
