@@ -37,14 +37,14 @@ Event OnEffectStart(Actor Who, Actor From)
 	;;;;;;;;
 
 	Main.Data.ActorDetermineFeatures(self.Target)
-	Main.Util.Print("Scanning " + self.Target.GetDisplayName())
+	Main.Util.PrintLookup("ScannerScanning",self.Target.GetDisplayName())
 
 	self.ActorScan()
 	Return
 EndEvent
 
 Event OnEffectFinish(Actor Who, Actor From)
-	Main.Util.Print("Done Scanning " + self.Target.GetDisplayName())
+	Main.Util.PrintLookup("ScannerDone",self.Target.GetDisplayName())
 	
 	Main.GemBar.SetTitle("")
 	Main.GemBar.SetText("")

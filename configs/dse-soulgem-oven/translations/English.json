@@ -13,6 +13,8 @@
 	"MenuGemCount": "Gems: %1",
 	"MenuMilkCount": "Milk: %1",
 	"MenuSemenCount": "Semen: %1",
+	"ScannerScanning": "Scanning %1",
+	"ScannerDone": "Done scanning %1",
 	"FlavourActorGemGain": [
 		"%1 is now incubating another gem.",
 		"Another gem has begun to grow within %1."
