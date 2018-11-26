@@ -17,7 +17,7 @@
 		},
 		{	"Name": "Breton",
 			"Race": "79681|Skyrim.esm",
-			"Milk": "004353|dse-soulgem-oven.esp",
+			"Milk": "17235|dse-soulgem-oven.esp",
 			"Semen": "37944|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Breton Vampire",
@@ -31,7 +31,7 @@
 			"Semen": "37945|dse-soulgem-oven.esp"
 		},
 		{	"Name": "Dunmer Vampire",
-			"Race": "79680|Skyrim.esm",
+			"Race": "559165|Skyrim.esm",
 			"Milk": "17237|dse-soulgem-oven.esp",
 			"Semen": "37945|dse-soulgem-oven.esp"
 		},
