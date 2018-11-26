@@ -26,6 +26,9 @@ String Property AniBirth01 = "dse-sgo-birth01-01" AutoReadOnly Hidden
 String Property AniMilking01 = "dse-sgo-milking01-01" AutoReadOnly Hidden
 String Property AniWanking01 = "dse-sgo-wanking01-01" AutoReadOnly Hidden
 
+String Property KeySlidersGems = ".Sliders.Gems" AutoReadOnly Hidden
+String Property KeySlidersMilk = ".Sliders.Milk" AutoReadOnly Hidden
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -55,7 +58,7 @@ Function ActorUpdateGems(Actor Who)
 	Float GemPercent = Main.Data.ActorGemTotalPercent(Who)
 	;;Main.Util.PrintDebug("ActorUpdateGems(" + Who.GetDisplayName() + ") = " + GemPercent)
 
-	self.ActorSlidersApply(Who,"Gems",GemPercent)
+	self.ActorSlidersApply(Who,self.KeySlidersGems,GemPercent)
 
 	Return
 EndFunction
@@ -66,7 +69,7 @@ Function ActorUpdateMilk(Actor Who)
 	Float MilkPercent = Main.Data.ActorMilkTotalPercent(Who)
 	;;Main.Util.PrintDebug("ActorUpdateMilk(" + Who.GetDisplayName() + ") = " + MilkPercent)
 
-	self.ActorSlidersApply(Who,"Milk",MilkPercent)
+	self.ActorSlidersApply(Who,self.KeySlidersMilk,MilkPercent)
 
 	Return
 EndFunction
@@ -78,17 +81,23 @@ Function ActorSlidersApply(Actor Who, String Prefix, Float Percent)
 {apply a specific set of sliders at a percentage of their max value.}
 
 	String MorphKey = "SGO4.Morph." + Prefix
-	Int SliderCount = Main.Config.GetCount("Sliders." + Prefix)
+	Int SliderCount = Main.Config.GetCount(Prefix)
 	Int SliderIter = 0
 	String SliderName
 	Float SliderMax
 
-	While(SliderIter < SliderCount)
-		SliderName = Main.Config.GetString("Sliders." + Prefix + "[" + SliderIter + "].Name")
-		SliderMax = Main.Config.GetFloat("Sliders." + Prefix + "[" + SliderIter + "].Max")
+	Main.Util.PrintDebug(Who.GetDisplayName() + " Slider Count: " + Prefix + " " + SliderCount)
 
-		;;Main.Util.PrintDebug(Who.GetDisplayName() + " Apply " + Prefix + " Slider " + SliderName + " " + (SliderMax*Percent))
+	While(SliderIter < SliderCount)
+		SliderName = Main.Config.GetString(Prefix + "[" + SliderIter + "].Name")
+		SliderMax = Main.Config.GetFloat(Prefix + "[" + SliderIter + "].Max")
+
+		Main.Util.PrintDebug(Who.GetDisplayName() + " Apply " + Prefix + " Slider " + SliderName + " " + (SliderMax*Percent))
 		NiOverride.SetBodyMorph(Who,SliderName,MorphKey,(SliderMax * Percent))
+
+		;; these two should be removed after a few versions. just a cleanup.
+		NiOverride.ClearBodyMorph(Who,SliderName,"SGO4.Morph.Gems")
+		NiOverride.ClearBodyMorph(Who,SliderName,"SGO4.Morph.Milk")
 
 		SliderIter += 1
 	EndWhile

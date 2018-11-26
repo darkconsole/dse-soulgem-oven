@@ -160,7 +160,7 @@ Int Function GetCount(String Path)
 {fetch how many items are in the specified thing. you should probably only
 use this on arrays.}
 
-	If(JsonUtil.CanResolvepath(self.FileCustom,Path))
+	If(JsonUtil.CanResolvePath(self.FileCustom,Path))
 		Return JsonUtil.PathCount(self.FileCustom,Path)
 	EndIf
 
