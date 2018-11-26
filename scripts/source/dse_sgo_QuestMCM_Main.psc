@@ -20,6 +20,9 @@ Event OnGameReload()
 	;; do a dependency check every launch.
 	;;Main.ResetMod_Prepare()
 
+	Main.Util.PrintDebug("JSON ERRORS: " + JsonUtil.GetErrors(Main.Config.FileConfig))
+	Main.Util.PrintDebug("JSON ERRORS: " + JsonUtil.GetErrors(Main.Config.FileCustom))
+
 	Main.UnregisterForMenu("Sleep/Wait Menu")
 	Main.RegisterForMenu("Sleep/Wait Menu")
 
@@ -32,7 +35,7 @@ EndEvent
 Event OnConfigInit()
 {things to do when the menu initalises (is opening)}
 
-	self.Pages = new String[3]
+	self.Pages = new String[4]
 	
 	self.Pages[0] = "$SGO4_Menu_General"
 	;; info, enable/disable, uninstall.
