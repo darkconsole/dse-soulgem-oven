@@ -5,7 +5,7 @@ dse_sgo_QuestController_Main Property Main Auto
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-String Property FileRaces = "../../../configs/dse-soulgem-oven/races/Default.json" AutoReadOnly Hidden
+String Property FileRaces = "../../../configs/dse-soulgem-oven/races/VanillaRaces.json" AutoReadOnly Hidden
 
 String Property RaceDirectory = "../../../configs/dse-soulgem-oven/races" AutoReadOnly Hidden
 String[] Property RaceFiles Auto Hidden
@@ -1082,8 +1082,21 @@ in and the second number is which array item was the race.}
 		Offset[0] = Offset[0] + 1
 	EndWhile
 
+	Main.Util.PrintDebug("Race Find Fail: " + What.GetFormID() + " " + What.GetName())
 	Offset[0] = 0
-	Offset[1] = 1	
+	Offset[1] = 0	
+
+	While(Offset[0] < self.RaceFiles.Length)
+		If(self.RaceFiles[Offset[0]] == self.FileRaces)
+			Return Offset
+		EndIf
+
+		Offset[0] = Offset[0] + 1
+	EndWhile
+
+	Main.Util.PrintDebug("Race Find Fail Hard: " + What.GetFormID() + " " + What.GetName())
+	Offset[0] = 0
+	Offset[1] = 0
 	Return Offset
 EndFunction
 
