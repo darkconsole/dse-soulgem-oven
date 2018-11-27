@@ -1045,7 +1045,7 @@ automatically done and cached on game load.}
 
 	While(Iter < self.RaceFiles.Length)
 		Main.Util.PrintDebug(self.RaceFiles[Iter])
-		Total += JsonUtil.PathCount(self.RaceFiles[Iter],"Races")
+		Total += JsonUtil.PathCount(self.RaceFiles[Iter],".Races")
 		Iter += 1
 	EndWhile
 
@@ -1066,10 +1066,10 @@ in and the second number is which array item was the race.}
 
 	While(Offset[0] < self.RaceFiles.Length)
 		Offset[1] = 0
-		FileRaceCount = JsonUtil.PathCount(self.RaceFiles[Offset[0]],"Races")
+		FileRaceCount = JsonUtil.PathCount(self.RaceFiles[Offset[0]],".Races")
 
 		While(Offset[1] < FileRaceCount)
-			Path = "Races[" + Offset[1] + "].Race"
+			Path = ".Races[" + Offset[1] + "].Race"
 			Current = JsonUtil.GetPathFormValue(self.RaceFiles[Offset[0]],Path) as Race
 
 			If(Current == What)
@@ -1103,7 +1103,7 @@ EndFunction
 Form Function RaceGetMilk(Int FileIndex, Int RaceIndex)
 {get the milk for the specified race.}
 
-	String Path = "Races[" + RaceIndex + "].Milk"
+	String Path = ".Races[" + RaceIndex + "].Milk"
 
 	Return JsonUtil.GetPathFormValue(self.RaceFiles[FileIndex],Path)
 EndFunction
@@ -1111,7 +1111,7 @@ EndFunction
 Form Function RaceGetSemen(Int FileIndex, Int RaceIndex)
 {get the semen for the specified race.}
 
-	String Path = "Races[" + RaceIndex + "].Semen"
+	String Path = ".Races[" + RaceIndex + "].Semen"
 
 	Return JsonUtil.GetPathFormValue(self.RaceFiles[FileIndex],Path)
 EndFunction
