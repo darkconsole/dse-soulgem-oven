@@ -29,10 +29,11 @@ Event OnUpdate()
 	;;;;;;;;
 	;;;;;;;;
 
-	Delay = Main.Config.GetFloat("UpdateLoopDelay")
+	Delay = Main.Config.GetFloat(".UpdateLoopDelay")
 	ActorCount = Main.Data.ActorTrackingCount()
 	ActorIter = 0
 	ActorCull = FALSE
+
 
 	While(ActorIter < ActorCount)
 		Who = Main.Data.ActorTrackingGet(ActorIter)
@@ -44,8 +45,9 @@ Event OnUpdate()
 		Else
 			ActorCull = TRUE
 		EndIf
-
+		
 		ActorIter += 1
+		Main.Util.PrintDebug("Update Loop Delay " + Delay)
 		Utility.Wait(Delay)
 	EndWhile
 
@@ -57,12 +59,13 @@ Event OnUpdate()
 	;;;;;;;;
 	;;;;;;;;
 
+
 	Ev = ModEvent.Create("SGO4.UpdateLoop.Done")
 	ModEvent.Send(Ev)
 
 	If(self.IsRunning())
 		Main.Util.PrintDebug("Update Loop Renewed")
-		self.RegisterForSingleUpdate(Main.Config.GetFloat("UpdateLoopFreq"))
+		self.RegisterForSingleUpdate(Main.Config.GetFloat(".UpdateLoopFreq"))
 	Else
 		Main.Util.PrintDebug("Update Loop Terminated")
 	EndIf

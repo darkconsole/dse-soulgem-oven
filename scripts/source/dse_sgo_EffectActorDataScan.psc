@@ -130,12 +130,12 @@ Function ActorScan()
 	String SemenString
 	Float SemenOffset
 
-	Float Scale = Main.Config.GetFloat("WidgetScale")
-	Float PosX = Main.Config.GetFloat("WidgetOffsetX")
-	Float Offset = Main.Config.GetFloat("WidgetOffsetY")
+	Float Scale = Main.Config.GetFloat(".WidgetScale")
+	Float PosX = Main.Config.GetFloat(".WidgetOffsetX")
+	Float Offset = Main.Config.GetFloat(".WidgetOffsetY")
 	Float OffsetFactor = 0.5
-	String PosH = Main.Config.GetString("WidgetAnchorH")
-	String PosV = Main.Config.GetString("WidgetAnchorV")
+	String PosH = Main.Config.GetString(".WidgetAnchorH")
+	String PosV = Main.Config.GetString(".WidgetAnchorV")
 
 	;; fetch and calculate some data for positioning.
 

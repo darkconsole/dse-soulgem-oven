@@ -15,6 +15,7 @@ Bool Property DebugMode = TRUE Auto Hidden
 
 String Property FileConfig = "../../../configs/dse-soulgem-oven/settings/Default.json" AutoReadOnly Hidden
 String Property FileCustom = "../../../configs/dse-soulgem-oven/settings/Custom.json" AutoReadOnly Hidden
+Int[] Property FileID Auto Hidden
 
 ;; Float UpdateLoopFreq (in seconds)
 ;; how often the update loop runs.
@@ -116,13 +117,20 @@ EndFunction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+Function LoadFiles()
+
+	Return
+EndFunction
+
 Bool Function GetBool(String Path)
-{fetch an integer from the json config.}
+{fetch an boolean from the json config.}
 
 	If(JsonUtil.IsPathNumber(self.FileCustom,Path) || JsonUtil.IsPathBool(self.FileCustom,Path))
+		;;Main.Util.PrintDebug("Config.GetBool Custom " + Path)
 		Return JsonUtil.GetPathBoolValue(self.FileCustom,Path)
 	EndIf
 
+	;;Main.Util.PrintDebug("Config.GetBool Default " + Path)
 	Return JsonUtil.GetPathBoolValue(self.FileConfig,Path)
 EndFunction
 
@@ -130,9 +138,11 @@ Int Function GetInt(String Path)
 {fetch an integer from the json config.}
 
 	If(JsonUtil.IsPathNumber(self.FileCustom,Path))
+		;;Main.Util.PrintDebug("Config.GetInt Custom " + Path)
 		Return JsonUtil.GetPathIntValue(self.FileCustom,Path)
 	EndIf
 
+	;;Main.Util.PrintDebug("Config.GetInt Default " + Path)
 	Return JsonUtil.GetPathIntValue(self.FileConfig,Path)
 EndFunction
 
@@ -140,9 +150,11 @@ Float Function GetFloat(String Path)
 {fetch an float from the json config.}
 
 	If(JsonUtil.IsPathNumber(self.FileCustom,Path))
+		;;Main.Util.PrintDebug("Config.GetInt Custom " + Path)
 		Return JsonUtil.GetPathFloatValue(self.FileCustom,Path)
 	EndIf
 
+	;;Main.Util.PrintDebug("Config.GetInt Default " + Path)
 	Return JsonUtil.GetPathFloatValue(self.FileConfig,Path)
 EndFunction
 
@@ -150,9 +162,11 @@ String Function GetString(String Path)
 {fetch a string from the json config.}
 
 	If(JsonUtil.IsPathString(self.FileCustom,Path))
+		;;Main.Util.PrintDebug("Config.GetString Custom " + Path)
 		Return JsonUtil.GetPathStringValue(self.FileCustom,Path)
 	EndIf
 
+	;;Main.Util.PrintDebug("Config.GetString Default " + Path)
 	Return JsonUtil.GetPathStringValue(self.FileConfig,Path)
 EndFunction
 
@@ -161,11 +175,81 @@ Int Function GetCount(String Path)
 use this on arrays.}
 
 	If(JsonUtil.CanResolvePath(self.FileCustom,Path))
+		;;Main.Util.PrintDebug("Config.GetCount Custom " + Path)
 		Return JsonUtil.PathCount(self.FileCustom,Path)
 	EndIf
 
+	;;Main.Util.PrintDebug("Config.GetCount Default " + Path)
 	Return JsonUtil.PathCount(self.FileConfig,Path)
 EndFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; JContainers version of JSON reading.
+
+;/*
+Function LoadFiles()
+
+	Int FP = JValue.ReadFromFile("Data/configs/dse-soulgem-oven/settings/Default.json")
+	JDB.setObj("SGO4Config",FP)
+	Main.Util.PrintDebug("JC Config File: " + FP)
+
+	Return
+EndFunction
+
+Bool Function GetBool(String Path)
+{fetch an boolean from the json config.}
+
+	Bool Val = JDB.solveInt(".SGO4Config" + Path) AS Bool
+
+	Main.Util.PrintDebug("Config.GetBoolJC Default " + Path + " " + Val)
+
+	Return Val
+EndFunction
+
+Int Function GetInt(String Path)
+{fetch an integer from the json config.}
+
+	Int Val = JDB.solveInt(".SGO4Config" + Path)
+
+	Main.Util.PrintDebug("Config.GetIntJC Default " + Path + " " + Val)
+
+	Return Val
+EndFunction
+
+Float Function GetFloat(String Path)
+{fetch an float from the json config.}
+
+	Float Val = JDB.solveFlt(".SGO4Config" + Path)
+
+	Main.Util.PrintDebug("Config.GetFloatJC Default " + Path + " " + Val)
+
+	Return Val
+EndFunction
+
+String Function GetString(String Path)
+{fetch a string from the json config.}
+
+	String Val = JDB.solveStr(".SGO4Config" + Path)
+
+	Main.Util.PrintDebug("Config.GetStringJC Default " + Path + " " + Val)
+
+	Return Val
+EndFunction
+
+Int Function GetCount(String Path)
+{fetch how many items are in the specified thing. you should probably only
+use this on arrays.}
+
+	Int DP = JDB.solveObj(".SGO4Config" + Path)
+	Int Val = JValue.Count(DP)
+
+	Main.Util.PrintDebug("Config.GetCountJC Default " + Path + " " + Val)
+
+	Return Val
+EndFunction
+*/;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

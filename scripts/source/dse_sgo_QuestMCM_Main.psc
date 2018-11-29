@@ -16,6 +16,9 @@ Event OnGameReload()
 {things to do when the game is loaded from disk.}
 
 	parent.OnGameReload()
+
+	Main.Config.LoadFiles()
+
 	Main.Data.RaceLoadFiles()
 	;; do a dependency check every launch.
 	;;Main.ResetMod_Prepare()
@@ -204,32 +207,32 @@ Event OnOptionSliderOpen(Int Item)
 	Float Interval = 0.0
 
 	If(Item == ItemWidgetOffsetX)
-		Val = Main.Config.GetFloat("WidgetOffsetX")
+		Val = Main.Config.GetFloat(".WidgetOffsetX")
 		Min = 0.0
 		Max = 1280.0
 		Interval = 0.1
 	ElseIf(Item == ItemWidgetOffsetY)
-		Val = Main.Config.GetFloat("WidgetOffsetY")
+		Val = Main.Config.GetFloat(".WidgetOffsetY")
 		Min = 0.0
 		Max = 720.0
 		Interval = 0.1
 	ElseIf(Item == ItemWidgetScale)
-		Val = Main.Config.GetFloat("WidgetScale")
+		Val = Main.Config.GetFloat(".WidgetScale")
 		Min = 0.1
 		Max = 1.0
 		Interval = 0.05
 	ElseIf(Item == ItemActorGemsMax)
-		Val = Main.Config.GetFloat("ActorGemsMax")
+		Val = Main.Config.GetFloat(".ActorGemsMax")
 		Min = 1.0
 		Max = 12.0
 		Interval = 1.0
 	ElseIf(Item == ItemActorMilkMax)
-		Val = Main.Config.GetFloat("ActorMilkMax")
+		Val = Main.Config.GetFloat(".ActorMilkMax")
 		Min = 1.0
 		Max = 4.0
 		Interval = 1.0
 	ElseIf(Item == ItemActorSemenMax)
-		Val = Main.Config.GetFloat("ActorSemenMax")
+		Val = Main.Config.GetFloat(".ActorSemenMax")
 		Min = 1.0
 		Max = 3.0
 		Interval = 1.0
@@ -249,22 +252,22 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 
 	If(Item == ItemWidgetOffsetX)
 		Fmt = "{1}"
-		Main.Config.SetFloat("WidgetOffsetX",Val)
+		Main.Config.SetFloat(".WidgetOffsetX",Val)
 	ElseIf(Item == ItemWidgetOffsetY)
 		Fmt = "{1}"
-		Main.Config.SetFloat("WidgetOffsetY",Val)
+		Main.Config.SetFloat(".WidgetOffsetY",Val)
 	ElseIf(Item == ItemWidgetScale)
 		Fmt = "{2}"
-		Main.Config.SetFloat("WidgetScale",Val)
+		Main.Config.SetFloat(".WidgetScale",Val)
 	ElseIf(Item == ItemActorGemsMax)
 		Fmt = "{0}"
-		Main.Config.SetInt("ActorGemsMax",(Val as Int))
+		Main.Config.SetInt(".ActorGemsMax",(Val as Int))
 	ElseIf(Item == ItemActorMilkMax)
 		Fmt = "{0}"
-		Main.Config.SetInt("ActorMilkMax",(Val as Int))
+		Main.Config.SetInt(".ActorMilkMax",(Val as Int))
 	ElseIf(Item == ItemActorSemenMax)
 		Fmt = "{0}"
-		Main.Config.SetInt("ActorSemenMax",(Val as Int))
+		Main.Config.SetInt(".ActorSemenMax",(Val as Int))
 	EndIf
 
 	SetSliderOptionValue(Item,Val,Fmt)
@@ -289,7 +292,7 @@ Event OnOptionMenuOpen(Int Item)
 		Iter = Opts.Length
 		While(Iter > 0)
 			Iter -= 1
-			If(Opts[Iter] == Main.Config.GetString("WidgetAnchorH"))
+			If(Opts[Iter] == Main.Config.GetString(".WidgetAnchorH"))
 				Select = Iter
 				Iter = 0
 			EndIf
@@ -303,7 +306,7 @@ Event OnOptionMenuOpen(Int Item)
 		Iter = Opts.Length
 		While(Iter > 0)
 			Iter -= 1
-			If(Opts[Iter] == Main.Config.GetString("WidgetAnchorV"))
+			If(Opts[Iter] == Main.Config.GetString(".WidgetAnchorV"))
 				Select = Iter
 				Iter = 0
 			EndIf
@@ -325,19 +328,19 @@ Event OnOptionMenuAccept(Int Item, Int Selected)
 
 	If(Item == ItemWidgetAnchorH)
 		If(Selected == 0)
-			Val = Main.Config.SetString("WidgetAnchorH","left")
+			Val = Main.Config.SetString(".WidgetAnchorH","left")
 		ElseIf(Selected == 1)
-			Val = Main.Config.SetString("WidgetAnchorH","center")
+			Val = Main.Config.SetString(".WidgetAnchorH","center")
 		ElseIf(Selected == 2)
-			Val = Main.Config.SetString("WidgetAnchorH","right")
+			Val = Main.Config.SetString(".WidgetAnchorH","right")
 		EndIf
 	ElseIf(Item == ItemWidgetAnchorV)
 		If(Selected == 0)
-			Val = Main.Config.SetString("WidgetAnchorV","top")
+			Val = Main.Config.SetString(".WidgetAnchorV","top")
 		ElseIf(Selected == 1)
-			Val = Main.Config.SetString("WidgetAnchorV","center")
+			Val = Main.Config.SetString(".WidgetAnchorV","center")
 		ElseIf(Selected == 2)
-			Val = Main.Config.SetString("WidgetAnchorV","bottom")
+			Val = Main.Config.SetString(".WidgetAnchorV","bottom")
 		EndIf
 	EndIf
 
@@ -401,9 +404,9 @@ Function ShowPageGeneral()
 	AddHeaderOption("$SGO4_MenuOpt_ActorOptions")
 	AddHeaderOption("")
 
-	ItemActorGemsMax = AddSliderOption("$SGO4_MenuOpt_ActorGemsMax",Main.Config.GetInt("ActorGemsMax"),"{0}")
-	ItemActorMilkMax = AddSliderOption("$SGO4_MenuOpt_ActorMilkMax",Main.Config.GetInt("ActorMilkMax"),"{0}")
-	ItemActorSemenMax = AddSliderOption("$SGO4_MenuOpt_ActorSemenMax",Main.Config.GetInt("ActorSemenMax"),"{0}")
+	ItemActorGemsMax = AddSliderOption("$SGO4_MenuOpt_ActorGemsMax",Main.Config.GetInt(".ActorGemsMax"),"{0}")
+	ItemActorMilkMax = AddSliderOption("$SGO4_MenuOpt_ActorMilkMax",Main.Config.GetInt(".ActorMilkMax"),"{0}")
+	ItemActorSemenMax = AddSliderOption("$SGO4_MenuOpt_ActorSemenMax",Main.Config.GetInt(".ActorSemenMax"),"{0}")
 
 	Return
 EndFunction
@@ -425,11 +428,11 @@ Function ShowPageWidgets()
 
 	AddHeaderOption("$SGO4_MenuOpt_ScannerWidget")
 	AddHeaderOption("")
-	ItemWidgetOffsetX = AddSliderOption("$SGO4_MenuOpt_WidgetOffsetX",Main.Config.GetFloat("WidgetOffsetX"),"{1}")
-	ItemWidgetAnchorH = AddMenuOption("$SGO4_MenuOpt_WidgetAnchorH",Main.Config.GetString("WidgetAnchorH"))
-	ItemWidgetOffsetY = AddSliderOption("$SGO4_MenuOpt_WidgetOffsetY",Main.Config.GetFloat("WidgetOffsetY"),"{1}")
-	ItemWidgetAnchorV = AddMenuOption("$SGO4_MenuOpt_WidgetAnchorV",Main.Config.GetString("WidgetAnchorV"))
-	ItemWidgetScale = AddSliderOption("$SGO4_MenuOpt_WidgetScale",Main.Config.GetFloat("WidgetScale"),"{2}")
+	ItemWidgetOffsetX = AddSliderOption("$SGO4_MenuOpt_WidgetOffsetX",Main.Config.GetFloat(".WidgetOffsetX"),"{1}")
+	ItemWidgetAnchorH = AddMenuOption("$SGO4_MenuOpt_WidgetAnchorH",Main.Config.GetString(".WidgetAnchorH"))
+	ItemWidgetOffsetY = AddSliderOption("$SGO4_MenuOpt_WidgetOffsetY",Main.Config.GetFloat(".WidgetOffsetY"),"{1}")
+	ItemWidgetAnchorV = AddMenuOption("$SGO4_MenuOpt_WidgetAnchorV",Main.Config.GetString(".WidgetAnchorV"))
+	ItemWidgetScale = AddSliderOption("$SGO4_MenuOpt_WidgetScale",Main.Config.GetFloat(".WidgetScale"),"{2}")
 
 	Return
 EndFunction

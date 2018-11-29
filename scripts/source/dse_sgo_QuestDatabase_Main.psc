@@ -75,7 +75,7 @@ EndFunction
 Function GemStagePopulate()
 {populate the gem dataset based on the the configuration.}
 
-	Int Mode = Main.Config.GetInt("BirthGemsFilled")
+	Int Mode = Main.Config.GetInt(".BirthGemsFilled")
 
 	StorageUtil.FormListClear(None,self.KeyGemStageData)
 
@@ -250,14 +250,12 @@ Bool Function ActorTrackingAdd(Actor Who)
 {it does not matter why we want to track the actor. for any reason they get
 added to this list.}
 
-	Int Ev = ModEvent.Create("SGO4.Actor.Inspect")
+	Int Ev
 
 	;; when we attempt to track an actor, regardless of if we already have
 	;; or not, this is also a good time to notify other mods that they
 	;; may want to inspect the actor if they intend to mod any of their
 	;; datasets.
-
-	ModEvent.PushForm(Ev,Who)
 
 	self.ActorDetermineFeatures(Who)
 
@@ -267,6 +265,8 @@ added to this list.}
 		;; if we are already tracking this actor give up now. send the
 		;; inspection event in case a fourth party mod was installed
 		;; after the game was running.
+		Ev = ModEvent.Create("SGO4.Actor.Inspect")
+		ModEvent.PushForm(Ev,Who)
 		ModEvent.Send(Ev)
 		Return FALSE
 	EndIf
@@ -280,6 +280,9 @@ added to this list.}
 	Who.RegisterForUpdate(600)
 
 	Main.Util.PrintDebug(Who.GetDisplayName() + " is now being tracked.")
+
+	Ev = ModEvent.Create("SGO4.Actor.Inspect")
+	ModEvent.PushForm(Ev,Who)
 	ModEvent.Send(Ev)
 
 	Return TRUE
@@ -339,7 +342,7 @@ Function ActorUpdate(Actor Who)
 	Bool Semen
 	Bool Fertility
 
-	If(TimeSince < Main.Config.GetFloat("UpdateGameHours"))
+	If(TimeSince < Main.Config.GetFloat(".UpdateGameHours"))
 		Main.Util.PrintDebug(Who.GetDisplayName() + " not ready for calc.")
 		Return
 	EndIf
@@ -510,7 +513,7 @@ Int Function ActorGemMax(Actor Who)
 {return how many gems an actor can incubate at one time. it is rounded in the
 event with mods its a fraction of a gem.}
 
-	Int Base = Main.Config.GetInt("ActorGemsMax")
+	Int Base = Main.Config.GetInt(".ActorGemsMax")
 	Float Val = self.ActorModGetFinal(Who,"GemsMax",Base)
 	
 	Return Main.Util.RoundToInt(Val)
@@ -594,7 +597,7 @@ Bool Function ActorGemUpdateData(Actor Who, Float TimeSince)
 {update the actors gem data given the time progression. returns false if this
 actor is physically not capable of producing this item.}
 
-	Float PerDay = Main.Config.GetFloat("GemsPerDay")
+	Float PerDay = Main.Config.GetFloat(".GemsPerDay")
 	Float Inc = ((TimeSince * PerDay) / 24.0)
 	Int GemCount = self.ActorGemCount(Who)
 	Int GemStages = self.GemStageCount(Who)
@@ -717,7 +720,7 @@ EndFunction
 Int Function ActorMilkMax(Actor Who)
 {return how much milk an actor can have at once.}
 
-	Int Base = Main.Config.GetInt("ActorMilkMax")
+	Int Base = Main.Config.GetInt(".ActorMilkMax")
 	Float Val = self.ActorModGetFinal(Who,"MilkMax",Base)
 
 	Return Main.Util.RoundToInt(Val)
@@ -737,8 +740,8 @@ Bool Function ActorMilkUpdateData(Actor Who, Float TimeSince)
 actor is physically not capable of producing this item.}
 
 	Float PregPercent = self.ActorGemTotalPercent(Who)
-	Float PregNeeded = Main.Config.GetFloat("MilksPregPercent") / 100.0
-	Float PerDay = Main.Config.GetFloat("MilksPerDay")
+	Float PregNeeded = Main.Config.GetFloat(".MilksPregPercent") / 100.0
+	Float PerDay = Main.Config.GetFloat(".MilksPerDay")
 	Float Inc = ((TimeSince * PerDay) / 24.0)
 	Int MilkMax = self.ActorMilkMax(Who)
 	Int MilkOld
@@ -849,7 +852,7 @@ EndFunction
 Int Function ActorSemenMax(Actor Who)
 {return how many bottles of semen an actor can have at once.}
 
-	Int Base = Main.Config.GetInt("ActorSemenMax")
+	Int Base = Main.Config.GetInt(".ActorSemenMax")
 	Float Val = self.ActorModGetFinal(Who,"SemenMax",Base)
 
 	Return Main.Util.RoundToInt(Val)
@@ -868,7 +871,7 @@ Bool Function ActorSemenUpdateData(Actor Who, Float TimeSince)
 {update the actors gem data given the time progression. returns false if this
 actor is physically not capable of producing this item.}
 
-	Float PerDay = Main.Config.GetFloat("SemensPerDay")
+	Float PerDay = Main.Config.GetFloat(".SemensPerDay")
 	Float Inc = ((TimeSince * PerDay) / 24.0)
 
 	If(!Who.IsInFaction(Main.FactionProduceSemen))
@@ -890,7 +893,7 @@ Float Function ActorFertilityValue(Actor Who)
 	Float Value = StorageUtil.GetFloatValue(Who,self.KeyActorFertilityData,-1.0)
 
 	If(Value == -1.0)
-		Value = Utility.RandomFloat(0.0,Main.Config.GetInt("FertilityDays"))
+		Value = Utility.RandomFloat(0.0,Main.Config.GetInt(".FertilityDays"))
 		StorageUtil.SetFloatValue(Who,self.KeyActorFertilityData,Value)
 	EndIf
 
@@ -900,8 +903,8 @@ EndFunction
 Float Function ActorFertilityFactor(Actor Who, float Vmod=0.0)
 {fetch the current multiplier for the fertility value using science and shit.}
 
-	Int FertilityDays = Main.Config.GetInt("FertilityDays")
-	Float FertilityWindow = Main.Config.GetFloat("FertilityWindow")
+	Int FertilityDays = Main.Config.GetInt(".FertilityDays")
+	Float FertilityWindow = Main.Config.GetFloat(".FertilityWindow")
 	Float Fval
 	Float Poff
 	Int Plen
@@ -943,9 +946,9 @@ the actor is not biologically able to produce gems.}
 
 	;; 1 2 3... 27 28 0 1 2 3...
 
-	Int FertilityDays = Main.Config.GetInt("FertilityDays")
-	Bool FertilitySync = Main.Config.GetBool("FertilitySync")
-	Float FertilityWindow = Main.Config.GetFloat("FertilityWindow")
+	Int FertilityDays = Main.Config.GetInt(".FertilityDays")
+	Bool FertilitySync = Main.Config.GetBool(".FertilitySync")
+	Float FertilityWindow = Main.Config.GetFloat(".FertilityWindow")
 	Float SyncDist
 
 	If(!Who.IsInFaction(Main.FactionProduceGems))

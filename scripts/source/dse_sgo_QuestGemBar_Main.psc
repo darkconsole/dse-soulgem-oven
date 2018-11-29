@@ -105,9 +105,9 @@ EndFunction
 Function WidgetBaseReset()
 {this these are things that must be done with a widget starts.}
 
-	self.Scale = Main.Config.GetFloat("WidgetScale")
-	self.PosH = Main.Config.GetString("WidgetAnchorH")
-	self.PosV = Main.Config.GetString("WidgetAnchorV")
+	self.Scale = Main.Config.GetFloat(".WidgetScale")
+	self.PosH = Main.Config.GetString(".WidgetAnchorH")
+	self.PosV = Main.Config.GetString(".WidgetAnchorV")
 
 	;; copied from SKI_WidgetBase OnWidgetReset() because i was
 	;; having issues with parent resolution when my other bars

@@ -139,7 +139,7 @@ value will be doubled.}
 	;; input 1 at level 100
 	;; ((100 / 100) * 1) + 1 = 2.0
 
-	Float Base = Main.Config.GetFloat("LevelValueBase")
+	Float Base = Main.Config.GetFloat(".LevelValueBase")
 
 	Return (((Level / Base) * (Value * Factor)) + Value) as Float
 EndFunction
@@ -223,7 +223,7 @@ Function ActorArmourRemove(Actor Who)
 
 	Form[] Items
 
-	If(Main.Config.GetBool("SexLabStrip"))
+	If(Main.Config.GetBool(".SexLabStrip"))
 		Items = Main.SexLab.StripActor(Who,None,FALSE,FALSE) as Form[]
 		Main.Util.PrintDebug("Stripping " + Who.GetDisplayName() + " via SexLab (" + Items.Length + ")")
 	Else
@@ -252,7 +252,7 @@ Function ActorArmourReplace(Actor Who)
 		Items = StorageUtil.FormListToArray(Who,"SGO4.Actor.Armor") as Form[]
 	EndIf
 
-	;;If(Main.Config.GetBool("SexLabStrip"))
+	;;If(Main.Config.GetBool(".SexLabStrip"))
 	If(Items.Length > 0)
 		Main.SexLab.UnstripActor(Who,Items,FALSE)
 	EndIf
@@ -281,8 +281,8 @@ leave ItemValue at the default of 1.0.}
 		Return
 	EndIf
 
-	Factor = Main.Config.GetFloat("LevelAlchFactor")
-	MilksPerday = Main.Config.GetFloat("MilksPerDay")
+	Factor = Main.Config.GetFloat(".LevelAlchFactor")
+	MilksPerday = Main.Config.GetFloat(".MilksPerDay")
 
 	If(Factor == 0.0)
 		;; do not process when disabled.
@@ -323,7 +323,7 @@ mostly.}
 		Return
 	EndIf
 
-	Factor = Main.Config.GetFloat("LevelEnchFactor")
+	Factor = Main.Config.GetFloat(".LevelEnchFactor")
 
 	If(Factor == 0.0)
 		;; do not process when disabled.

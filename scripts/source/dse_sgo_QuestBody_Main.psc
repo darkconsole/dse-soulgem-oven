@@ -35,7 +35,7 @@ String Property KeySlidersMilk = ".Sliders.Milk" AutoReadOnly Hidden
 Function ActorUpdate(Actor Who)
 {force the actor's body into the state described by its current dataset.}
 
-	Int Ev = ModEvent.Create("SGO4.Body.ActorUpdate")
+	Int Ev
 
 	self.ActorUpdateGems(Who)
 	self.ActorUpdateMilk(Who)
@@ -46,6 +46,7 @@ Function ActorUpdate(Actor Who)
 		NiOverride.UpdateModelWeight(Who)
 	EndIf
 
+	Ev = ModEvent.Create("SGO4.Body.ActorUpdate")
 	ModEvent.PushForm(Ev,Who)
 	ModEvent.Send(Ev)
 
@@ -80,11 +81,21 @@ EndFunction
 Function ActorSlidersApply(Actor Who, String Prefix, Float Percent)
 {apply a specific set of sliders at a percentage of their max value.}
 
-	String MorphKey = "SGO4.Morph." + Prefix
+	String MorphKey = ""
 	Int SliderCount = Main.Config.GetCount(Prefix)
 	Int SliderIter = 0
 	String SliderName
 	Float SliderMax
+
+	If(Prefix == self.KeySlidersGems)
+		MorphKey = "SGO4Gems";
+	ElseIf(Prefix == self.KeySlidersMilk)
+		MorphKey = "SGO4Milk";
+	EndIf
+
+	If(StringUtil.GetLength(MorphKey) == 0)
+		Return
+	EndIf
 
 	Main.Util.PrintDebug(Who.GetDisplayName() + " Slider Count: " + Prefix + " " + SliderCount)
 
@@ -93,11 +104,18 @@ Function ActorSlidersApply(Actor Who, String Prefix, Float Percent)
 		SliderMax = Main.Config.GetFloat(Prefix + "[" + SliderIter + "].Max")
 
 		Main.Util.PrintDebug(Who.GetDisplayName() + " Apply " + Prefix + " Slider " + SliderName + " " + (SliderMax*Percent))
-		NiOverride.SetBodyMorph(Who,SliderName,MorphKey,(SliderMax * Percent))
 
-		;; these two should be removed after a few versions. just a cleanup.
+		If(Percent > 0)
+			NiOverride.SetBodyMorph(Who,SliderName,MorphKey,(SliderMax * Percent))
+		Else
+			NiOverride.ClearBodyMorph(Who,SliderName,MorphKey)
+		EndIf
+
+		;; these should be removed after a few versions. just a cleanup.
 		NiOverride.ClearBodyMorph(Who,SliderName,"SGO4.Morph.Gems")
 		NiOverride.ClearBodyMorph(Who,SliderName,"SGO4.Morph.Milk")
+		NiOverride.ClearBodyMorph(Who,SliderName,"SGO4.Morph..Sliders.Gems")
+		NiOverride.ClearBodyMorph(Who,SliderName,"SGO4.Morph..Sliders.Milk")
 
 		SliderIter += 1
 	EndWhile
@@ -108,7 +126,17 @@ EndFunction
 Function ActorSlidersClear(Actor Who, String Prefix)
 {clear all the morphs for a specific set of sliders.}
 
-	String MorphKey = "SGO4.Morph." + Prefix
+	String MorphKey = ""
+
+	If(Prefix == self.KeySlidersGems)
+		MorphKey = "SGO4Gems";
+	ElseIf(Prefix == self.KeySlidersMilk)
+		MorphKey = "SGO4Milk";
+	EndIf
+
+	If(StringUtil.GetLength(MorphKey) == 0)
+		Return
+	EndIf
 
 	NiOverride.ClearBodyMorphKeys(Who,MorphKey)
 

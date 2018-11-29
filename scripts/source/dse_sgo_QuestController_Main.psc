@@ -213,7 +213,7 @@ EndFunction
 Bool Function CheckForDeps_SKSE(Bool Popup)
 {make sure skse is new enough.}
 
-	If(SKSE.GetScriptVersionRelease() < 57)
+	If(SKSE.GetScriptVersionRelease() < 56)
 		If(Popup)
 			self.Util.PopupError("You need to update your SKSE to 2.0.7 or newer.")
 		EndIf
@@ -337,7 +337,7 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 	Actor[] ActorList
 	Int ActorIter
 	Float PregRoll = 0.0
-	Float PregChance = Config.GetFloat("FertilityChance")
+	Float PregChance = Config.GetFloat(".FertilityChance")
 
 	;;;;;;;;
 
