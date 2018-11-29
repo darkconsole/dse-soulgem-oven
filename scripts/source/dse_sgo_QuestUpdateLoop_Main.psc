@@ -59,9 +59,11 @@ Event OnUpdate()
 	;;;;;;;;
 	;;;;;;;;
 
-
-	Ev = ModEvent.Create("SGO4.UpdateLoop.Done")
-	ModEvent.Send(Ev)
+	;; disabled due to the discovery of save hangs if the vm is frozen between
+	;; create and send. we were not using it for anything, so we are disabling
+	;; to avoid it being another snag.
+	;;Ev = ModEvent.Create("SGO4.UpdateLoop.Done")
+	;;ModEvent.Send(Ev)
 
 	If(self.IsRunning())
 		Main.Util.PrintDebug("Update Loop Renewed")
