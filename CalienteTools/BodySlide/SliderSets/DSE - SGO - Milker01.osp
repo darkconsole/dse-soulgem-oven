@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<SliderSetInfo version="1">
+    <SliderSet name="DSE - SGO - Milker01">
+        <DataFolder>DSE - SGO - Milker01</DataFolder>
+        <SourceFile>DSE - SGO - Milker01.nif</SourceFile>
+        <OutputPath>meshes\dse-soulgem-oven\milkers</OutputPath>
+        <OutputFile GenWeights="true">milker01</OutputFile>
+        <Shape target="BlackPlasticBits">BlackPlasticBits</Shape>
+        <Shape target="BaseShapeHR" DataFolder="CBBE">CBBE</Shape>
+        <Shape target="ChromeBits">ChromeBits</Shape>
+        <Shape target="GlassBits">GlassBits</Shape>
+        <Shape target="RubberHose">RubberHose</Shape>
+        <Slider name="AreolaSize" invert="false" small="0" big="0" uv="true">
+            <Data name="BaseShapeHRAreolaSize" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRAreolaSize</Data>
+        </Slider>
+        <Slider name="BreastCenter" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRBreastCenter" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRBreastCenter</Data>
+            <Data name="RubberHoseBreastCenter" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseBreastCenter</Data>
+            <Data name="BlackPlasticBitsBreastCenter" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsBreastCenter</Data>
+            <Data name="GlassBitsBreastCenter" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsBreastCenter</Data>
+        </Slider>
+        <Slider name="BreastCenterBig" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRBreastCenterBig" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRBreastCenterBig</Data>
+            <Data name="RubberHoseBreastCenterBig" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseBreastCenterBig</Data>
+        </Slider>
+        <Slider name="BreastCleavage" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRBreastCleavage" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRBreastCleavage</Data>
+            <Data name="RubberHoseBreastCleavage" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseBreastCleavage</Data>
+            <Data name="BlackPlasticBitsBreastCleavage" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsBreastCleavage</Data>
+            <Data name="GlassBitsBreastCleavage" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsBreastCleavage</Data>
+        </Slider>
+        <Slider name="BreastFlatness2" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRBreastFlatness2" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRBreastFlatness2</Data>
+            <Data name="RubberHoseBreastFlatness2" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseBreastFlatness2</Data>
+            <Data name="BlackPlasticBitsBreastFlatness2" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsBreastFlatness2</Data>
+            <Data name="GlassBitsBreastFlatness2" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsBreastFlatness2</Data>
+        </Slider>
+        <Slider name="BreastFlatness" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRBreastFlattness" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRBreastFlattness</Data>
+            <Data name="RubberHoseBreastFlatness" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseBreastFlatness</Data>
+            <Data name="BlackPlasticBitsBreastFlatness" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsBreastFlatness</Data>
+            <Data name="GlassBitsBreastFlatness" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsBreastFlatness</Data>
+        </Slider>
+        <Slider name="BreastGravity2" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRBreastGravity2" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRBreastGravity2</Data>
+            <Data name="RubberHoseBreastGravity2" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseBreastGravity2</Data>
+            <Data name="BlackPlasticBitsBreastGravity2" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsBreastGravity2</Data>
+            <Data name="ChromeBitsBreastGravity2" target="ChromeBits" local="true">DSE - SGO - Milker01.osd\ChromeBitsBreastGravity2</Data>
+            <Data name="GlassBitsBreastGravity2" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsBreastGravity2</Data>
+        </Slider>
+        <Slider name="BreastHeight" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRBreastHeight" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRBreastHeight</Data>
+            <Data name="RubberHoseBreastHeight" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseBreastHeight</Data>
+            <Data name="BlackPlasticBitsBreastHeight" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsBreastHeight</Data>
+            <Data name="ChromeBitsBreastHeight" target="ChromeBits" local="true">DSE - SGO - Milker01.osd\ChromeBitsBreastHeight</Data>
+            <Data name="GlassBitsBreastHeight" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsBreastHeight</Data>
+        </Slider>
+        <Slider name="BreastPerkiness" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRBreastPerkiness" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRBreastPerkiness</Data>
+            <Data name="RubberHoseBreastPerkiness" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseBreastPerkiness</Data>
+            <Data name="BlackPlasticBitsBreastPerkiness" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsBreastPerkiness</Data>
+            <Data name="GlassBitsBreastPerkiness" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsBreastPerkiness</Data>
+        </Slider>
+        <Slider name="Breasts" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRBreasts" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRBreasts</Data>
+            <Data name="RubberHoseBreasts" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseBreasts</Data>
+            <Data name="BlackPlasticBitsBreasts" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsBreasts</Data>
+            <Data name="GlassBitsBreasts" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsBreasts</Data>
+        </Slider>
+        <Slider name="BreastsFantasy" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRBreastsFantasy" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRBreastsFantasy</Data>
+            <Data name="RubberHoseBreastsFantasy" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseBreastsFantasy</Data>
+            <Data name="BlackPlasticBitsBreastsFantasy" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsBreastsFantasy</Data>
+            <Data name="GlassBitsBreastsFantasy" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsBreastsFantasy</Data>
+        </Slider>
+        <Slider name="BreastsGone" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRBreastsGone" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRBreastsGone</Data>
+            <Data name="RubberHoseBreastsGone" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseBreastsGone</Data>
+            <Data name="BlackPlasticBitsBreastsGone" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsBreastsGone</Data>
+            <Data name="ChromeBitsBreastsGone" target="ChromeBits" local="true">DSE - SGO - Milker01.osd\ChromeBitsBreastsGone</Data>
+            <Data name="GlassBitsBreastsGone" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsBreastsGone</Data>
+        </Slider>
+        <Slider name="BreastsNewSH" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRBreastsNewSH" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRBreastsNewSH</Data>
+            <Data name="RubberHoseBreastsNewSH" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseBreastsNewSH</Data>
+            <Data name="BlackPlasticBitsBreastsNewSH" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsBreastsNewSH</Data>
+            <Data name="ChromeBitsBreastsNewSH" target="ChromeBits" local="true">DSE - SGO - Milker01.osd\ChromeBitsBreastsNewSH</Data>
+            <Data name="GlassBitsBreastsNewSH" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsBreastsNewSH</Data>
+        </Slider>
+        <Slider name="BreastsSmall" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRBreastsSmall" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRBreastsSmall</Data>
+            <Data name="RubberHoseBreastsSmall" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseBreastsSmall</Data>
+            <Data name="BlackPlasticBitsBreastsSmall" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsBreastsSmall</Data>
+            <Data name="ChromeBitsBreastsSmall" target="ChromeBits" local="true">DSE - SGO - Milker01.osd\ChromeBitsBreastsSmall</Data>
+            <Data name="GlassBitsBreastsSmall" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsBreastsSmall</Data>
+        </Slider>
+        <Slider name="BreastsSmall2" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRBreastsSmall2" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRBreastsSmall2</Data>
+            <Data name="RubberHoseBreastsSmall2" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseBreastsSmall2</Data>
+            <Data name="BlackPlasticBitsBreastsSmall2" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsBreastsSmall2</Data>
+            <Data name="ChromeBitsBreastsSmall2" target="ChromeBits" local="true">DSE - SGO - Milker01.osd\ChromeBitsBreastsSmall2</Data>
+            <Data name="GlassBitsBreastsSmall2" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsBreastsSmall2</Data>
+        </Slider>
+        <Slider name="BreastsTogether" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRBreastsTogether" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRBreastsTogether</Data>
+            <Data name="RubberHoseBreastsTogether" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseBreastsTogether</Data>
+            <Data name="BlackPlasticBitsBreastsTogether" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsBreastsTogether</Data>
+            <Data name="ChromeBitsBreastsTogether" target="ChromeBits" local="true">DSE - SGO - Milker01.osd\ChromeBitsBreastsTogether</Data>
+            <Data name="GlassBitsBreastsTogether" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsBreastsTogether</Data>
+        </Slider>
+        <Slider name="BreastTopSlope" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRBreastTopSlope" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRBreastTopSlope</Data>
+            <Data name="RubberHoseBreastTopSlope" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseBreastTopSlope</Data>
+            <Data name="BlackPlasticBitsBreastTopSlope" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsBreastTopSlope</Data>
+            <Data name="ChromeBitsBreastTopSlope" target="ChromeBits" local="true">DSE - SGO - Milker01.osd\ChromeBitsBreastTopSlope</Data>
+            <Data name="GlassBitsBreastTopSlope" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsBreastTopSlope</Data>
+        </Slider>
+        <Slider name="BreastWidth" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRBreastWidth" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRBreastWidth</Data>
+            <Data name="RubberHoseBreastWidth" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseBreastWidth</Data>
+            <Data name="BlackPlasticBitsBreastWidth" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsBreastWidth</Data>
+            <Data name="GlassBitsBreastWidth" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsBreastWidth</Data>
+        </Slider>
+        <Slider name="DoubleMelon" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRDoubleMelon" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRDoubleMelon</Data>
+            <Data name="RubberHoseDoubleMelon" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseDoubleMelon</Data>
+            <Data name="BlackPlasticBitsDoubleMelon" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsDoubleMelon</Data>
+            <Data name="GlassBitsDoubleMelon" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsDoubleMelon</Data>
+        </Slider>
+        <Slider name="NippleDistance" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRNippleDistance" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRNippleDistance</Data>
+            <Data name="RubberHoseNippleDistance" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseNippleDistance</Data>
+            <Data name="BlackPlasticBitsNippleDistance" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsNippleDistance</Data>
+            <Data name="GlassBitsNippleDistance" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsNippleDistance</Data>
+        </Slider>
+        <Slider name="NippleDown" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRNippleDown" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRNippleDown</Data>
+            <Data name="RubberHoseNippleDown" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseNippleDown</Data>
+            <Data name="BlackPlasticBitsNippleDown" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsNippleDown</Data>
+            <Data name="GlassBitsNippleDown" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsNippleDown</Data>
+        </Slider>
+        <Slider name="NippleLength" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRNippleLength" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRNippleLength</Data>
+            <Data name="RubberHoseNippleLength" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseNippleLength</Data>
+            <Data name="BlackPlasticBitsNippleLength" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsNippleLength</Data>
+            <Data name="GlassBitsNippleLength" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsNippleLength</Data>
+        </Slider>
+        <Slider name="NipplePerkiness" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRNipplePerkiness" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRNipplePerkiness</Data>
+            <Data name="RubberHoseNipplePerkiness" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseNipplePerkiness</Data>
+            <Data name="BlackPlasticBitsNipplePerkiness" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsNipplePerkiness</Data>
+            <Data name="GlassBitsNipplePerkiness" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsNipplePerkiness</Data>
+        </Slider>
+        <Slider name="NippleUp" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRNippleUp" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRNippleUp</Data>
+            <Data name="RubberHoseNippleUp" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseNippleUp</Data>
+            <Data name="BlackPlasticBitsNippleUp" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsNippleUp</Data>
+            <Data name="GlassBitsNippleUp" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsNippleUp</Data>
+        </Slider>
+        <Slider name="PushUp" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRPushUp" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRPushUp</Data>
+            <Data name="RubberHosePushUp" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHosePushUp</Data>
+            <Data name="BlackPlasticBitsPushUp" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsPushUp</Data>
+            <Data name="ChromeBitsPushUp" target="ChromeBits" local="true">DSE - SGO - Milker01.osd\ChromeBitsPushUp</Data>
+            <Data name="GlassBitsPushUp" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsPushUp</Data>
+        </Slider>
+        <Slider name="7B Upper" invert="false" small="0" big="0">
+            <Data name="BaseShapeHR7B Upper" target="BaseShapeHR">CBBE Body.osd\BaseShapeHR7B Upper</Data>
+            <Data name="RubberHose7B Upper" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHose7B Upper</Data>
+            <Data name="BlackPlasticBits7B Upper" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBits7B Upper</Data>
+            <Data name="ChromeBits7B Upper" target="ChromeBits" local="true">DSE - SGO - Milker01.osd\ChromeBits7B Upper</Data>
+            <Data name="GlassBits7B Upper" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBits7B Upper</Data>
+        </Slider>
+        <Slider name="VanillaSSEHi" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRVanillaSSEHi" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRVanillaSSEHi</Data>
+            <Data name="RubberHoseVanillaSSEHi" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseVanillaSSEHi</Data>
+            <Data name="BlackPlasticBitsVanillaSSEHi" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsVanillaSSEHi</Data>
+            <Data name="ChromeBitsVanillaSSEHi" target="ChromeBits" local="true">DSE - SGO - Milker01.osd\ChromeBitsVanillaSSEHi</Data>
+            <Data name="GlassBitsVanillaSSEHi" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsVanillaSSEHi</Data>
+        </Slider>
+        <Slider name="VanillaSSELo" invert="false" small="0" big="0">
+            <Data name="BaseShapeHRVanillaSSELo" target="BaseShapeHR">CBBE Body.osd\BaseShapeHRVanillaSSELo</Data>
+            <Data name="RubberHoseVanillaSSELo" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseVanillaSSELo</Data>
+            <Data name="BlackPlasticBitsVanillaSSELo" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsVanillaSSELo</Data>
+            <Data name="ChromeBitsVanillaSSELo" target="ChromeBits" local="true">DSE - SGO - Milker01.osd\ChromeBitsVanillaSSELo</Data>
+            <Data name="GlassBitsVanillaSSELo" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsVanillaSSELo</Data>
+        </Slider>
+        <Slider name="OldBaseShape" invert="false" small="0" big="0">
+            <Data name="BaseShapeHROldBaseShape" target="BaseShapeHR">CBBE Body.osd\BaseShapeHROldBaseShape</Data>
+            <Data name="RubberHoseOldBaseShape" target="RubberHose" local="true">DSE - SGO - Milker01.osd\RubberHoseOldBaseShape</Data>
+            <Data name="BlackPlasticBitsOldBaseShape" target="BlackPlasticBits" local="true">DSE - SGO - Milker01.osd\BlackPlasticBitsOldBaseShape</Data>
+            <Data name="ChromeBitsOldBaseShape" target="ChromeBits" local="true">DSE - SGO - Milker01.osd\ChromeBitsOldBaseShape</Data>
+            <Data name="GlassBitsOldBaseShape" target="GlassBits" local="true">DSE - SGO - Milker01.osd\GlassBitsOldBaseShape</Data>
+        </Slider>
+    </SliderSet>
+</SliderSetInfo>
