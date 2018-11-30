@@ -53,5 +53,17 @@
 		"My back is sore from supporting these things.",
 		"My boobs are so full... wonder if anyone here is thirsty.",
 		"I think my jugs are full."
+	],
+	"FlavourActorMilkerEquip": [
+		"%1 flushes a bit as the milker latches on."
+	],
+	"FlavourPlayerMilkerEquip": [
+		"The suction cups latch on to your nipples great resolve."
+	],
+	"FlavourActorMilkerUnequip": [
+		"%1 looks relieved as the suction releases."
+	],
+	"FlavourPlayerMilkerUnequip": [
+		"With effort you manage to wrestle the suction cups off."
 	]
 }
