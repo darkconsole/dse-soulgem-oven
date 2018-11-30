@@ -150,6 +150,7 @@ EndFunction
 ;; strings
 
 String Function StringInsert(String Format, String InputList="")
+{a cheeky af implementation of like an sprintf type thing but not.}
 
 	Int Iter = 0
 	Int Pos = -1
@@ -188,6 +189,7 @@ String Function StringInsert(String Format, String InputList="")
 EndFunction
 
 String Function StringLookup(String Path, String InputList="")
+{get a string from the translation file and run it through StringInsert.}
 
 	String Format = JsonUtil.GetPathStringValue(self.FileStrings,Path,("MISSING STRING LOL: " + Path))
 
@@ -195,6 +197,7 @@ String Function StringLookup(String Path, String InputList="")
 EndFunction
 
 String Function StringLookupRandom(String Path, String InputList="")
+{get a random string from the translation file and run it through StringInsert.}
 
 	Int Count = JsonUtil.PathCount(self.FileStrings,Path)
 	Int Selected = Utility.RandomInt(0,(Count - 1))
@@ -204,11 +207,13 @@ String Function StringLookupRandom(String Path, String InputList="")
 EndFunction
 
 Function PrintLookup(String KeyName, String InputList="")
+{print a notification string from the translation file.}
 
 	self.Print(self.StringLookup(KeyName,InputList))
 EndFunction
 
 Function PrintLookupRandom(String KeyName, String InputList="")
+{print a random string from the translation file.}
 
 	self.Print(self.StringLookupRandom(KeyName,InputList))
 EndFunction
@@ -408,6 +413,7 @@ Function ActorToggleFaction(Actor Who, Faction What)
 		Who.AddToFaction(What)
 	EndIf
 
+	Main.Data.ActorTrackingAdd(Who)
 	Return
 EndFunction
 
