@@ -254,7 +254,7 @@ Bool Function CheckForDeps_SexLab(Bool Popup)
 
 	;; check that the version of sexlab is good enough.
 
-	If(self.SexLab.GetVersion() < 16203)
+	If(self.SexLab.GetVersion() < 16202)
 		If(Popup)
 			self.Util.PopupError("Your SexLab needs to be updated. Install 1.63 SE Beta 2 or newer.")
 		EndIf
@@ -270,7 +270,7 @@ Bool Function CheckForDeps_PapyrusUtil(Bool Popup)
 {make sure papyrus util is new enough. mostly to detect if someone overwrote
 the one that comes in sexlab with an old version.}
 
-	If(PapyrusUtil.GetScriptVersion() < 35)
+	If(PapyrusUtil.GetScriptVersion() < 34)
 		If(Popup)
 			self.Util.PopupError("Your PapyrusUtil is out of date. It is likely some other mod overwrote the version that came in SexLab.")
 			Return FALSE
@@ -303,7 +303,7 @@ Bool Function CheckForDeps_RaceMenu(Bool Popup)
 
 	;; soft fail if no morph sliders.
 	
-	If(!self.Util.IsPluginInstalled("RaceMenuMorphsCBBE.esp") && !self.Util.IsPluginInstalled("RaceMenuMorphsTBD.esp"))
+	If(!self.Util.IsPluginInstalled("RaceMenuMorphsCBBE.esp") && !self.Util.IsPluginInstalled("RaceMenuMorphsTBD.esp") && !self.Util.IsPluginInstalled("RaceMenuMorphsUUNP.esp"))
 		If(Popup)
 			self.Util.PopupError("You have no BodyMorphs installed. Currently the only known ones are CBBE and TBD. You will not see any body scaling until you fix this.")
 		EndIf
