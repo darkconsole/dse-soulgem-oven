@@ -411,15 +411,14 @@ EndFunction
 Float Function ActorModGetTotal(Actor Who, String What)
 {get the total bonus value from all the multiplier mods.}
 
-	String ListName = KeyActorModListPrefix + What
-	Int ModCount = StorageUtil.StringListCount(Who,ListName)
+	Int ModCount = StorageUtil.StringListCount(Who,What)
 	Float Val = 0.0
 	String ValueName
 
 	While(ModCount > 0)
 		ModCount -= 1
 
-		ValueName = StorageUtil.StringListGet(Who,ListName,ModCount)
+		ValueName = StorageUtil.StringListGet(Who,What,ModCount)
 		Val += StorageUtil.GetFloatValue(Who,ValueName)
 	EndWhile
 
@@ -429,10 +428,13 @@ EndFunction
 Function ActorModSetValue(Actor Who, String What, String ModKey, Float Val=0.0)
 {add/set a buff to the actor.}
 
-	String ListName = KeyActorModListPrefix + What
-	String ValueName = KeyActorModValuePrefix + What + "." + ModKey
+	;; example:
+	;; What = SGO4.ActorMod.MilkProduce
+	;; ModKey = .SGOAutoMilker
 
-	StorageUtil.StringListAdd(Who,ListName,ValueName,FALSE)
+	String ValueName = What + ModKey
+
+	StorageUtil.StringListAdd(Who,What,ValueName,FALSE)
 	StorageUtil.SetFloatValue(Who,ValueName,Val)
 
 	Main.Util.PrintDebug("Mod " + Who.GetDisplayName() + " " + ValueName + "=" + Val + " Added")
@@ -442,10 +444,13 @@ EndFunction
 Function ActorModUnsetValue(Actor Who, String What, String ModKey)
 {remove a buff from an actor.}
 
-	String ListName = KeyActorModListPrefix + What
-	String ValueName = KeyActorModValuePrefix + What + "." + ModKey
+	;; example:
+	;; What = SGO4.ActorMod.MilkProduce
+	;; ModKey = .SGOAutoMilker
 
-	StorageUtil.StringListRemove(Who,ListName,ValueName,TRUE)
+	String ValueName = What + ModKey
+
+	StorageUtil.StringListRemove(Who,What,ValueName,TRUE)
 	StorageUtil.UnsetFloatValue(Who,ValueName)
 
 	Main.Util.PrintDebug("Mod " + Who.GetDisplayName() + " " + ValueName + " Removed")
@@ -743,20 +748,34 @@ actor is physically not capable of producing this item.}
 	Float PregNeeded = Main.Config.GetFloat(".MilksPregPercent") / 100.0
 	Float PerDay = Main.Config.GetFloat(".MilksPerDay")
 	Float Inc = ((TimeSince * PerDay) / 24.0)
+	Float ModRate = self.ActorModGetFinal(Who,"SGO4.ActorMod.MilkRate",1.0)
+	Bool ModForceProduce = (self.ActorModGetTotal(Who,"SGO4.ActorMod.MilkProduce") > 0.0)
 	Int MilkMax = self.ActorMilkMax(Who)
 	Int MilkOld
 	Int MilkNew
+
+	;;;;;;;;
 
 	If(!Who.IsInFaction(Main.FactionProduceMilk))
 		Return FALSE
 	EndIf
 
-	If(PregPercent < PregNeeded)
+	If(!ModForceProduce && PregPercent < PregNeeded)
 		Main.Util.PrintDebug(Who.GetDisplayName() + " is not producing milk yet.")
 		Return TRUE
 	EndIf
 
+	;;;;;;;;
+
+	If(ModForceProduce)
+		PregPercent = 1.0
+	EndIf
+
+	PregPercent *= ModRate
 	Inc *= PregPercent
+
+	;;;;;;;;
+
 	MilkOld = Math.Floor(self.ActorMilkAmount(Who))
 	self.ActorMilkInc(Who,Inc)
 	MilkNew = Math.Floor(self.ActorMilkAmount(Who))
@@ -1111,10 +1130,26 @@ Form Function RaceGetMilk(Int FileIndex, Int RaceIndex)
 	Return JsonUtil.GetPathFormValue(self.RaceFiles[FileIndex],Path)
 EndFunction
 
+Form Function ActorGetMilk(Actor Who)
+{get the milk for the race of the specified actor.}
+
+	Int[] RaceMap = self.RaceFind(Who.GetRace())
+
+	Return self.RaceGetMilk(RaceMap[0],RaceMap[1])
+EndFunction
+
 Form Function RaceGetSemen(Int FileIndex, Int RaceIndex)
 {get the semen for the specified race.}
 
 	String Path = ".Races[" + RaceIndex + "].Semen"
 
 	Return JsonUtil.GetPathFormValue(self.RaceFiles[FileIndex],Path)
+EndFunction
+
+Form Function ActorGetSemen(Actor Who)
+{get the milk for the race of the specified actor.}
+
+	Int[] RaceMap = self.RaceFind(Who.GetRace())
+
+	Return self.RaceGetSemen(RaceMap[0],RaceMap[1])
 EndFunction
