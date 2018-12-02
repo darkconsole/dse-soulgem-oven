@@ -15,7 +15,8 @@ Event OnEquipped(Actor Who)
 	;; zone in. may be related to the modevent foolery i debugged
 	;; when saving.
 
-	Utility.Wait(0.75)
+	Main.Util.PrintDebug(Who.GetDisplayName() + " equipped the milker")
+	Utility.Wait(0.01)
 
 	;; first crop off excess milks from before we were wearing this
 
@@ -47,6 +48,7 @@ Event OnUnequipped(Actor Who)
 
 	;; tell soulgem oven we no longer wish to produce.
 
+	Main.Util.PrintDebug(Who.GetDisplayName() + " removed the milker")
 	Main.Data.ActorModUnsetValue(Who,"SGO4.ActorMod.MilkProduce",".SGO4AutoMilker")
 	Main.Data.ActorModUnsetValue(Who,"SGO4.ActorMod.MilkRate",".SGO4AutoMilker")
 

@@ -265,9 +265,9 @@ added to this list.}
 		;; if we are already tracking this actor give up now. send the
 		;; inspection event in case a fourth party mod was installed
 		;; after the game was running.
-		Ev = ModEvent.Create("SGO4.Actor.Inspect")
-		ModEvent.PushForm(Ev,Who)
-		ModEvent.Send(Ev)
+		;;Ev = ModEvent.Create("SGO4.Actor.Inspect")
+		;;ModEvent.PushForm(Ev,Who)
+		;;ModEvent.Send(Ev)
 		Return FALSE
 	EndIf
 
@@ -281,9 +281,9 @@ added to this list.}
 
 	Main.Util.PrintDebug(Who.GetDisplayName() + " is now being tracked.")
 
-	Ev = ModEvent.Create("SGO4.Actor.Inspect")
-	ModEvent.PushForm(Ev,Who)
-	ModEvent.Send(Ev)
+	;;Ev = ModEvent.Create("SGO4.Actor.Inspect")
+	;;ModEvent.PushForm(Ev,Who)
+	;;ModEvent.Send(Ev)
 
 	Return TRUE
 EndFunction
