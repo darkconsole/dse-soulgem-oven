@@ -108,6 +108,7 @@ EndFunction
 Function ActorUpdateMilkInfluence(Actor Who, Float MilkPercent)
 
 	Float MilkWhen = Main.Config.GetFloat("InfluenceMilkWhen")
+	Float Speech = Main.Config.GetFloat("InfluenceMilkSpeech")
 
 	;; clean off spells.
 	Who.RemoveSpell(Main.SpellInfluenceMilk)
@@ -115,7 +116,10 @@ Function ActorUpdateMilkInfluence(Actor Who, Float MilkPercent)
 	;; apply effects when triggered.
 	If(MilkPercent >= MilkWhen)
 		;; effect 0 is the speech influence.
-		Main.SpellInfluenceMilk.SetNthEffectMagnitude(0,(Main.Config.GetFloat("InfluenceMilkSpeech") * MilkPercent))
+		Main.SpellInfluenceMilk.SetNthEffectMagnitude(0,(Speech * MilkPercent))
+
+		;; effect 1 is the nude speech influence.
+		Main.SpellInfluenceMilk.SetNthEffectMagnitude(1,((Speech * 0.5) * MilkPercent))
 
 		;; reapply spells.
 		Who.AddSpell(Main.SpellInfluenceMilk)
