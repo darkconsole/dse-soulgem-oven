@@ -7,6 +7,8 @@
 	"ActorMilkMax": 2,
 	"ActorSemenMax": 1,
 	"GemsPerDay": 1.0,
+	"InfluenceMilkWhen": 0.1,
+	"InfluenceMilkSpeech": 20.0,
 	"MilksPerDay": 2.0,
 	"MilksPregPercent": 50.0,
 	"SemensPerDay": 2.0,

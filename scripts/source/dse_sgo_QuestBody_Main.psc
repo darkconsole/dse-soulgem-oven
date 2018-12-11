@@ -72,6 +72,30 @@ Function ActorUpdateMilk(Actor Who)
 
 	self.ActorSlidersApply(Who,self.KeySlidersMilk,MilkPercent)
 
+	If(Who == Main.Player)
+		self.ActorUpdateMilkInfluence(Who)
+	EndIf
+
+	Return
+EndFunction
+
+Function ActorUpdateMilkInfluence(Actor Who)
+
+	Float MilkPercent = Main.Data.ActorMilkTotalPercent(Who)
+	Float MilkWhen = Main.Config.GetFloat("InfluenceMilkWhen")
+
+	;; clean off spells.
+	Who.RemoveSpell(Main.SpellInfluenceMilk)
+
+	;; apply effects when triggered.
+	If(MilkPercent >= MilkWhen)
+		;; effect 0 is the speech influence.
+		Main.SpellInfluenceMilk.SetNthEffectMagnitude(0,(Main.Config.GetFloat("InfluenceMilkSpeech") * MilkPercent))
+
+		;; reapply spells.
+		Who.AddSpell(Main.SpellInfluenceMilk)
+	EndIf
+
 	Return
 EndFunction
 

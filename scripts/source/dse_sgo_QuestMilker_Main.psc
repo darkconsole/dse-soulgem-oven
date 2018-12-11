@@ -35,8 +35,6 @@ the milk status and milk any bottles that are over the limit.}
 		Return
 	EndIf
 
-	Main.Util.PrintDebug(Who.GetDisplayName() + " milker milker milker")
-
 	;;;;;;;;
 
 	Current = Main.Data.ActorMilkAmount(Who,FALSE)

@@ -70,6 +70,7 @@ Spell Property SpellActorDataScanToggle Auto
 Spell Property SpellBirthLargest Auto
 Spell Property SpellInsertGems Auto
 Spell Property SpellInsertSemens Auto
+Spell Property SpellInfluenceMilk Auto
 Spell Property SpellMenuMainOpen Auto
 Spell Property SpellMilkingAction Auto
 Spell Property SpellWankingAction Auto
