@@ -3,7 +3,7 @@
 	"UpdateLoopDelay": 0.25,
 	"UpdateGameHours": 1.0,
 	"BirthGemsFilled": 1,
-	"ActorGemsMax": 6,
+	"ActorGemsMax": 3,
 	"ActorMilkMax": 2,
 	"ActorSemenMax": 1,
 	"GemsPerDay": 1.0,
