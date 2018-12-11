@@ -61,6 +61,10 @@ Function ActorUpdateGems(Actor Who)
 
 	self.ActorSlidersApply(Who,self.KeySlidersGems,GemPercent)
 
+	If(Who == Main.Player)
+		self.ActorUpdateGemsInfluence(Who,GemPercent)
+	EndIf
+
 	Return
 EndFunction
 
@@ -74,6 +78,28 @@ Function ActorUpdateMilk(Actor Who)
 
 	If(Who == Main.Player)
 		self.ActorUpdateMilkInfluence(Who,MilkPercent)
+	EndIf
+
+	Return
+EndFunction
+
+Function ActorUpdateGemsInfluence(Actor Who, Float GemPercent)
+
+	Float GemsWhen = Main.Config.GetFloat("InfluenceGemsWhen")
+
+	;; clean off spells.
+	Who.RemoveSpell(Main.SpellInfluenceGems)
+
+	;; apply effects when triggered.
+	If(GemPercent >= GemsWhen)
+		;; effect 0 is the health influence.
+		Main.SpellInfluenceGems.SetNthEffectMagnitude(0,(Main.Config.GetFloat("InfluenceGemsHealth") * GemPercent))
+
+		;; effect 1 is the mana influence.
+		Main.SpellInfluenceGems.SetNthEffectMagnitude(1,(Main.Config.GetFloat("InfluenceGemsMagicka") * GemPercent))
+
+		;; reapply spells.
+		Who.AddSpell(Main.SpellInfluenceGems)
 	EndIf
 
 	Return
