@@ -73,15 +73,14 @@ Function ActorUpdateMilk(Actor Who)
 	self.ActorSlidersApply(Who,self.KeySlidersMilk,MilkPercent)
 
 	If(Who == Main.Player)
-		self.ActorUpdateMilkInfluence(Who)
+		self.ActorUpdateMilkInfluence(Who,MilkPercent)
 	EndIf
 
 	Return
 EndFunction
 
-Function ActorUpdateMilkInfluence(Actor Who)
+Function ActorUpdateMilkInfluence(Actor Who, Float MilkPercent)
 
-	Float MilkPercent = Main.Data.ActorMilkTotalPercent(Who)
 	Float MilkWhen = Main.Config.GetFloat("InfluenceMilkWhen")
 
 	;; clean off spells.
