@@ -229,7 +229,7 @@ EndFunction
 Bool Function CheckForDeps_SkyUI(Bool Popup)
 {make sure we have ui extensions installed and up to date.}
 
-	If(!self.Util.IsPluginInstalled("SkyUI_SE.esp"))
+	If(!Game.IsPluginInstalled("SkyUI_SE.esp"))
 		If(Popup)
 			self.Util.PopupError("SkyUI SE 5.2 or newer must be installed.")
 		EndIf
@@ -289,7 +289,7 @@ Bool Function CheckForDeps_RaceMenu(Bool Popup)
 
 	;; hard fail if no racemenu.
 
-	If(!self.Util.IsPluginInstalled("RaceMenu.esp"))
+	If(!Game.IsPluginInstalled("RaceMenu.esp"))
 		If(Popup)
 			self.Util.PopupError("RaceMenu SE 0.2.4 or newer must be installed.")
 		EndIf
@@ -305,7 +305,7 @@ Bool Function CheckForDeps_RaceMenu(Bool Popup)
 
 	;; soft fail if no morph sliders.
 	
-	If(!self.Util.IsPluginInstalled("RaceMenuMorphsCBBE.esp") && !self.Util.IsPluginInstalled("RaceMenuMorphsTBD.esp") && !self.Util.IsPluginInstalled("RaceMenuMorphsUUNP.esp"))
+	If(!Game.IsPluginInstalled("RaceMenuMorphsCBBE.esp") && !Game.IsPluginInstalled("RaceMenuMorphsTBD.esp") && !Game.IsPluginInstalled("RaceMenuMorphsUUNP.esp"))
 		If(Popup)
 			self.Util.PopupError("You have no BodyMorphs installed. Currently the only known ones are CBBE and TBD. You will not see any body scaling until you fix this.")
 		EndIf
@@ -317,7 +317,7 @@ EndFunction
 Bool Function CheckForDeps_UIExtensions(Bool Popup)
 {make sure we have ui extensions installed and up to date.}
 
-	If(!self.Util.IsPluginInstalled("UIExtensions.esp"))
+	If(!Game.IsPluginInstalled("UIExtensions.esp"))
 		If(Popup)
 			self.Util.PopupError("UI Extensions 1.2.0+ must be installed.")
 		EndIf
