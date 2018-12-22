@@ -85,21 +85,28 @@ EndFunction
 
 Function ActorUpdateGemsInfluence(Actor Who, Float GemPercent)
 
-	Float GemsWhen = Main.Config.GetFloat("InfluenceGemsWhen")
+	Float GemsWhen = Main.Config.GetFloat(".InfluenceGemsWhen")
+	Float GemsHealth = Main.Config.GetFloat(".InfluenceGemsHealth")
+	Float GemsMagicka = Main.Config.GetFloat(".InfluenceGemsMagicka")
 
 	;; clean off spells.
 	Who.RemoveSpell(Main.SpellInfluenceGems)
 
+	;; bail if disabled.
+	If(GemsHealth == 0.0 && GemsMagicka == 0.0)
+		Return
+	EndIf
+
 	;; apply effects when triggered.
 	If(GemPercent >= GemsWhen)
 		;; effect 0 is the health influence.
-		Main.SpellInfluenceGems.SetNthEffectMagnitude(0,(Main.Config.GetFloat("InfluenceGemsHealth") * GemPercent))
-
+		Main.SpellInfluenceGems.SetNthEffectMagnitude(0,(GemsHealth * GemPercent))
+		
 		;; effect 1 is the mana influence.
-		Main.SpellInfluenceGems.SetNthEffectMagnitude(1,(Main.Config.GetFloat("InfluenceGemsMagicka") * GemPercent))
+		Main.SpellInfluenceGems.SetNthEffectMagnitude(1,(GemsMagicka * GemPercent))
 
 		;; reapply spells.
-		Who.AddSpell(Main.SpellInfluenceGems)
+		Who.AddSpell(Main.SpellInfluenceGems,FALSE)
 	EndIf
 
 	Return
@@ -107,22 +114,28 @@ EndFunction
 
 Function ActorUpdateMilkInfluence(Actor Who, Float MilkPercent)
 
-	Float MilkWhen = Main.Config.GetFloat("InfluenceMilkWhen")
-	Float Speech = Main.Config.GetFloat("InfluenceMilkSpeech")
+	Float MilkWhen = Main.Config.GetFloat(".InfluenceMilkWhen")
+	Float MilkSpeech = Main.Config.GetFloat(".InfluenceMilkSpeech")
+	Float MilkSpeechExposed = Main.Config.GetFloat(".InfluenceMilkSpeechExposed")
 
 	;; clean off spells.
 	Who.RemoveSpell(Main.SpellInfluenceMilk)
 
+	;; bail if disabled.
+	If(MilkSpeech == 0.0 && MilkSpeechExposed == 0.0)
+		Return
+	EndIf
+
 	;; apply effects when triggered.
 	If(MilkPercent >= MilkWhen)
 		;; effect 0 is the speech influence.
-		Main.SpellInfluenceMilk.SetNthEffectMagnitude(0,(Speech * MilkPercent))
+		Main.SpellInfluenceMilk.SetNthEffectMagnitude(0,(MilkSpeech * MilkPercent))
 
 		;; effect 1 is the nude speech influence.
-		Main.SpellInfluenceMilk.SetNthEffectMagnitude(1,((Speech * 0.5) * MilkPercent))
+		Main.SpellInfluenceMilk.SetNthEffectMagnitude(1,(MilkSpeechExposed * MilkPercent))
 
 		;; reapply spells.
-		Who.AddSpell(Main.SpellInfluenceMilk)
+		Who.AddSpell(Main.SpellInfluenceMilk,FALSE)
 	EndIf
 
 	Return

@@ -38,18 +38,21 @@ EndEvent
 Event OnConfigInit()
 {things to do when the menu initalises (is opening)}
 
-	self.Pages = new String[4]
+	self.Pages = new String[5]
 	
 	self.Pages[0] = "$SGO4_Menu_General"
 	;; info, enable/disable, uninstall.
 
-	self.Pages[1] = "$SGO4_Menu_Widgets"
+	self.Pages[1] = "$SGO4_Menu_Gameplay"
+	;; gameplay settings
+
+	self.Pages[2] = "$SGO4_Menu_Widgets"
 	;; widget settings utilities
 
-	self.Pages[2] = "$SGO4_Menu_Debug"
+	self.Pages[3] = "$SGO4_Menu_Debug"
 	;; testing utilities
 
-	self.Pages[3] = "$SGO4_Menu_Splash"
+	self.Pages[4] = "$SGO4_Menu_Splash"
 	;; splash screen
 
 	Return
@@ -80,6 +83,8 @@ Event OnPageReset(string page)
 
 	If(Page == "$SGO4_Menu_General")
 		self.ShowPageGeneral()
+	ElseIf(Page == "$SGO4_Menu_Gameplay")
+		self.ShowPageGameplay()
 	ElseIf(Page == "$SGO4_Menu_Widgets")
 		self.ShowPageWidgets()
 	ElseIf(Page == "$SGO4_Menu_Debug")
@@ -236,6 +241,26 @@ Event OnOptionSliderOpen(Int Item)
 		Min = 1.0
 		Max = 3.0
 		Interval = 1.0
+	ElseIf(Item == ItemInfluenceMilkSpeech)
+		Val = Main.Config.GetFloat(".InfluenceMilkSpeech")
+		Min = 0.0
+		Max = 50.0
+		Interval = 1.0
+	ElseIf(Item == ItemInfluenceMilkSpeechExposed)
+		Val = Main.Config.GetFloat(".InfluenceMilkSpeechExposed")
+		Min = 0.0
+		Max = 20.0
+		Interval = 1.0
+	ElseIf(Item == ItemInfluenceGemsHealth)
+		Val = Main.Config.GetFloat(".InfluenceGemsHealth")
+		Min = 0.0
+		Max = 150.0
+		Interval = 1.0
+	ElseIf(Item == ItemInfluenceGemsMagicka)
+		Val = Main.Config.GetFloat(".InfluenceGemsMagicka")
+		Min = 0.0
+		Max = 150.0
+		Interval = 1.0
 	EndIf
 
 	SetSliderDialogStartValue(Val)
@@ -268,6 +293,18 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 	ElseIf(Item == ItemActorSemenMax)
 		Fmt = "{0}"
 		Main.Config.SetInt(".ActorSemenMax",(Val as Int))
+	ElseIf(Item == ItemInfluenceMilkSpeech)
+		Fmt = "{0}"
+		Main.Config.SetFloat(".InfluenceMilkSpeech",Val)
+	ElseIf(Item == ItemInfluenceMilkSpeechExposed)
+		Fmt = "{0}"
+		Main.Config.SetFloat(".InfluenceMilkSpeechExposed",Val)
+	ElseIf(Item == ItemInfluenceGemsHealth)
+		Fmt = "{0}"
+		Main.Config.SetFloat(".InfluenceGemsHealth",Val)
+	ElseIf(Item == ItemInfluenceGemsMagicka)
+		Fmt = "{0}"
+		Main.Config.SetFloat(".InfluenceGemsMagicka",Val)
 	EndIf
 
 	SetSliderOptionValue(Item,Val,Fmt)
@@ -367,6 +404,14 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_WidgetScale"
 	ElseIf(Item == ItemModStatus)
 		Txt = "$SGO4_MenuTip_IsModActive"
+	ElseIf(Item == ItemInfluenceMilkSpeech)
+		Txt = "$SGO4_MenuTip_InfluenceMilkSpeech"
+	ElseIf(Item == ItemInfluenceMilkSpeechExposed)
+		Txt = "$SGO4_MenuTip_InfluenceMilkSpeechExposed"
+	ElseIf(Item == ItemInfluenceGemsHealth)
+		Txt = "$SGO4_MenuTip_InfluenceGemsHealth"
+	ElseIf(Item == ItemInfluenceGemsMagicka)
+		Txt = "$SGO4_MenuTip_InfluenceGemsMagicka"
 	EndIf
 
 	self.SetInfoText(Txt)
@@ -401,12 +446,38 @@ Function ShowPageGeneral()
 	ItemModStatus = AddToggleOption("$SGO4_MenuOpt_IsModActive",Main.IsRunning())
 	AddEmptyOption()
 
+	Return
+EndFunction
+
+;/*****************************************************************************
+*****************************************************************************/;
+
+Int ItemInfluenceMilkSpeech
+Int ItemInfluenceMilkSpeechExposed
+Int ItemInfluenceGemsHealth
+Int ItemInfluenceGemsMagicka
+
+Function ShowPageGameplay()
+
+	self.SetTitleText("$SGO4_MenuTitle_Gameplay")
+	self.SetCursorFillMode(LEFT_TO_RIGHT)
+	self.SetCursorPosition(0)
+
 	AddHeaderOption("$SGO4_MenuOpt_ActorOptions")
 	AddHeaderOption("")
 
 	ItemActorGemsMax = AddSliderOption("$SGO4_MenuOpt_ActorGemsMax",Main.Config.GetInt(".ActorGemsMax"),"{0}")
 	ItemActorMilkMax = AddSliderOption("$SGO4_MenuOpt_ActorMilkMax",Main.Config.GetInt(".ActorMilkMax"),"{0}")
 	ItemActorSemenMax = AddSliderOption("$SGO4_MenuOpt_ActorSemenMax",Main.Config.GetInt(".ActorSemenMax"),"{0}")
+	AddEmptyOption()
+
+	AddHeaderOption("$SGO4_MenuOpt_BioInfluences")
+	AddHeaderOption("")
+
+	ItemInfluenceGemsHealth = AddSliderOption("$SGO4_MenuOpt_InfluenceGemsHealth",Main.Config.GetFloat(".InfluenceGemsHealth"),"{0}")
+	ItemInfluenceMilkSpeech = AddSliderOption("$SGO4_MenuOpt_InfluenceMilkSpeech",Main.Config.GetFloat(".InfluenceMilkSpeech"),"{0}")
+	ItemInfluenceGemsMagicka = AddSliderOption("$SGO4_MenuOpt_InfluenceGemsMagicka",Main.Config.GetFloat(".InfluenceGemsMagicka"),"{0}")
+	ItemInfluenceMilkSpeechExposed = AddSliderOption("$SGO4_MenuOpt_InfluenceMilkSpeechExposed",Main.Config.GetFloat(".InfluenceMilkSpeechExposed"),"{0}")
 
 	Return
 EndFunction
