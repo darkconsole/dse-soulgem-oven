@@ -180,6 +180,12 @@ Event OnOptionSelect(Int Item)
 
 	;;;;;;;;
 
+	ElseIf(Item == ItemSexLabStrip)
+		Val = !Main.Config.GetBool(".SexLabStrip")
+		Main.Config.SetBool(".SexLabStrip",Val)
+
+	;;;;;;;;
+
 	ElseIf(Item == ItemModStatus)
 		Debug.MessageBox("$SGO4_Dialog_PleaseCloseMCM")
 		Utility.Wait(0.1)
@@ -412,6 +418,8 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_InfluenceGemsHealth"
 	ElseIf(Item == ItemInfluenceGemsMagicka)
 		Txt = "$SGO4_MenuTip_InfluenceGemsMagicka"
+	ElseIf(Item == ItemSexLabStrip)
+		Txt = "$SGO4_MenuTip_SexLabStrip"
 	EndIf
 
 	self.SetInfoText(Txt)
@@ -431,9 +439,7 @@ EndFunction
 *****************************************************************************/;
 
 Int ItemModStatus
-Int ItemActorGemsMax
-Int ItemActorMilkMax
-Int ItemActorSemenMax
+Int ItemSexLabStrip
 
 Function ShowPageGeneral()
 
@@ -445,6 +451,13 @@ Function ShowPageGeneral()
 	AddHeaderOption("")
 	ItemModStatus = AddToggleOption("$SGO4_MenuOpt_IsModActive",Main.IsRunning())
 	AddEmptyOption()
+	AddEmptyOption()
+	AddEmptyOption()
+
+	AddHeaderOption("$SGO4_MenuOpt_Misc")
+	AddHeaderOption("")
+
+	ItemSexLabStrip = AddToggleOption("$SGO4_MenuOpt_SexLabStrip",Main.Config.GetBool(".SexLabStrip"))
 
 	Return
 EndFunction
@@ -452,6 +465,9 @@ EndFunction
 ;/*****************************************************************************
 *****************************************************************************/;
 
+Int ItemActorGemsMax
+Int ItemActorMilkMax
+Int ItemActorSemenMax
 Int ItemInfluenceMilkSpeech
 Int ItemInfluenceMilkSpeechExposed
 Int ItemInfluenceGemsHealth
@@ -469,6 +485,8 @@ Function ShowPageGameplay()
 	ItemActorGemsMax = AddSliderOption("$SGO4_MenuOpt_ActorGemsMax",Main.Config.GetInt(".ActorGemsMax"),"{0}")
 	ItemActorMilkMax = AddSliderOption("$SGO4_MenuOpt_ActorMilkMax",Main.Config.GetInt(".ActorMilkMax"),"{0}")
 	ItemActorSemenMax = AddSliderOption("$SGO4_MenuOpt_ActorSemenMax",Main.Config.GetInt(".ActorSemenMax"),"{0}")
+	AddEmptyOption()
+	AddEmptyOption()
 	AddEmptyOption()
 
 	AddHeaderOption("$SGO4_MenuOpt_BioInfluences")
