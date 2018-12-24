@@ -367,13 +367,23 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 
 	;;;;;;;;
 
-	;; determine what to do.
+	;; determine if we do.
 
 	If(!Who.IsInFaction(FactionProduceSemen))
 		;; bail if the cummer is not producing semen.
 		Util.PrintDebug("Preg Abort: " + Who.GetDisplayName() + " is not a semen producer.")
 		Return
+	ElseIf(Data.ActorSemenAmount(Who,FALSE) < 1.0)
+		;; bail if no semen.
+		Util.PrintDebug("Preg Abort: " + Who.GetDisplayName() + " does not have enough semen.")
+		Return
 	EndIf
+
+	;; they blew a load so deduct it.
+
+	Data.ActorSemenInc(Who,-1.0)
+
+	;; determine where we do.
 
 	If(ActorList.Length == 1)
 		;; bail if it was a solo mission.
