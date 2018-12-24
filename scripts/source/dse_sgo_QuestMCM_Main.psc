@@ -267,6 +267,16 @@ Event OnOptionSliderOpen(Int Item)
 		Min = 0.0
 		Max = 150.0
 		Interval = 1.0
+	ElseIf(Item == ItemGemsPerDay)
+		Val = Main.Config.GetFloat(".GemsPerDay")
+		Min = 0.05
+		Max = Main.Data.GemStageCount(None)
+		Interval = 0.05
+	ElseIf(Item == ItemMilksPerDay)
+		Val = Main.Config.GetFloat(".MilksPerDay")
+		Min = 0.05
+		Max = 6.0
+		Interval = 0.05
 	EndIf
 
 	SetSliderDialogStartValue(Val)
@@ -311,6 +321,12 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 	ElseIf(Item == ItemInfluenceGemsMagicka)
 		Fmt = "{0}"
 		Main.Config.SetFloat(".InfluenceGemsMagicka",Val)
+	ElseIf(Item == ItemGemsPerDay)
+		Fmt = "{2}"
+		Main.Config.SetFloat(".GemsPerDay",Val)
+	ElseIf(Item == ItemMilksPerDay)
+		Fmt = "{2}"
+		Main.Config.SetFloat(".MilksPerDay",Val)
 	EndIf
 
 	SetSliderOptionValue(Item,Val,Fmt)
@@ -420,6 +436,10 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_InfluenceGemsMagicka"
 	ElseIf(Item == ItemSexLabStrip)
 		Txt = "$SGO4_MenuTip_SexLabStrip"
+	ElseIf(Item == ItemGemsPerDay)
+		Txt = "$SGO4_MenuTip_GemsPerDay"
+	ElseIf(Item == ItemMilksPerDay)
+		Txt = "$SGO4_MenuTip_MilksPerDay"
 	EndIf
 
 	self.SetInfoText(Txt)
@@ -472,12 +492,22 @@ Int ItemInfluenceMilkSpeech
 Int ItemInfluenceMilkSpeechExposed
 Int ItemInfluenceGemsHealth
 Int ItemInfluenceGemsMagicka
+Int ItemGemsPerDay
+Int ItemMilksPerDay
 
 Function ShowPageGameplay()
 
 	self.SetTitleText("$SGO4_MenuTitle_Gameplay")
 	self.SetCursorFillMode(LEFT_TO_RIGHT)
 	self.SetCursorPosition(0)
+
+	AddHeaderOption("$SGO4_MenuOpt_ProductionOptions")
+	AddHeaderOption("")
+
+	ItemGemsPerDay = AddSliderOption("$SGO4_MenuOpt_GemsPerDay",Main.Config.GetFloat(".GemsPerDay"),"{2}")
+	ItemMilksPerDay = AddSliderOption("$SGO4_MenuOpt_MilksPerDay",Main.Config.GetFloat(".MilksPerDay"),"{2}")
+	AddEmptyOption()
+	AddEmptyOption()
 
 	AddHeaderOption("$SGO4_MenuOpt_ActorOptions")
 	AddHeaderOption("")
