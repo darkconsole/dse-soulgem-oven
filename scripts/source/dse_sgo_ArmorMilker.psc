@@ -22,6 +22,8 @@ Event OnEquipped(Actor Who)
 
 	Float Amount = Main.Data.ActorMilkAmount(Who)
 	Int Max = Main.Data.ActorMilkMax(Who)
+	Bool Produce = Main.Config.GetBool(".MilkerProduce")
+	Float Rate = Main.Config.GetFloat(".MilkerRate")
 
 	If(Amount > (Max + 1))
 		Main.Data.ActorMilkSet(Who,((Max + 1) As Float))
@@ -29,9 +31,17 @@ Event OnEquipped(Actor Who)
 
 	;; then tell soulgem oven this actor should be producing.
 
-	Main.Data.ActorModSetValue(Who,"SGO4.ActorMod.MilkProduce",".SGO4AutoMilker",1.0)
-	Main.Data.ActorModSetValue(Who,"SGO4.ActorMod.MilkRate",".SGO4AutoMilker",0.10)
-	Main.Data.ActorTrackingAdd(Who)
+	If(Produce)
+		Main.Data.ActorModSetValue(Who,"SGO4.ActorMod.MilkProduce",".SGO4AutoMilker",1.0)
+	EndIf
+
+	If(Rate > 0.0)
+		Main.Data.ActorModSetValue(Who,"SGO4.ActorMod.MilkRate",".SGO4AutoMilker",Rate)
+	EndIf
+
+	If(Produce && Rate > 0.0)
+		Main.Data.ActorTrackingAdd(Who)
+	EndIf
 
 	;; throw in some flavour.
 

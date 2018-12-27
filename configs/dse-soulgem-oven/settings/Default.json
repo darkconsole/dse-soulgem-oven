@@ -29,6 +29,8 @@
 	"WidgetAnchorH": "left",
 	"WidgetAnchorV": "bottom",
 	"WidgetScale": 0.75,
+	"MilkerProduce": true,
+	"MilkerRate": 0.10,
 	"Sliders": {
 		"Gems": [
 			{ "Name": "PregnancyBelly", "Max": 0.65 },

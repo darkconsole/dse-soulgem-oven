@@ -186,6 +186,12 @@ Event OnOptionSelect(Int Item)
 
 	;;;;;;;;
 
+	ElseIf(Item == ItemMilkerProduce)
+		Val = !Main.Config.GetBool(".MilkerProduce")
+		Main.Config.SetBool(".MilkerProduce",Val)
+
+	;;;;;;;;
+
 	ElseIf(Item == ItemModStatus)
 		Debug.MessageBox("$SGO4_Dialog_PleaseCloseMCM")
 		Utility.Wait(0.1)
@@ -292,6 +298,11 @@ Event OnOptionSliderOpen(Int Item)
 		Min = 0.5
 		Max = 2.0
 		Interval = 0.1
+	ElseIf(Item == ItemMilkerRate)
+		Val = (Main.Config.GetFloat(".MilkerRate") * 100)
+		Min = 0.0
+		Max = 100.0
+		Interval = 1.0
 	EndIf
 
 	SetSliderDialogStartValue(Val)
@@ -351,6 +362,9 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 	ElseIf(Item == ItemUpdateGameHours)
 		Fmt = "{1} hr"
 		Main.Config.SetFloat(".UpdateGameHours",Val)
+	ElseIf(Item == ItemMilkerRate)
+		Fmt = "{0}%"
+		Main.Config.SetFloat(".MilkerRate",(Val / 100.0))
 	EndIf
 
 	SetSliderOptionValue(Item,Val,Fmt)
@@ -470,6 +484,10 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_UpdateLoopDelay"
 	ElseIf(Item == ItemUpdateGameHours)
 		Txt = "$SGO4_MenuTip_UpdateGameHours"
+	ElseIf(Item == ItemMilkerProduce)
+		Txt = "$SGO4_MenuTip_MilkerProduce"
+	ElseIf(Item == ItemMilkerRate)
+		Txt = "$SGO4_MenuTip_MilkerRate"
 	EndIf
 
 	self.SetInfoText(Txt)
@@ -537,6 +555,8 @@ Int ItemInfluenceGemsHealth
 Int ItemInfluenceGemsMagicka
 Int ItemGemsPerDay
 Int ItemMilksPerDay
+Int ItemMilkerProduce
+Int ItemMilkerRate
 
 Function ShowPageGameplay()
 
@@ -549,6 +569,8 @@ Function ShowPageGameplay()
 
 	ItemGemsPerDay = AddSliderOption("$SGO4_MenuOpt_GemsPerDay",Main.Config.GetFloat(".GemsPerDay"),"{2}")
 	ItemMilksPerDay = AddSliderOption("$SGO4_MenuOpt_MilksPerDay",Main.Config.GetFloat(".MilksPerDay"),"{2}")
+	ItemMilkerProduce = AddToggleOption("$SGO4_MenuOpt_MilkerProduce",Main.Config.GetBool(".MilkerProduce"))
+	ItemMilkerRate = AddSliderOption("$SGO4_MenuOpt_MilkerRate",(Main.Config.GetFloat(".MilkerRate") * 100),"{0}%")
 	AddEmptyOption()
 	AddEmptyOption()
 
