@@ -277,6 +277,21 @@ Event OnOptionSliderOpen(Int Item)
 		Min = 0.05
 		Max = 6.0
 		Interval = 0.05
+	ElseIf(Item == ItemUpdateLoopFreq)
+		Val = Main.Config.GetFloat(".UpdateLoopFreq")
+		Min = 10.0
+		Max = 300.0
+		Interval = 0.5
+	ElseIf(Item == ItemUpdateLoopDelay)
+		Val = Main.Config.GetFloat(".UpdateLoopDelay")
+		Min = 0.05
+		Max = 2.0
+		Interval = 0.05
+	ElseIf(Item == ItemUpdateGameHours)
+		Val = Main.Config.GetFloat(".UpdateGameHours")
+		Min = 0.5
+		Max = 2.0
+		Interval = 0.1
 	EndIf
 
 	SetSliderDialogStartValue(Val)
@@ -327,6 +342,15 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 	ElseIf(Item == ItemMilksPerDay)
 		Fmt = "{2}"
 		Main.Config.SetFloat(".MilksPerDay",Val)
+	ElseIf(Item == ItemUpdateLoopFreq)
+		Fmt = "{2} sec"
+		Main.Config.SetFloat(".UpdateLoopFreq",Val)
+	ElseIf(Item == ItemUpdateLoopDelay)
+		Fmt = "{2} sec"
+		Main.Config.SetFloat(".UpdateLoopDelay",Val)
+	ElseIf(Item == ItemUpdateGameHours)
+		Fmt = "{1} hr"
+		Main.Config.SetFloat(".UpdateGameHours",Val)
 	EndIf
 
 	SetSliderOptionValue(Item,Val,Fmt)
@@ -440,6 +464,12 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_GemsPerDay"
 	ElseIf(Item == ItemMilksPerDay)
 		Txt = "$SGO4_MenuTip_MilksPerDay"
+	ElseIf(Item == ItemUpdateLoopFreq)
+		Txt = "$SGO4_MenuTip_UpdateLoopFreq"
+	ElseIf(Item == ItemUpdateLoopDelay)
+		Txt = "$SGO4_MenuTip_UpdateLoopDelay"
+	ElseIf(Item == ItemUpdateGameHours)
+		Txt = "$SGO4_MenuTip_UpdateGameHours"
 	EndIf
 
 	self.SetInfoText(Txt)
@@ -460,6 +490,9 @@ EndFunction
 
 Int ItemModStatus
 Int ItemSexLabStrip
+Int ItemUpdateLoopFreq
+Int ItemUpdateLoopDelay
+Int ItemUpdateGameHours
 
 Function ShowPageGeneral()
 
@@ -470,6 +503,16 @@ Function ShowPageGeneral()
 	AddHeaderOption("$SGO4_MenuOpt_ModStatus")
 	AddHeaderOption("")
 	ItemModStatus = AddToggleOption("$SGO4_MenuOpt_IsModActive",Main.IsRunning())
+	AddEmptyOption()
+	AddEmptyOption()
+	AddEmptyOption()
+
+	AddHeaderOption("$SGO4_MenuOpt_Performance")
+	AddHeaderOption("")
+
+	ItemUpdateLoopFreq = AddSliderOption("$SGO4_MenuOpt_UpdateLoopFreq",Main.Config.GetFloat(".UpdateLoopFreq"),"{1} sec")
+	ItemUpdateLoopDelay = AddSliderOption("$SGO4_MenuOpt_UpdateLoopDelay",Main.Config.GetFloat(".UpdateLoopDelay"),"{2} sec")
+	ItemUpdateGameHours = AddSliderOption("$SGO4_MenuOpt_UpdateGameHours",Main.Config.GetFloat(".UpdateGameHours"),"{1} hr")
 	AddEmptyOption()
 	AddEmptyOption()
 	AddEmptyOption()
