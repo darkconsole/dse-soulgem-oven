@@ -283,6 +283,16 @@ Event OnOptionSliderOpen(Int Item)
 		Min = 0.05
 		Max = 6.0
 		Interval = 0.05
+	ElseIf(Item == ItemMilksPregPercent)
+		Val = Main.Config.GetFloat(".MilksPregPercent")
+		Min = 1.0
+		Max = 100.0
+		Interval = 1.0
+	ElseIf(Item == ItemMilkerRate)
+		Val = (Main.Config.GetFloat(".MilkerRate") * 100)
+		Min = 0.0
+		Max = 100.0
+		Interval = 1.0
 	ElseIf(Item == ItemUpdateLoopFreq)
 		Val = Main.Config.GetFloat(".UpdateLoopFreq")
 		Min = 10.0
@@ -298,11 +308,6 @@ Event OnOptionSliderOpen(Int Item)
 		Min = 0.5
 		Max = 2.0
 		Interval = 0.1
-	ElseIf(Item == ItemMilkerRate)
-		Val = (Main.Config.GetFloat(".MilkerRate") * 100)
-		Min = 0.0
-		Max = 100.0
-		Interval = 1.0
 	EndIf
 
 	SetSliderDialogStartValue(Val)
@@ -353,6 +358,12 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 	ElseIf(Item == ItemMilksPerDay)
 		Fmt = "{2}"
 		Main.Config.SetFloat(".MilksPerDay",Val)
+	ElseIf(Item == ItemMilksPregPercent)
+		Fmt = "{0}%"
+		Main.Config.SetFloat(".MilksPregPercent",Val)
+	ElseIf(Item == ItemMilkerRate)
+		Fmt = "{0}%"
+		Main.Config.SetFloat(".MilkerRate",(Val / 100.0))
 	ElseIf(Item == ItemUpdateLoopFreq)
 		Fmt = "{2} sec"
 		Main.Config.SetFloat(".UpdateLoopFreq",Val)
@@ -362,9 +373,6 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 	ElseIf(Item == ItemUpdateGameHours)
 		Fmt = "{1} hr"
 		Main.Config.SetFloat(".UpdateGameHours",Val)
-	ElseIf(Item == ItemMilkerRate)
-		Fmt = "{0}%"
-		Main.Config.SetFloat(".MilkerRate",(Val / 100.0))
 	EndIf
 
 	SetSliderOptionValue(Item,Val,Fmt)
@@ -484,6 +492,8 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_UpdateLoopDelay"
 	ElseIf(Item == ItemUpdateGameHours)
 		Txt = "$SGO4_MenuTip_UpdateGameHours"
+	ElseIf(Item == ItemMilksPregPercent)
+		Txt = "$SGO4_MenuTip_MilksPregPercent"
 	ElseIf(Item == ItemMilkerProduce)
 		Txt = "$SGO4_MenuTip_MilkerProduce"
 	ElseIf(Item == ItemMilkerRate)
@@ -555,6 +565,7 @@ Int ItemInfluenceGemsHealth
 Int ItemInfluenceGemsMagicka
 Int ItemGemsPerDay
 Int ItemMilksPerDay
+Int ItemMilksPregPercent
 Int ItemMilkerProduce
 Int ItemMilkerRate
 
@@ -568,8 +579,10 @@ Function ShowPageGameplay()
 	AddHeaderOption("")
 
 	ItemGemsPerDay = AddSliderOption("$SGO4_MenuOpt_GemsPerDay",Main.Config.GetFloat(".GemsPerDay"),"{2}")
+	ItemMilksPregPercent = AddSliderOption("$SGO4_MenuOpt_MilksPregPercent",Main.Config.GetFloat(".MilksPregPercent"),"{0}%")
 	ItemMilksPerDay = AddSliderOption("$SGO4_MenuOpt_MilksPerDay",Main.Config.GetFloat(".MilksPerDay"),"{2}")
 	ItemMilkerProduce = AddToggleOption("$SGO4_MenuOpt_MilkerProduce",Main.Config.GetBool(".MilkerProduce"))
+	AddEmptyOption()
 	ItemMilkerRate = AddSliderOption("$SGO4_MenuOpt_MilkerRate",(Main.Config.GetFloat(".MilkerRate") * 100),"{0}%")
 	AddEmptyOption()
 	AddEmptyOption()

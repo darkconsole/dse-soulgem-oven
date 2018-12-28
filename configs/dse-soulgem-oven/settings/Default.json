@@ -14,7 +14,7 @@
 	"InfluenceMilkSpeech": 20.0,
 	"InfluenceMilkSpeechExposed": 10.0,
 	"MilksPerDay": 2.0,
-	"MilksPregPercent": 50.0,
+	"MilksPregPercent": 30.0,
 	"SemensPerDay": 2.0,
 	"SexLabStrip": true,
 	"LevelAlchFactor": 1.0,
