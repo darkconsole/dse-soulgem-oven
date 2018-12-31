@@ -1,4 +1,5 @@
 {
+	"SoulgemOvenStart": "Soulgem Oven 4 has started.",
 	"CannotAnimateOverride": "%1 appears to be forcefully controlled by another mod, skipping the animations.",
 	"CannotFitMoreGems": "%1 cannot fit any more gems.",
 	"CannotInsertThat": "%1 cannot insert that.",

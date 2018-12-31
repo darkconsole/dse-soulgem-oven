@@ -84,6 +84,12 @@ String Property KeyESP = "dse-soulgem-oven.esp" AutoReadOnly Hidden
 String Property KeySplashGraphic = "dse-soulgem-oven/splash.dds" AutoReadOnly Hidden
 Bool Property OptValidateActor = TRUE Auto Hidden
 
+dse_sgo_QuestController_Main Function Get() Global
+{static method for grabbing a quick handle to the api.}
+
+	Return Game.GetFormFromFile(0xD61,"dse-soulgem-oven.esp") As dse_sgo_QuestController_Main
+EndFunction
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -96,13 +102,15 @@ Event OnInit()
 		Return
 	EndIf
 
+	;; don't allow activation if there is something wrong with the dependencies.
+
 	If(!self.CheckForDeps(TRUE))
 		self.Reset()
 		self.Stop()
 		Return
 	EndIf
 
-	;;;;;;;;
+	;; start the configuration menu.
 
 	self.ResetConfig()
 
@@ -118,7 +126,7 @@ Event OnInit()
 		Return
 	EndIf
 
-	;;;;;;;;
+	;; start the background processor.
 
 	self.ResetLoop()
 
@@ -136,18 +144,24 @@ Event OnInit()
 
 	;;;;;;;;
 
-	;; not for real things just hack testing.
+	;; go ahead and ping the player with tracking now to prime their
+	;; biological features.
 
 	self.Data.ActorTrackingAdd(self.Player)
 	
-	;;;;;;;;
+	;; handle sexlab events.
 
 	self.UnregisterForModEvent("SexLabOrgasm")
 	self.RegisterForModEvent("SexLabOrgasm","OnModEvent_SexLabOrgasm")
 
+	;; give the player the menu systems.
+
 	self.Player.AddSpell(self.SpellMenuMainOpen)
 	self.Player.AddSpell(self.SpellActorDataScanToggle)
-	self.Util.Print("Soulgem Oven 4 has started.")
+
+	;;;;;;;;
+
+	self.Util.PrintLookup("SoulgemOvenStart")
 	Return
 EndEvent
 
@@ -155,25 +169,32 @@ EndEvent
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Function ResetConfig()
+{reset the config menu library.}
 
 	self.Config.Reset()
 	self.Config.Stop()
 	self.Config.Start()
+
 	Return
 EndFunction
 
 Function ResetLoop()
+{reset the background processor library.}
 
 	self.Loop.Reset()
 	self.Loop.Stop()
 	self.Loop.Start()
+
+	Return
 EndFunction
 
 Function ResetMod()
+{reset the entire mod.}
 
 	self.Reset()
 	self.Stop()
 	self.Start()
+
 	Return
 EndFunction
 
@@ -331,6 +352,7 @@ EndFunction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
+{handler for sexlab orgasm events.}
 
 	Actor Who = Whom as Actor
 	Actor Oven
@@ -340,6 +362,12 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 	Int ActorIter
 	Float PregRoll = 0.0
 	Float PregChance = Config.GetFloat(".FertilityChance")
+
+	;; do nothing if we're powered down.
+
+	If(!self.IsRunning())
+		Return
+	EndIf
 
 	;;;;;;;;
 
@@ -624,7 +652,7 @@ Function MenuMainOpen(Actor Who=None)
 		self.SpellInsertGems.Cast(self.Player,self.Player)
 	ElseIf(Result == 1)
 		;; xfer gems
-		Debug.MessageBox("Cumming Soon (tm)")
+		self.MenuTransferGemsOpen(Who)
 	ElseIf(Result == 2)
 		;; inseminate
 		self.SpellInsertSemens.Cast(self.Player,self.Player)
@@ -715,6 +743,8 @@ EndFunction
 
 Function MenuTransferGemsOpen(Actor Who=None)
 {open the gem transfer menu.}
+
+	Debug.MessageBox("Cumming Soon (tm)")
 
 	Return
 EndFunction
