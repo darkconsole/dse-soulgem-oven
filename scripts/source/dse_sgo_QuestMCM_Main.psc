@@ -193,7 +193,7 @@ Event OnOptionSelect(Int Item)
 	;;;;;;;;
 
 	ElseIf(Item == ItemModStatus)
-		Debug.MessageBox("$SGO4_Dialog_PleaseCloseMCM")
+		Debug.MessageBox(Main.Util.StringLookup("SoulgemOvenStartCloseMenu"))
 		Utility.Wait(0.1)
 
 		If(Main.IsRunning())
