@@ -483,8 +483,10 @@ Event OnMenuClose(String Name)
 {handler for our menu hack}
 
 	If(Name == "Sleep/Wait Menu")
-		Loop.UnregisterForUpdate()
-		Loop.OnUpdate()
+		If(Config.GetBool(".UpdateAfterWait"))
+			Loop.UnregisterForUpdate()
+			Loop.OnUpdate()
+		EndIf
 	EndIf
 
 	Return

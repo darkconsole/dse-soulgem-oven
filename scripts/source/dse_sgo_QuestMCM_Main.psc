@@ -192,6 +192,12 @@ Event OnOptionSelect(Int Item)
 
 	;;;;;;;;
 
+	ElseIf(Item == ItemUpdateAfterWait)
+		Val = !Main.Config.GetBool(".UpdateAfterWait")
+		Main.Config.SetBool(".UpdateAfterWait",Val)
+
+	;;;;;;;;
+
 	ElseIf(Item == ItemModStatus)
 		Debug.MessageBox(Main.Util.StringLookup("SoulgemOvenStartCloseMenu"))
 		Utility.Wait(0.1)
@@ -498,6 +504,8 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_MilkerProduce"
 	ElseIf(Item == ItemMilkerRate)
 		Txt = "$SGO4_MenuTip_MilkerRate"
+	ElseIf(Item == ItemUpdateAfterWait)
+		Txt = "$SGO4_MenuTip_UpdateAfterWait"
 	EndIf
 
 	self.SetInfoText(Txt)
@@ -521,6 +529,7 @@ Int ItemSexLabStrip
 Int ItemUpdateLoopFreq
 Int ItemUpdateLoopDelay
 Int ItemUpdateGameHours
+Int ItemUpdateAfterWait
 
 Function ShowPageGeneral()
 
@@ -541,7 +550,7 @@ Function ShowPageGeneral()
 	ItemUpdateLoopFreq = AddSliderOption("$SGO4_MenuOpt_UpdateLoopFreq",Main.Config.GetFloat(".UpdateLoopFreq"),"{1} sec")
 	ItemUpdateLoopDelay = AddSliderOption("$SGO4_MenuOpt_UpdateLoopDelay",Main.Config.GetFloat(".UpdateLoopDelay"),"{2} sec")
 	ItemUpdateGameHours = AddSliderOption("$SGO4_MenuOpt_UpdateGameHours",Main.Config.GetFloat(".UpdateGameHours"),"{1} hr")
-	AddEmptyOption()
+	ItemUpdateAfterWait = AddToggleOption("$SGO4_MenuOpt_UpdateAfterWait",Main.Config.GetBool(".UpdateAfterWait"))
 	AddEmptyOption()
 	AddEmptyOption()
 

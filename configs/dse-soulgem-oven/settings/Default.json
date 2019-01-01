@@ -2,6 +2,7 @@
 	"UpdateLoopFreq": 60.0,
 	"UpdateLoopDelay": 0.25,
 	"UpdateGameHours": 1.0,
+	"UpdateAfterWait": true,
 	"BirthGemsFilled": 1,
 	"ActorGemsMax": 3,
 	"ActorMilkMax": 2,
