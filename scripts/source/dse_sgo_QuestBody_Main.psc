@@ -32,13 +32,19 @@ String Property KeySlidersMilk = ".Sliders.Milk" AutoReadOnly Hidden
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Function ActorUpdate(Actor Who)
+Function ActorUpdate(Actor Who, Bool Force=FALSE)
 {force the actor's body into the state described by its current dataset.}
 
 	Int Ev
 
-	self.ActorUpdateGems(Who)
-	self.ActorUpdateMilk(Who)
+	If(Force || Who.IsInFaction(Main.FactionProduceGems))
+		self.ActorUpdateGems(Who)
+	EndIf
+
+
+	If(Force || Who.IsInFaction(Main.FactionProduceMilk))
+		self.ActorUpdateMilk(Who)
+	EndIF
 
 	If(Who.Is3dLoaded())
 		;; allow our data to have gotten updated, but there is no need to
@@ -57,13 +63,16 @@ Function ActorUpdateGems(Actor Who)
 {handle body updates based on the state of their gems.}
 
 	Float GemPercent = Main.Data.ActorGemTotalPercent(Who)
-	;;Main.Util.PrintDebug("ActorUpdateGems(" + Who.GetDisplayName() + ") = " + GemPercent)
-
-	self.ActorSlidersApply(Who,self.KeySlidersGems,GemPercent)
 
 	If(Who == Main.Player)
 		self.ActorUpdateGemsInfluence(Who,GemPercent)
 	EndIf
+
+	If(Who.IsInFaction(Main.FactionNoBodyScale))
+		GemPercent = 0.0
+	EndIf
+
+	self.ActorSlidersApply(Who,self.KeySlidersGems,GemPercent)
 
 	Return
 EndFunction
@@ -72,13 +81,16 @@ Function ActorUpdateMilk(Actor Who)
 {handle body updates based on the state of their milk.}
 
 	Float MilkPercent = Main.Data.ActorMilkTotalPercent(Who)
-	;;Main.Util.PrintDebug("ActorUpdateMilk(" + Who.GetDisplayName() + ") = " + MilkPercent)
-
-	self.ActorSlidersApply(Who,self.KeySlidersMilk,MilkPercent)
 
 	If(Who == Main.Player)
 		self.ActorUpdateMilkInfluence(Who,MilkPercent)
 	EndIf
+	
+	If(Who.IsInFaction(Main.FactionNoBodyScale))
+		MilkPercent = 0.0
+	EndIf
+
+	self.ActorSlidersApply(Who,self.KeySlidersMilk,MilkPercent)
 
 	Return
 EndFunction
@@ -178,10 +190,10 @@ Function ActorSlidersApply(Actor Who, String Prefix, Float Percent)
 		EndIf
 
 		;; these should be removed after a few versions. just a cleanup.
-		NiOverride.ClearBodyMorph(Who,SliderName,"SGO4.Morph.Gems")
-		NiOverride.ClearBodyMorph(Who,SliderName,"SGO4.Morph.Milk")
-		NiOverride.ClearBodyMorph(Who,SliderName,"SGO4.Morph..Sliders.Gems")
-		NiOverride.ClearBodyMorph(Who,SliderName,"SGO4.Morph..Sliders.Milk")
+		;;NiOverride.ClearBodyMorph(Who,SliderName,"SGO4.Morph.Gems")
+		;;NiOverride.ClearBodyMorph(Who,SliderName,"SGO4.Morph.Milk")
+		;;NiOverride.ClearBodyMorph(Who,SliderName,"SGO4.Morph..Sliders.Gems")
+		;;NiOverride.ClearBodyMorph(Who,SliderName,"SGO4.Morph..Sliders.Milk")
 
 		SliderIter += 1
 	EndWhile

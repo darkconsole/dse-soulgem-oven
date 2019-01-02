@@ -65,6 +65,7 @@ FormList property ListSemenFilter Auto
 Faction Property FactionProduceGems Auto
 Faction Property FactionProduceMilk Auto
 Faction Property FactionProduceSemen Auto
+Faction Property FactionNoBodyScale Auto
 Spell Property SpellActorDataScan Auto
 Spell Property SpellActorDataScanToggle Auto
 Spell Property SpellBirthLargest Auto
@@ -688,6 +689,7 @@ Function MenuActorOptionsOpen(Actor Who=None)
 	Bool CanGem
 	Bool CanMilk
 	Bool CanSemen
+	Bool NoBodyScale
 
 	Who = self.MenuTargetGet(Who)
 	self.Data.ActorDetermineFeatures(Who)
@@ -695,10 +697,11 @@ Function MenuActorOptionsOpen(Actor Who=None)
 	CanGem = Who.IsInFaction(self.FactionProduceGems)
 	CanMilk = Who.IsInFaction(self.FactionProduceMilk)
 	CanSemen = Who.IsInFaction(self.FactionProduceSemen)
+	NoBodyScale = Who.IsInFaction(self.FactionNoBodyScale)
 
 	;;;;;;;;
 
-	;; 0 toggle gems  | 4
+	;; 0 toggle gems  | 4 no body scale
 	;; 1 toggle milk  | 5
 	;; 2 toggle semen | 6
 	;; 3              | 7
@@ -715,6 +718,10 @@ Function MenuActorOptionsOpen(Actor Who=None)
 	ItemDesc[2] = "$SGO4_MenuProduceSemenDesc"
 	ItemShow[2] = TRUE
 
+	ItemText[4] = "$SGO4_MenuNoBodyScaleOn"
+	ItemDesc[4] = "$SGO4_MenuNoBodyScaleDesc"
+	ItemShow[4] = TRUE
+
 	If(CanGem)
 		ItemText[0] = "$SGO4_MenuProduceGemsOn"
 	EndIf
@@ -725,6 +732,10 @@ Function MenuActorOptionsOpen(Actor Who=None)
 
 	If(CanSemen)
 		ItemText[2] = "$SGO4_MenuProduceSemenOn"
+	EndIf
+
+	If(NoBodyScale)
+		ItemText[4] = "$SGO4_MenuNoBodyScaleOff"
 	EndIf
 
 	;;;;;;;;
@@ -738,6 +749,9 @@ Function MenuActorOptionsOpen(Actor Who=None)
 		self.Util.ActorToggleFaction(Who,self.FactionProduceMilk)
 	ElseIf(Result == 2)
 		self.Util.ActorToggleFaction(Who,self.FactionProduceSemen)
+	ElseIf(Result == 4)
+		self.Util.ActorToggleFaction(Who,self.FactionNoBodyScale)
+		self.Body.ActorUpdate(Who,TRUE)
 	EndIf
 
 	Return
