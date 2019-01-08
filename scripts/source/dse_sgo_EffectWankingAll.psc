@@ -77,7 +77,7 @@ Function HandleSkipAnimation()
 	Main.Data.ActorSemenLimit(self.SemenFrom)
 	Main.Util.PrintLookup("CannotAnimateOverride",self.SemenFrom.GetDisplayName())
 
-	While(Main.Data.ActorSemenAmount(self.SemenFrom) > 1.0)
+	While(Main.Data.ActorSemenAmount(self.SemenFrom) >= 1.0)
 		Main.Body.OnAnimationEvent_ActorMoan(self.SemenFrom,50)
 		self.HandleSpawnSemen(FALSE)
 		Utility.Wait(2.5)

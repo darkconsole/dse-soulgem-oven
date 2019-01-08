@@ -77,7 +77,7 @@ Function HandleSkipAnimation()
 	Main.Data.ActorMilkLimit(self.MilkFrom)
 	Main.Util.PrintLookup("CannotAnimateOverride",self.MilkFrom.GetDisplayName())
 
-	While(Main.Data.ActorMilkAmount(self.MilkFrom) > 1.0)
+	While(Main.Data.ActorMilkAmount(self.MilkFrom) >= 1.0)
 		Main.Body.OnAnimationEvent_ActorMoan(self.MilkFrom,50)
 		self.HandleSpawnMilk(FALSE)
 		Utility.Wait(2.5)
