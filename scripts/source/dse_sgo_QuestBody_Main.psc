@@ -28,6 +28,8 @@ String Property AniWanking01 = "dse-sgo-wanking01-01" AutoReadOnly Hidden
 
 String Property KeySlidersGems = ".Sliders.Gems" AutoReadOnly Hidden
 String Property KeySlidersMilk = ".Sliders.Milk" AutoReadOnly Hidden
+String Property KeyMorphGems = "SGO4Gems" AutoReadOnly Hidden
+String Property KeyMorphMilk = "SGO4Milk" AutoReadOnly Hidden
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -166,9 +168,9 @@ Function ActorSlidersApply(Actor Who, String Prefix, Float Percent)
 	Float SliderMax
 
 	If(Prefix == self.KeySlidersGems)
-		MorphKey = "SGO4Gems";
+		MorphKey = self.KeyMorphGems;
 	ElseIf(Prefix == self.KeySlidersMilk)
-		MorphKey = "SGO4Milk";
+		MorphKey = self.KeyMorphMilk;
 	EndIf
 
 	If(StringUtil.GetLength(MorphKey) == 0)
@@ -207,9 +209,9 @@ Function ActorSlidersClear(Actor Who, String Prefix)
 	String MorphKey = ""
 
 	If(Prefix == self.KeySlidersGems)
-		MorphKey = "SGO4Gems";
+		MorphKey = self.KeyMorphGems;
 	ElseIf(Prefix == self.KeySlidersMilk)
-		MorphKey = "SGO4Milk";
+		MorphKey = self.KeyMorphMilk;
 	EndIf
 
 	If(StringUtil.GetLength(MorphKey) == 0)
