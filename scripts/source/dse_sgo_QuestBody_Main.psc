@@ -456,6 +456,26 @@ EndFunction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+Bool Function SliderAdd(String SliderKey, String SliderName, Float SliderValue=0.0)
+{add a slider to the custom config.}
+
+	Int SliderOld = self.SliderFindByName(SliderKey,SliderName)
+	Int SliderCount = Main.Config.GetCount(SliderKey)
+	String SliderPath
+
+	If(SliderOld != -1)
+		Return FALSE
+	EndIf
+
+	SliderPath = SliderKey + "[" + SliderCount + "].Name"
+	Main.Config.SetString(SliderPath,SliderName)
+
+	SliderPath = SliderKey + "[" + SliderCount + "].Max"
+	Main.Config.SetFloat(SliderPath,SliderValue)
+
+	Return TRUE
+EndFunction
+
 Int Function SliderFindByName(String SliderKey, String SliderName)
 {find a slider in the config. returns the offset of the slider or -1 if not
 found.}
@@ -475,8 +495,43 @@ found.}
 	Return -1
 EndFunction
 
+Function SliderConfigDefault()
+{force the default sliders into the custom configuration file.}
+
+	Int SliderCount
+	String SliderName
+	Float SliderValue
+
+	self.SliderConfigReset()
+
+	SliderCount = Main.Config.GetCount(self.KeySlidersGems,TRUE)
+	While(SliderCount > 0)
+		SliderCount -= 1
+		SliderName = Main.Config.GetString((self.KeySlidersGems+"["+SliderCount+"].Name"),TRUE)
+		SliderValue = Main.Config.GetFloat((self.KeySlidersGems+"["+SliderCount+"].Max"),TRUE)
+		self.SliderAdd(self.KeySlidersGems,SliderName,SliderValue)
+	EndWhile
+
+	SliderCount = Main.Config.GetCount(self.KeySlidersMilk,TRUE)
+	While(SliderCount > 0)
+		SliderCount -= 1
+		SliderName = Main.Config.GetString((self.KeySlidersMilk+"["+SliderCount+"].Name"),TRUE)
+		SliderValue = Main.Config.GetFloat((self.KeySlidersMilk+"["+SliderCount+"].Max"),TRUE)
+		self.SliderAdd(self.KeySlidersMilk,SliderName,SliderValue)
+	EndWhile
+
+	Return
+EndFunction
+
+Function SliderConfigReset()
+{empty the dataset from the custom config.}
+
+	JsonUtil.SetRawPathValue(Main.Config.FileCustom,Main.Body.KeySliders,"{\"Gems\":[],\"Milk\":[]}")
+	Return
+EndFunction
+
 Bool Function SliderDeleteByName(String SliderKey, String SliderName)
-{delete a slider from the config.}
+{delete a slider from the custom config.}
 
 	Int SliderOffset = self.SliderFindByName(SliderKey,SliderName)
 	String SliderPath
@@ -489,7 +544,7 @@ Bool Function SliderDeleteByName(String SliderKey, String SliderName)
 EndFunction
 
 Bool Function SliderDeleteByOffset(String SliderKey, Int SliderOffset)
-{delete a slider from the config.}
+{delete a slider from the custom config.}
 
 	Int SliderCount = Main.Config.GetCount(SliderKey)
 	String[] SliderName = Utility.CreateStringArray(SliderCount)
@@ -501,7 +556,7 @@ Bool Function SliderDeleteByOffset(String SliderKey, Int SliderOffset)
 	Iter = 0
 	While(Iter < SliderCount)
 		SliderName[Iter] = self.SliderNameByOffset(SliderKey,Iter)
-		SliderVal[Iter] = self.SliderMaxByOffset(SliderKey,Iter)
+		SliderVal[Iter] = self.SliderValueByOffset(SliderKey,Iter)
 		Iter += 1
 	EndWhile
 
@@ -523,40 +578,16 @@ Bool Function SliderDeleteByOffset(String SliderKey, Int SliderOffset)
 	Return TRUE
 EndFunction
 
-Function SliderConfigReset()
-{empty the dataset from the custom config.}
-
-	JsonUtil.SetRawPathValue(Main.Config.FileCustom,Main.Body.KeySliders,"{\"Gems\":[],\"Milk\":[]}")
-	Return
-EndFunction
-
-Bool Function SliderAdd(String SliderKey, String SliderName, Float SliderValue=0.0)
-
-	Int SliderOld = self.SliderFindByName(SliderKey,SliderName)
-	Int SliderCount = Main.Config.GetCount(SliderKey)
-	String SliderPath
-
-	If(SliderOld != -1)
-		Return FALSE
-	EndIf
-
-	SliderPath = SliderKey + "[" + SliderCount + "].Name"
-	Main.Config.SetString(SliderPath,SliderName)
-
-	SliderPath = SliderKey + "[" + SliderCount + "].Max"
-	Main.Config.SetFloat(SliderPath,SliderValue)
-
-	Return TRUE
-EndFunction
-
 String Function SliderNameByOffset(String SliderKey, Int Offset)
+{get the name of a slider by its offset.}
 
 	String SliderPath = SliderKey + "[" + Offset + "].Name"
 
 	Return Main.Config.GetString(SliderPath)
 EndFunction
 
-Float Function SliderMaxByOffset(String SliderKey, Int Offset)
+Float Function SliderValueByOffset(String SliderKey, Int Offset)
+{get the value of a slider by its offset.}
 
 	String SliderPath = SliderKey + "[" + Offset + "].Max"
 

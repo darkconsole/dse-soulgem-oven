@@ -40,9 +40,6 @@ Function OnGameReload_CopySliderData()
 defined any configuration.}
 
 	Bool Bootstrap = FALSE
-	Int SliderCount
-	String SliderName
-	Float SliderValue
 
 	If(!JsonUtil.IsPathObject(Main.Config.FileCustom,Main.Body.KeySliders))
 		Bootstrap = TRUE
@@ -59,23 +56,7 @@ defined any configuration.}
 	;;;;;;;;
 
 	If(Bootstrap)
-		Main.Body.SliderConfigReset()
-
-		SliderCount = Main.Config.GetCount(Main.Body.KeySlidersGems,TRUE)
-		While(SliderCount > 0)
-			SliderCount -= 1
-			SliderName = Main.Config.GetString((Main.Body.KeySlidersGems+"["+SliderCount+"].Name"),TRUE)
-			SliderValue = Main.Config.GetFloat((Main.Body.KeySlidersGems+"["+SliderCount+"].Max"),TRUE)
-			Main.Body.SliderAdd(Main.Body.KeySlidersGems,SliderName,SliderValue)
-		EndWhile
-
-		SliderCount = Main.Config.GetCount(Main.Body.KeySlidersMilk,TRUE)
-		While(SliderCount > 0)
-			SliderCount -= 1
-			SliderName = Main.Config.GetString((Main.Body.KeySlidersMilk+"["+SliderCount+"].Name"),TRUE)
-			SliderValue = Main.Config.GetFloat((Main.Body.KeySlidersMilk+"["+SliderCount+"].Max"),TRUE)
-			Main.Body.SliderAdd(Main.Body.KeySlidersMilk,SliderName,SliderValue)
-		EndWhile
+		Main.Body.SliderConfigDefault()
 	EndIf
 
 	Return
@@ -405,7 +386,7 @@ Event OnOptionSliderOpen(Int Item)
 			ItemCount -= 1
 
 			If(ItemSliderVal[ItemCount] == Item)
-				Val = Main.Body.SliderMaxByOffset(ItemSliderType,ItemCount)
+				Val = Main.Body.SliderValueByOffset(ItemSliderType,ItemCount)
 				ItemCount = 0
 			EndIf
 
