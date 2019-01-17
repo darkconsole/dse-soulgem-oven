@@ -491,52 +491,43 @@ EndFunction
 Bool Function SliderDeleteByOffset(String SliderKey, Int SliderOffset)
 {delete a slider from the config.}
 
-	;/*
-	String SliderPath
-
-	If(SliderOffset < 0)
-		Return FALSE
-	EndIf
-
-	SliderPath = SliderKey + "[" + SliderOffset + "]"
-	Main.Config.DeletePath(SliderPath)
-	*/;
-
-	;; there seems to be no working way in json util to delete an array element
-	;; so we are going to write up our own dataset and force it into the path
-	;; of the json data lol.
-
-	Int SliderCount = Main.Config.GetCount(SliderKey)	
-	String Data = ""
+	Int SliderCount = Main.Config.GetCount(SliderKey)
+	String[] SliderName = Utility.CreateStringArray(SliderCount)
+	Float[] SliderVal = Utility.CreateFloatArray(SliderCount)
 	Int Iter
-	Bool First
+
+	;; create an index.
 
 	Iter = 0
-	First = TRUE
 	While(Iter < SliderCount)
-		If(Iter != SliderOffset) 
-			If(!First)
-				Data += ","
-			Else
-				First = FALSE
-			EndIf
+		SliderName[Iter] = self.SliderNameByOffset(SliderKey,Iter)
+		SliderVal[Iter] = self.SliderMaxByOffset(SliderKey,Iter)
+		Iter += 1
+	EndWhile
 
-			Data += "{"
-			Data += "\"Name\":\"" + self.SliderNameByOffset(SliderKey,Iter)
-			Data += "\","
-			Data += "\"Max\":" + self.SliderMaxByOffset(SliderKey,Iter)
-			Data += "}"
+	;; blow the old one away and reinstall sliders.
+	
+	self.SliderConfigReset()
+
+	Iter = 0
+	While(Iter < SliderCount)
+		;; skip the one we wanted to delete.
+		
+		If(Iter != SliderOffset)
+			self.SliderAdd(SliderKey,SliderName[Iter],SliderVal[Iter])
 		EndIf
 
 		Iter += 1
 	EndWhile
 
-	Data = "[" + Data + "]"
-
-	JsonUtil.SetRawPathValue(Main.Config.FileCustom,SliderKey,Data)
-	JsonUtil.Save(Main.Config.FileCustom)
-
 	Return TRUE
+EndFunction
+
+Function SliderConfigReset()
+{empty the dataset from the custom config.}
+
+	JsonUtil.SetRawPathValue(Main.Config.FileCustom,Main.Body.KeySliders,"{\"Gems\":[],\"Milk\":[]}")
+	Return
 EndFunction
 
 Bool Function SliderAdd(String SliderKey, String SliderName, Float SliderValue=0.0)

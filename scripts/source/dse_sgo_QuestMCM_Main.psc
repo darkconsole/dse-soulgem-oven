@@ -51,7 +51,7 @@ defined any configuration.}
 	;;;;;;;;
 
 	If(Bootstrap)
-		JsonUtil.SetRawPathValue(Main.Config.FileCustom,Main.Body.KeySliders,"{\"Gems\":[],\"Milk\":[]}")
+		Main.Body.SliderConfigReset()
 
 		SliderCount = JsonUtil.PathCount(Main.Config.FileConfig,Main.Body.KeySlidersGems)
 		While(SliderCount > 0)
