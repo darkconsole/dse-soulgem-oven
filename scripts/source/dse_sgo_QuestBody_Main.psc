@@ -507,16 +507,16 @@ Function SliderConfigDefault()
 	SliderCount = Main.Config.GetCount(self.KeySlidersGems,TRUE)
 	While(SliderCount > 0)
 		SliderCount -= 1
-		SliderName = Main.Config.GetString((self.KeySlidersGems+"["+SliderCount+"].Name"),TRUE)
-		SliderValue = Main.Config.GetFloat((self.KeySlidersGems+"["+SliderCount+"].Max"),TRUE)
+		SliderName = self.SliderNameByOffset(self.KeySlidersGems,SliderCount,TRUE)
+		SliderValue = self.SliderValueByOffset(self.KeySlidersGems,SliderCount,TRUE)
 		self.SliderAdd(self.KeySlidersGems,SliderName,SliderValue)
 	EndWhile
 
 	SliderCount = Main.Config.GetCount(self.KeySlidersMilk,TRUE)
 	While(SliderCount > 0)
 		SliderCount -= 1
-		SliderName = Main.Config.GetString((self.KeySlidersMilk+"["+SliderCount+"].Name"),TRUE)
-		SliderValue = Main.Config.GetFloat((self.KeySlidersMilk+"["+SliderCount+"].Max"),TRUE)
+		SliderName = self.SliderNameByOffset(self.KeySlidersMilk,SliderCount,TRUE)
+		SliderValue = self.SliderValueByOffset(self.KeySlidersMilk,SliderCount,TRUE)
 		self.SliderAdd(self.KeySlidersMilk,SliderName,SliderValue)
 	EndWhile
 
@@ -578,18 +578,18 @@ Bool Function SliderDeleteByOffset(String SliderKey, Int SliderOffset)
 	Return TRUE
 EndFunction
 
-String Function SliderNameByOffset(String SliderKey, Int Offset)
+String Function SliderNameByOffset(String SliderKey, Int Offset, Bool Default=FALSE)
 {get the name of a slider by its offset.}
 
 	String SliderPath = SliderKey + "[" + Offset + "].Name"
 
-	Return Main.Config.GetString(SliderPath)
+	Return Main.Config.GetString(SliderPath,Default)
 EndFunction
 
-Float Function SliderValueByOffset(String SliderKey, Int Offset)
+Float Function SliderValueByOffset(String SliderKey, Int Offset, Bool Default=FALSE)
 {get the value of a slider by its offset.}
 
 	String SliderPath = SliderKey + "[" + Offset + "].Max"
 
-	Return Main.Config.GetFloat(SliderPath)
+	Return Main.Config.GetFloat(SliderPath,Default)
 EndFunction
