@@ -122,64 +122,64 @@ Function LoadFiles()
 	Return
 EndFunction
 
-Bool Function GetBool(String Path)
+Bool Function GetBool(String Path, Bool Default=FALSE)
 {fetch an boolean from the json config.}
 
-	If(JsonUtil.IsPathNumber(self.FileCustom,Path) || JsonUtil.IsPathBool(self.FileCustom,Path))
-		;;Main.Util.PrintDebug("Config.GetBool Custom " + Path)
-		Return JsonUtil.GetPathBoolValue(self.FileCustom,Path)
+	If(!Default)
+		If(JsonUtil.IsPathNumber(self.FileCustom,Path) || JsonUtil.IsPathBool(self.FileCustom,Path))
+			Return JsonUtil.GetPathBoolValue(self.FileCustom,Path)
+		EndIf
 	EndIf
 
-	;;Main.Util.PrintDebug("Config.GetBool Default " + Path)
 	Return JsonUtil.GetPathBoolValue(self.FileConfig,Path)
 EndFunction
 
-Int Function GetInt(String Path)
+Int Function GetInt(String Path, Bool Default=FALSE)
 {fetch an integer from the json config.}
 
-	If(JsonUtil.IsPathNumber(self.FileCustom,Path))
-		;;Main.Util.PrintDebug("Config.GetInt Custom " + Path)
-		Return JsonUtil.GetPathIntValue(self.FileCustom,Path)
+	If(!Default)
+		If(JsonUtil.IsPathNumber(self.FileCustom,Path))
+			Return JsonUtil.GetPathIntValue(self.FileCustom,Path)
+		EndIf
 	EndIf
 
-	;;Main.Util.PrintDebug("Config.GetInt Default " + Path)
 	Return JsonUtil.GetPathIntValue(self.FileConfig,Path)
 EndFunction
 
-Float Function GetFloat(String Path)
+Float Function GetFloat(String Path, Bool Default=FALSE)
 {fetch an float from the json config.}
 
-	If(JsonUtil.IsPathNumber(self.FileCustom,Path))
-		;;Main.Util.PrintDebug("Config.GetInt Custom " + Path)
-		Return JsonUtil.GetPathFloatValue(self.FileCustom,Path)
+	If(!Default)
+		If(JsonUtil.IsPathNumber(self.FileCustom,Path))
+			Return JsonUtil.GetPathFloatValue(self.FileCustom,Path)
+		EndIf
 	EndIf
 
-	;;Main.Util.PrintDebug("Config.GetInt Default " + Path)
 	Return JsonUtil.GetPathFloatValue(self.FileConfig,Path)
 EndFunction
 
-String Function GetString(String Path)
+String Function GetString(String Path, Bool Default=FALSE)
 {fetch a string from the json config.}
 
-	If(JsonUtil.IsPathString(self.FileCustom,Path))
-		;;Main.Util.PrintDebug("Config.GetString Custom " + Path)
-		Return JsonUtil.GetPathStringValue(self.FileCustom,Path)
+	If(!Default)
+		If(JsonUtil.IsPathString(self.FileCustom,Path))
+			Return JsonUtil.GetPathStringValue(self.FileCustom,Path)
+		EndIf
 	EndIf
 
-	;;Main.Util.PrintDebug("Config.GetString Default " + Path)
 	Return JsonUtil.GetPathStringValue(self.FileConfig,Path)
 EndFunction
 
-Int Function GetCount(String Path)
+Int Function GetCount(String Path, Bool Default=FALSE)
 {fetch how many items are in the specified thing. you should probably only
 use this on arrays.}
 
-	If(JsonUtil.CanResolvePath(self.FileCustom,Path))
-		;;Main.Util.PrintDebug("Config.GetCount Custom " + Path)
-		Return JsonUtil.PathCount(self.FileCustom,Path)
+	If(!Default)
+		If(JsonUtil.CanResolvePath(self.FileCustom,Path))
+			Return JsonUtil.PathCount(self.FileCustom,Path)
+		EndIf
 	EndIf
 
-	;;Main.Util.PrintDebug("Config.GetCount Default " + Path)
 	Return JsonUtil.PathCount(self.FileConfig,Path)
 EndFunction
 
