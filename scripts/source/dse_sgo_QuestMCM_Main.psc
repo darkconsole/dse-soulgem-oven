@@ -523,13 +523,8 @@ Event OnOptionMenuOpen(Int Item)
 		EndWhile
 
 	ElseIf(Item == ItemSliderDel)
-		If(PageCurrentKey == "$SGO4_Menu_GemSliders")
-			self.OnOptionMenuOpen_SliderDelete(Item,Main.Body.KeySlidersGems)
-			Return
-		ElseIf(PageCurrentKey == "$SGO4_Menu_MilkSliders")
-			self.OnOptionMenuOpen_SliderDelete(Item,Main.Body.KeySlidersMilk)
-			Return
-		EndIf
+		self.OnOptionMenuOpen_SliderDelete(Item,ItemSliderType)
+		Return
 	EndIf
 
 	SetMenuDialogDefaultIndex(0)
@@ -585,13 +580,8 @@ Event OnOptionMenuAccept(Int Item, Int Selected)
 		EndIf
 
 	ElseIf(Item == ItemSliderDel)
-		If(PageCurrentKey == "$SGO4_Menu_GemSliders")
-			self.OnOptionMenuAccept_SliderDelete(Item,Main.Body.KeySlidersGems,Selected)
-			Return
-		ElseIf(PageCurrentKey == "$SGO4_Menu_MilkSliders")
-			self.OnOptionMenuAccept_SliderDelete(Item,Main.Body.KeySlidersMilk,Selected)
-			Return
-		EndIf
+		self.OnOptionMenuAccept_SliderDelete(Item,ItemSliderType,Selected)
+		Return
 	EndIf
 
 	SetMenuOptionValue(Item,Val)
