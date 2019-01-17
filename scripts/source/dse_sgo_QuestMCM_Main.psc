@@ -241,6 +241,10 @@ Event OnOptionSelect(Int Item)
 		Val = !Main.Config.GetBool(".UpdateAfterWait")
 		Main.Config.SetBool(".UpdateAfterWait",Val)
 
+	ElseIf(Item == ItemDebug)
+		Val = !Main.Config.DebugMode
+		Main.Config.DebugMode = Val
+
 	;;;;;;;;
 
 	ElseIf(Item == ItemModStatus)
@@ -651,6 +655,8 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_MilkerRate"
 	ElseIf(Item == ItemUpdateAfterWait)
 		Txt = "$SGO4_MenuTip_UpdateAfterWait"
+	ElseIf(Item == ItemDebug)
+		Txt = "$SGO4_MenuTip_Debug"
 	EndIf
 
 	self.SetInfoText(Txt)
@@ -836,6 +842,7 @@ EndFunction
 ;/*****************************************************************************
 *****************************************************************************/;
 
+Int ItemDebug
 Int ItemDebugPlayerGemsEmpty
 Int ItemDebugPlayerGemsMin
 Int ItemDebugPlayerGemsHalf
@@ -875,6 +882,9 @@ Function ShowPageDebug()
 	ItemDebugPlayerSemenMax = AddToggleOption("Fill Player Semen Full",FALSE)
 
 	self.SetCursorPosition(1)
+	ItemDebug = AddToggleOption("$SGO4_MenuOpt_Debug",Main.Config.DebugMode)
+	AddEmptyOption()
+
 	AddHeaderOption(Who.GetDisplayName() + " Dataset")
 
 	GemIter = 0
