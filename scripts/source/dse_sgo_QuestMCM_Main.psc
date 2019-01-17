@@ -48,28 +48,34 @@ defined any configuration.}
 		Bootstrap = TRUE
 	EndIf
 
+	If(!JsonUtil.IsPathArray(Main.Config.FileCustom,Main.Body.KeySlidersGems))
+		Bootstrap = TRUE
+	EndIf
+
+	If(!JsonUtil.IsPathArray(Main.Config.FileCustom,Main.Body.KeySlidersMilk))
+		Bootstrap = TRUE
+	EndIf
+
 	;;;;;;;;
 
 	If(Bootstrap)
 		Main.Body.SliderConfigReset()
 
-		SliderCount = JsonUtil.PathCount(Main.Config.FileConfig,Main.Body.KeySlidersGems)
+		SliderCount = Main.Config.GetCount(Main.Body.KeySlidersGems,TRUE)
 		While(SliderCount > 0)
 			SliderCount -= 1
-			SliderName = JsonUtil.GetPathStringValue(Main.Config.FileConfig,(Main.Body.KeySlidersGems+"["+SliderCount+"].Name"))
-			SliderValue = JsonUtil.GetPathFloatValue(Main.Config.FileConfig,(Main.Body.KeySlidersGems+"["+SliderCount+"].Max"))
+			SliderName = Main.Config.GetString((Main.Body.KeySlidersGems+"["+SliderCount+"].Name"),TRUE)
+			SliderValue = Main.Config.GetFloat((Main.Body.KeySlidersGems+"["+SliderCount+"].Max"),TRUE)
 			Main.Body.SliderAdd(Main.Body.KeySlidersGems,SliderName,SliderValue)
 		EndWhile
 
-		SliderCount = JsonUtil.PathCount(Main.Config.FileConfig,Main.Body.KeySlidersMilk)
+		SliderCount = Main.Config.GetCount(Main.Body.KeySlidersMilk,TRUE)
 		While(SliderCount > 0)
 			SliderCount -= 1
-			SliderName = JsonUtil.GetPathStringValue(Main.Config.FileConfig,(Main.Body.KeySlidersMilk+"["+SliderCount+"].Name"))
-			SliderValue = JsonUtil.GetPathFloatValue(Main.Config.FileConfig,(Main.Body.KeySlidersMilk+"["+SliderCount+"].Max"))
+			SliderName = Main.Config.GetString((Main.Body.KeySlidersMilk+"["+SliderCount+"].Name"),TRUE)
+			SliderValue = Main.Config.GetFloat((Main.Body.KeySlidersMilk+"["+SliderCount+"].Max"),TRUE)
 			Main.Body.SliderAdd(Main.Body.KeySlidersMilk,SliderName,SliderValue)
 		EndWhile
-
-		JsonUtil.Save(Main.Config.FileCustom)
 	EndIf
 
 	Return
