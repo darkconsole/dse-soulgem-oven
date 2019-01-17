@@ -243,25 +243,6 @@ Event OnOptionSelect(Int Item)
 
 	;;;;;;;;
 
-	ElseIf(Item == ItemSliderDel)
-		If(PageCurrentKey == "$SGO4_Menu_GemSliders")
-			self.SetToggleOptionValue(Item,TRUE)
-			Data = Main.MenuSliderList(Main.Body.KeySlidersGems)
-			Main.Body.SliderDeleteByOffset(Main.Body.KeySlidersGems,Data)
-			self.ForcePageReset()
-		ElseIf(PageCurrentKey == "$SGO4_Menu_MilkSliders")
-			self.SetToggleOptionValue(Item,TRUE)
-			Data = Main.MenuSliderList(Main.Body.KeySlidersMilk)
-			Main.Body.SliderDeleteByOffset(Main.Body.KeySlidersMilk,Data)
-			self.ForcePageReset()
-		EndIf
-
-		Main.Util.PrintDebug("Menu Post Delete")
-
-		Return
-
-	;;;;;;;;
-
 	ElseIf(Item == ItemModStatus)
 		Debug.MessageBox(Main.Util.StringLookup("SoulgemOvenStartCloseMenu"))
 		Utility.Wait(0.1)
