@@ -26,6 +26,7 @@ String Property AniBirth01 = "dse-sgo-birth01-01" AutoReadOnly Hidden
 String Property AniMilking01 = "dse-sgo-milking01-01" AutoReadOnly Hidden
 String Property AniWanking01 = "dse-sgo-wanking01-01" AutoReadOnly Hidden
 
+String Property KeySliders = ".Sliders" AutoReadOnly Hidden
 String Property KeySlidersGems = ".Sliders.Gems" AutoReadOnly Hidden
 String Property KeySlidersMilk = ".Sliders.Milk" AutoReadOnly Hidden
 String Property KeyMorphGems = "SGO4Gems" AutoReadOnly Hidden
@@ -450,4 +451,123 @@ Function ActorAnimateSolo(Actor Who, String AniName)
 	Debug.SendAnimationEvent(Who,AniName)
 
 	Return
+EndFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Int Function SliderFindByName(String SliderKey, String SliderName)
+{find a slider in the config. returns the offset of the slider or -1 if not
+found.}
+
+	Int SliderCount = Main.Config.GetCount(SliderKey)
+	String SliderPath
+	
+	While(SliderCount > 0)
+		SliderCount -= 1
+		SliderPath = SliderKey + "[" + SliderCount + "].Name"
+
+		If(Main.Config.GetString(SliderPath) == SliderName)
+			Return SliderCount
+		EndIf
+	EndWhile
+
+	Return -1
+EndFunction
+
+Bool Function SliderDeleteByName(String SliderKey, String SliderName)
+{delete a slider from the config.}
+
+	Int SliderOffset = self.SliderFindByName(SliderKey,SliderName)
+	String SliderPath
+
+	If(SliderOffset == -1)
+		Return FALSE
+	EndIf
+
+	Return self.SliderDeleteByoffset(SliderKey,SliderOffset)
+EndFunction
+
+Bool Function SliderDeleteByOffset(String SliderKey, Int SliderOffset)
+{delete a slider from the config.}
+
+	;/*
+	String SliderPath
+
+	If(SliderOffset < 0)
+		Return FALSE
+	EndIf
+
+	SliderPath = SliderKey + "[" + SliderOffset + "]"
+	Main.Config.DeletePath(SliderPath)
+	*/;
+
+	;; there seems to be no working way in json util to delete an array element
+	;; so we are going to write up our own dataset and force it into the path
+	;; of the json data lol.
+
+	Int SliderCount = Main.Config.GetCount(SliderKey)	
+	String Data = ""
+	Int Iter
+	Bool First
+
+	Iter = 0
+	First = TRUE
+	While(Iter < SliderCount)
+		If(Iter != SliderOffset) 
+			If(!First)
+				Data += ","
+			Else
+				First = FALSE
+			EndIf
+
+			Data += "{"
+			Data += "\"Name\":\"" + self.SliderNameByOffset(SliderKey,Iter)
+			Data += "\","
+			Data += "\"Max\":" + self.SliderMaxByOffset(SliderKey,Iter)
+			Data += "}"
+		EndIf
+
+		Iter += 1
+	EndWhile
+
+	Data = "[" + Data + "]"
+
+	JsonUtil.SetRawPathValue(Main.Config.FileCustom,SliderKey,Data)
+	JsonUtil.Save(Main.Config.FileCustom)
+
+	Return TRUE
+EndFunction
+
+Bool Function SliderAdd(String SliderKey, String SliderName, Float SliderValue=0.0)
+
+	Int SliderOld = self.SliderFindByName(SliderKey,SliderName)
+	Int SliderCount = Main.Config.GetCount(SliderKey)
+	String SliderPath
+
+	If(SliderOld != -1)
+		Return FALSE
+	EndIf
+
+	SliderPath = SliderKey + "[" + SliderCount + "].Name"
+	Main.Config.SetString(SliderPath,SliderName)
+
+	SliderPath = SliderKey + "[" + SliderCount + "].Max"
+	Main.Config.SetFloat(SliderPath,SliderValue)
+
+	Return TRUE
+EndFunction
+
+String Function SliderNameByOffset(String SliderKey, Int Offset)
+
+	String SliderPath = SliderKey + "[" + Offset + "].Name"
+
+	Return Main.Config.GetString(SliderPath)
+EndFunction
+
+Float Function SliderMaxByOffset(String SliderKey, Int Offset)
+
+	String SliderPath = SliderKey + "[" + Offset + "].Max"
+
+	Return Main.Config.GetFloat(SliderPath)
 EndFunction

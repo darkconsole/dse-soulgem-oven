@@ -23,22 +23,67 @@ Event OnGameReload()
 	;; do a dependency check every launch.
 	;;Main.ResetMod_Prepare()
 
-	Main.Util.PrintDebug("JSON ERRORS: " + JsonUtil.GetErrors(Main.Config.FileConfig))
-	Main.Util.PrintDebug("JSON ERRORS: " + JsonUtil.GetErrors(Main.Config.FileCustom))
+	Main.Util.PrintDebug("JSON ERRORS (blank is good):")
+	Main.Util.PrintDebug("FileConfig: " + JsonUtil.GetErrors(Main.Config.FileConfig))
+	Main.Util.PrintDebug("FileCustom: " + JsonUtil.GetErrors(Main.Config.FileCustom))
 
 	Main.UnregisterForMenu("Sleep/Wait Menu")
 	Main.RegisterForMenu("Sleep/Wait Menu")
 
+	self.OnGameReload_CopySliderData()
+
 	Return
 EndEvent
 
+Function OnGameReload_CopySliderData()
+{copy the default slider data into the custom user config if they have not yet
+defined any configuration.}
+
+	Bool Bootstrap = FALSE
+	Int SliderCount
+	String SliderName
+	Float SliderValue
+
+	If(!JsonUtil.IsPathObject(Main.Config.FileCustom,Main.Body.KeySliders))
+		Bootstrap = TRUE
+	EndIf
+
+	;;;;;;;;
+
+	If(Bootstrap)
+		JsonUtil.SetRawPathValue(Main.Config.FileCustom,Main.Body.KeySliders,"{\"Gems\":[],\"Milk\":[]}")
+
+		SliderCount = JsonUtil.PathCount(Main.Config.FileConfig,Main.Body.KeySlidersGems)
+		While(SliderCount > 0)
+			SliderCount -= 1
+			SliderName = JsonUtil.GetPathStringValue(Main.Config.FileConfig,(Main.Body.KeySlidersGems+"["+SliderCount+"].Name"))
+			SliderValue = JsonUtil.GetPathFloatValue(Main.Config.FileConfig,(Main.Body.KeySlidersGems+"["+SliderCount+"].Max"))
+			Main.Body.SliderAdd(Main.Body.KeySlidersGems,SliderName,SliderValue)
+		EndWhile
+
+		SliderCount = JsonUtil.PathCount(Main.Config.FileConfig,Main.Body.KeySlidersMilk)
+		While(SliderCount > 0)
+			SliderCount -= 1
+			SliderName = JsonUtil.GetPathStringValue(Main.Config.FileConfig,(Main.Body.KeySlidersMilk+"["+SliderCount+"].Name"))
+			SliderValue = JsonUtil.GetPathFloatValue(Main.Config.FileConfig,(Main.Body.KeySlidersMilk+"["+SliderCount+"].Max"))
+			Main.Body.SliderAdd(Main.Body.KeySlidersMilk,SliderName,SliderValue)
+		EndWhile
+
+		JsonUtil.Save(Main.Config.FileCustom)
+	EndIf
+
+	Return
+EndFunction
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+String PageCurrentKey
 
 Event OnConfigInit()
 {things to do when the menu initalises (is opening)}
 
-	self.Pages = new String[5]
+	self.Pages = new String[7]
 	
 	self.Pages[0] = "$SGO4_Menu_General"
 	;; info, enable/disable, uninstall.
@@ -46,13 +91,19 @@ Event OnConfigInit()
 	self.Pages[1] = "$SGO4_Menu_Gameplay"
 	;; gameplay settings
 
-	self.Pages[2] = "$SGO4_Menu_Widgets"
+	self.Pages[2] = "$SGO4_Menu_GemSliders"
+	;; pregnancy sliders
+
+	self.Pages[3] = "$SGO4_Menu_MilkSliders"
+	;; milking sliders
+
+	self.Pages[4] = "$SGO4_Menu_Widgets"
 	;; widget settings utilities
 
-	self.Pages[3] = "$SGO4_Menu_Debug"
+	self.Pages[5] = "$SGO4_Menu_Debug"
 	;; testing utilities
 
-	self.Pages[4] = "$SGO4_Menu_Splash"
+	self.Pages[6] = "$SGO4_Menu_Splash"
 	;; splash screen
 
 	Return
@@ -76,10 +127,12 @@ Event OnConfigClose()
 	Return
 EndEvent
 
-Event OnPageReset(string page)
+Event OnPageReset(String Page)
 {when a different tab is selected in the menu.}
 
 	self.UnloadCustomContent()
+
+	PageCurrentKey = Page
 
 	If(Page == "$SGO4_Menu_General")
 		self.ShowPageGeneral()
@@ -87,6 +140,10 @@ Event OnPageReset(string page)
 		self.ShowPageGameplay()
 	ElseIf(Page == "$SGO4_Menu_Widgets")
 		self.ShowPageWidgets()
+	ElseIf(Page == "$SGO4_Menu_GemSliders")
+		self.ShowPageSliders("$SGO4_MenuTitle_GemSliders",Main.Body.KeySlidersGems)
+	ElseIf(Page == "$SGO4_Menu_MilkSliders")
+		self.ShowPageSliders("$SGO4_MenuTitle_MilkSliders",Main.Body.KeySlidersMilk)
 	ElseIf(Page == "$SGO4_Menu_Debug")
 		self.ShowPageDebug()
 	Else
@@ -101,6 +158,7 @@ EndEvent
 
 Event OnOptionSelect(Int Item)
 	Bool Val = FALSE
+	Int Data = -1
 
 	;;;;;;;;
 
@@ -195,6 +253,25 @@ Event OnOptionSelect(Int Item)
 	ElseIf(Item == ItemUpdateAfterWait)
 		Val = !Main.Config.GetBool(".UpdateAfterWait")
 		Main.Config.SetBool(".UpdateAfterWait",Val)
+
+	;;;;;;;;
+
+	ElseIf(Item == ItemSliderDel)
+		If(PageCurrentKey == "$SGO4_Menu_GemSliders")
+			self.SetToggleOptionValue(Item,TRUE)
+			Data = Main.MenuSliderList(Main.Body.KeySlidersGems)
+			Main.Body.SliderDeleteByOffset(Main.Body.KeySlidersGems,Data)
+			self.ForcePageReset()
+		ElseIf(PageCurrentKey == "$SGO4_Menu_MilkSliders")
+			self.SetToggleOptionValue(Item,TRUE)
+			Data = Main.MenuSliderList(Main.Body.KeySlidersMilk)
+			Main.Body.SliderDeleteByOffset(Main.Body.KeySlidersMilk,Data)
+			self.ForcePageReset()
+		EndIf
+
+		Main.Util.PrintDebug("Menu Post Delete")
+
+		Return
 
 	;;;;;;;;
 
@@ -314,6 +391,23 @@ Event OnOptionSliderOpen(Int Item)
 		Min = 0.5
 		Max = 2.0
 		Interval = 0.1
+	ElseIf(PageCurrentKey == "$SGO4_Menu_GemSliders" || PageCurrentKey == "$SGO4_Menu_MilkSliders")
+
+		Int ItemCount = ItemSliderVal.Length
+		
+		While(ItemCount > 0)
+			ItemCount -= 1
+
+			If(ItemSliderVal[ItemCount] == Item)
+				Val = Main.Body.SliderMaxByOffset(ItemSliderType,ItemCount)
+				ItemCount = 0
+			EndIf
+
+		EndWhile
+
+		Min = 0.0
+		Max = 3.0
+		Interval = 0.05
 	EndIf
 
 	SetSliderDialogStartValue(Val)
@@ -379,6 +473,23 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 	ElseIf(Item == ItemUpdateGameHours)
 		Fmt = "{1} hr"
 		Main.Config.SetFloat(".UpdateGameHours",Val)
+
+	ElseIf(PageCurrentKey == "$SGO4_Menu_GemSliders" || PageCurrentKey == "$SGO4_Menu_MilkSliders")
+
+		Int ItemCount = ItemSliderVal.Length
+		String SliderPath
+		
+		While(ItemCount > 0)
+			ItemCount -= 1
+
+			If(ItemSliderVal[ItemCount] == Item)
+				SliderPath = ItemSliderType + "[" + ItemCount + "].Max"
+				Main.Config.SetFloat(SliderPath,Val)
+				ItemCount = 0
+			EndIf
+
+			Fmt = "{2}"
+		EndWhile
 	EndIf
 
 	SetSliderOptionValue(Item,Val,Fmt)
@@ -408,6 +519,7 @@ Event OnOptionMenuOpen(Int Item)
 				Iter = 0
 			EndIf
 		EndWhile
+
 	ElseIf(Item == ItemWidgetAnchorV)
 		Opts = Utility.CreateStringArray(3)
 		Opts[0] = "top"
@@ -422,6 +534,15 @@ Event OnOptionMenuOpen(Int Item)
 				Iter = 0
 			EndIf
 		EndWhile
+
+	ElseIf(Item == ItemSliderDel)
+		If(PageCurrentKey == "$SGO4_Menu_GemSliders")
+			self.OnOptionMenuOpen_SliderDelete(Item,Main.Body.KeySlidersGems)
+			Return
+		ElseIf(PageCurrentKey == "$SGO4_Menu_MilkSliders")
+			self.OnOptionMenuOpen_SliderDelete(Item,Main.Body.KeySlidersMilk)
+			Return
+		EndIf
 	EndIf
 
 	SetMenuDialogDefaultIndex(0)
@@ -429,6 +550,27 @@ Event OnOptionMenuOpen(Int Item)
 	SetMenuDialogOptions(Opts)
 	Return
 EndEvent
+
+Function OnOptionMenuOpen_SliderDelete(Int Item, String SliderKey)
+
+	Int SliderCount = Main.Config.GetCount(SliderKey)
+	String[] Opts = Utility.CreateStringArray(SliderCount)
+	Int Iter = 0
+
+	;;Main.Util.PrintDebug("MenuOpenSliderDelete " + SliderCount + " " + SliderKey)
+
+	Iter = 0
+	While(Iter < SliderCount)
+		Opts[Iter] = Main.Body.SliderNameByOffset(SliderKey,Iter)
+		;;Main.Util.PrintDebug("MenuOpenSliderDeleteSlider " + Opts[Iter])
+		Iter += 1
+	EndWhile
+
+	SetMenuDialogDefaultIndex(-1)
+	SetMenuDialogStartIndex(0)
+	SetMenuDialogOptions(Opts)
+	Return
+EndFunction
 
 ;/*****************************************************************************
 *****************************************************************************/;
@@ -445,6 +587,7 @@ Event OnOptionMenuAccept(Int Item, Int Selected)
 		ElseIf(Selected == 2)
 			Val = Main.Config.SetString(".WidgetAnchorH","right")
 		EndIf
+
 	ElseIf(Item == ItemWidgetAnchorV)
 		If(Selected == 0)
 			Val = Main.Config.SetString(".WidgetAnchorV","top")
@@ -453,9 +596,53 @@ Event OnOptionMenuAccept(Int Item, Int Selected)
 		ElseIf(Selected == 2)
 			Val = Main.Config.SetString(".WidgetAnchorV","bottom")
 		EndIf
+
+	ElseIf(Item == ItemSliderDel)
+		If(PageCurrentKey == "$SGO4_Menu_GemSliders")
+			self.OnOptionMenuAccept_SliderDelete(Item,Main.Body.KeySlidersGems,Selected)
+			Return
+		ElseIf(PageCurrentKey == "$SGO4_Menu_MilkSliders")
+			self.OnOptionMenuAccept_SliderDelete(Item,Main.Body.KeySlidersMilk,Selected)
+			Return
+		EndIf
 	EndIf
 
 	SetMenuOptionValue(Item,Val)
+	Return
+EndEvent
+
+Function OnOptionMenuAccept_SliderDelete(Int Item, String SliderKey, Int SliderOffset)
+
+	Main.Util.PrintDebug("SliderDelete " + SliderKey + " = " + SliderOffset)
+	Main.Body.SliderDeleteByOffset(SliderKey,SliderOffset)
+	self.ForcePageReset()
+
+	Return
+EndFunction
+
+;/*****************************************************************************
+*****************************************************************************/;
+
+Event OnOptionInputOpen(Int Opt)
+
+	Return
+EndEvent
+
+;/*****************************************************************************
+*****************************************************************************/;
+
+Event OnOptionInputAccept(Int Opt, String Txt)
+	
+	If(Opt == ItemSliderAdd)
+		If(PageCurrentKey == "$SGO4_Menu_GemSliders")
+			Main.Body.SliderAdd(Main.Body.KeySlidersGems,Txt)
+			self.ForcePageReset()
+		ElseIf(PageCurrentKey == "$SGO4_Menu_MilkSliders")
+			Main.Body.SliderAdd(Main.Body.KeySlidersMilk,Txt)
+			self.ForcePageReset()
+		EndIf
+	EndIf
+
 	Return
 EndEvent
 
@@ -613,6 +800,51 @@ Function ShowPageGameplay()
 	ItemInfluenceMilkSpeech = AddSliderOption("$SGO4_MenuOpt_InfluenceMilkSpeech",Main.Config.GetFloat(".InfluenceMilkSpeech"),"{0}")
 	ItemInfluenceGemsMagicka = AddSliderOption("$SGO4_MenuOpt_InfluenceGemsMagicka",Main.Config.GetFloat(".InfluenceGemsMagicka"),"{0}")
 	ItemInfluenceMilkSpeechExposed = AddSliderOption("$SGO4_MenuOpt_InfluenceMilkSpeechExposed",Main.Config.GetFloat(".InfluenceMilkSpeechExposed"),"{0}")
+
+	Return
+EndFunction
+
+;/*****************************************************************************
+*****************************************************************************/;
+
+String ItemSliderType
+Int ItemSliderAdd
+Int ItemSliderDel
+Int[] ItemSliderVal
+
+Function ShowPageSliders(String PageTitle, String SliderConfig)
+
+	Int SliderCount = Main.Config.GetCount(SliderConfig)
+	Int SliderIter = 0
+	String SliderName
+	Float SliderValue
+
+	ItemSliderType = SliderConfig
+	ItemSliderVal = Utility.CreateIntArray(SliderCount)
+
+	;;;;;;;;
+
+	self.SetTitleText(PageTitle)
+	self.SetCursorFillMode(TOP_TO_BOTTOM)
+
+	self.SetCursorPosition(0)
+	AddHeaderOption("Current Morphs")
+	While(SliderIter < SliderCount)
+		SliderName = Main.Config.GetString(SliderConfig + "[" + SliderIter + "].Name")
+		SliderValue = Main.Config.GetFloat(SliderConfig + "[" + SliderIter + "].Max")
+
+		ItemSliderVal[SliderIter] = AddSliderOption(SliderName,SliderValue,"{2}")
+		
+		SliderIter += 1
+	EndWhile
+
+	self.SetCursorPosition(1)
+	AddHeaderOption("Manage Morphs")
+	;;ItemSliderAdd = AddToggleOption("$SGO4_MenuOpt_BodySliderAdd",FALSE)
+	ItemSliderAdd = AddInputOption("$SGO4_MenuOpt_BodySliderAdd","")
+	;;ItemSliderDel = AddToggleOption("$SGO4_MenuOpt_BodySliderDel",FALSE)
+	ItemSliderDel = AddMenuOption("$SGO4_MenuOpt_BodySliderDel","")
+	AddEmptyOption()
 
 	Return
 EndFunction

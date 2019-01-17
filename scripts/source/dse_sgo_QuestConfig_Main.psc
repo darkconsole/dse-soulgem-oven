@@ -286,3 +286,17 @@ String Function SetString(String Path, String Value)
 	Return Value
 EndFunction
 
+Function DeletePath(String Path)
+
+	Main.Util.PrintDebug("Config.DeletePath " + Path)
+
+	;; can resolve doesn't seem to return true unless it resolves into
+	;; a datatype papyrus can digest.
+
+	If(JsonUtil.CanResolvePath(self.FileCustom,Path) || JsonUtil.IsPathObject(self.FileCustom,Path))
+		Main.Util.PrintDebug("JsonUtil.ClearPath " + Path)
+		JsonUtil.ClearPath(self.FileCustom,Path)
+	EndIf
+
+	Return
+EndFunction

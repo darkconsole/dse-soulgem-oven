@@ -814,3 +814,24 @@ Function MenuActorStatsOpen(Actor Who=None)
 	Return
 EndFunction
 
+Int Function MenuSliderList(String SliderKey)
+{pick a slider from the list.}
+
+	UIListMenu Menu = UIExtensions.GetMenu("UIListMenu",TRUE) as UIListMenu
+	Int NoParent = -1
+	Int Result = -1
+
+	Int SliderCount = self.Config.GetCount(SliderKey)
+	Int SliderIter = 0
+
+	While(SliderIter < SliderCount)
+		Menu.AddEntryItem(self.Body.SliderNameByOffset(SliderKey,SliderIter),NoParent)
+		SliderIter += 1
+	EndWhile
+
+	Result = UIExtensions.OpenMenu("UIListMenu",None)
+
+	self.Util.PrintDebug("MenuSliderList = " + Result)
+
+	Return Result
+EndFunction
