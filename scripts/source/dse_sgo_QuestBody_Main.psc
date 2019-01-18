@@ -502,7 +502,7 @@ Function SliderConfigDefault()
 	String SliderName
 	Float SliderValue
 
-	self.SliderConfigReset()
+	self.SliderConfigReset(self.KeySliders)
 
 	SliderCount = Main.Config.GetCount(self.KeySlidersGems,TRUE)
 	While(SliderCount > 0)
@@ -523,10 +523,17 @@ Function SliderConfigDefault()
 	Return
 EndFunction
 
-Function SliderConfigReset()
+Function SliderConfigReset(String SliderKey="")
 {empty the dataset from the custom config.}
 
-	JsonUtil.SetRawPathValue(Main.Config.FileCustom,Main.Body.KeySliders,"{\"Gems\":[],\"Milk\":[]}")
+	If(SliderKey == self.KeySlidersGems)
+		JsonUtil.SetRawPathValue(Main.Config.FileCustom,self.KeySlidersGems,"[]")
+	ElseIf(SliderKey == self.KeySlidersMilk)
+		JsonUtil.SetRawPathValue(Main.Config.FileCustom,self.KeySlidersMilk,"[]")
+	ElseIf(SliderKey == self.KeySliders)
+		JsonUtil.SetRawPathValue(Main.Config.FileCustom,self.KeySliders,"{\"Gems\":[],\"Milk\":[]}")
+	EndIf
+
 	Return
 EndFunction
 
@@ -562,7 +569,7 @@ Bool Function SliderDeleteByOffset(String SliderKey, Int SliderOffset)
 
 	;; blow the old one away and reinstall sliders.
 	
-	self.SliderConfigReset()
+	self.SliderConfigReset(SliderKey)
 
 	Iter = 0
 	While(Iter < SliderCount)
