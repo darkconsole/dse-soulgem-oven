@@ -525,7 +525,13 @@ Int Function ActorGemMax(Actor Who)
 event with mods its a fraction of a gem.}
 
 	Int Base = Main.Config.GetInt(".ActorGemsMax")
-	Float Val = self.ActorModGetFinal(Who,"GemsMax",Base)
+	Float Val
+
+	;; apply multiplictative.
+	Val = self.ActorModGetFinal(Who,"SGO4.ActorMod.GemsMaxMult",Base,TRUE)
+	
+	;; apply additive.
+	Val = self.ActorModGetFinal(Who,"SGO4.ActorMod.GemsMax",Val,FALSE)
 	
 	Return Main.Util.RoundToInt(Val)
 EndFunction
@@ -732,7 +738,13 @@ Int Function ActorMilkMax(Actor Who)
 {return how much milk an actor can have at once.}
 
 	Int Base = Main.Config.GetInt(".ActorMilkMax")
-	Float Val = self.ActorModGetFinal(Who,"MilkMax",Base)
+	Float Val
+
+	;; apply multiplictative.
+	Val = self.ActorModGetFinal(Who,"SGO4.ActorMod.MilkMaxMult",Base,TRUE)
+	
+	;; apply additive.
+	Val = self.ActorModGetFinal(Who,"SGO4.ActorMod.MilkMax",Val,FALSE)
 
 	Return Main.Util.RoundToInt(Val)
 EndFunction
@@ -878,7 +890,13 @@ Int Function ActorSemenMax(Actor Who)
 {return how many bottles of semen an actor can have at once.}
 
 	Int Base = Main.Config.GetInt(".ActorSemenMax")
-	Float Val = self.ActorModGetFinal(Who,"SemenMax",Base)
+	Float Val
+
+	;; apply multiplictative.
+	Val = self.ActorModGetFinal(Who,"SGO4.ActorMod.SemenMaxMult",Base,TRUE)
+	
+	;; apply additive.
+	Val = self.ActorModGetFinal(Who,"SGO4.ActorMod.SemenMax",Val,FALSE)
 
 	Return Main.Util.RoundToInt(Val)
 EndFunction
