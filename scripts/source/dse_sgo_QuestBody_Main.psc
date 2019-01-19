@@ -103,6 +103,8 @@ Function ActorUpdateGemsInfluence(Actor Who, Float GemPercent)
 	Float GemsWhen = Main.Config.GetFloat(".InfluenceGemsWhen")
 	Float GemsHealth = Main.Config.GetFloat(".InfluenceGemsHealth")
 	Float GemsMagicka = Main.Config.GetFloat(".InfluenceGemsMagicka")
+	Float ModHealthMult = Main.Data.ActorModGetFinal(Who,"SGO4.ActorMod.InfluenceGemsHealthMult")
+	Float ModMagickaMult = Main.Data.ActorModGetFinal(Who,"SGO4.ActorMod.InfluenceGemsMagickaMult")
 
 	;; clean off spells.
 	Who.RemoveSpell(Main.SpellInfluenceGems)
@@ -111,6 +113,9 @@ Function ActorUpdateGemsInfluence(Actor Who, Float GemPercent)
 	If(GemsHealth == 0.0 && GemsMagicka == 0.0)
 		Return
 	EndIf
+
+	GemsHealth *= ModHealthMult
+	GemsMagicka *= ModMagickaMult
 
 	;; apply effects when triggered.
 	If(GemPercent >= GemsWhen)
@@ -132,6 +137,8 @@ Function ActorUpdateMilkInfluence(Actor Who, Float MilkPercent)
 	Float MilkWhen = Main.Config.GetFloat(".InfluenceMilkWhen")
 	Float MilkSpeech = Main.Config.GetFloat(".InfluenceMilkSpeech")
 	Float MilkSpeechExposed = Main.Config.GetFloat(".InfluenceMilkSpeechExposed")
+	Float ModSpeechMult = Main.Data.ActorModGetFinal(Who,"SGO4.ActorMod.InfluenceMilkSpeechMult")
+	Float ModSpeechExposedMult = Main.Data.ActorModGetFinal(Who,"SGO4.ActorMod.InfluenceMilkSpeechExposedMult")
 
 	;; clean off spells.
 	Who.RemoveSpell(Main.SpellInfluenceMilk)
@@ -140,6 +147,9 @@ Function ActorUpdateMilkInfluence(Actor Who, Float MilkPercent)
 	If(MilkSpeech == 0.0 && MilkSpeechExposed == 0.0)
 		Return
 	EndIf
+
+	MilkSpeech *= ModSpeechMult
+	MilkSpeechExposed *= ModSpeechExposedMult
 
 	;; apply effects when triggered.
 	If(MilkPercent >= MilkWhen)

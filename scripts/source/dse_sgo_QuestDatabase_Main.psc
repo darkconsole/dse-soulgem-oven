@@ -392,10 +392,16 @@ EndFunction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Float function ActorModGetFinal(Actor Who, String What, Float Base=1.0)
+Float function ActorModGetFinal(Actor Who, String What, Float Base=1.0, Bool Multiple=TRUE)
 {get the final value which is the base plus/minus the buffs/debuffs.}
 
-	Float Val = Base + self.ActorModGetBonus(Who,What,Base)
+	Float Val
+
+	If(Multiple)
+		Val = Base + self.ActorModGetBonus(Who,What,Base)
+	Else
+		Val = Base + self.ActorModGetTotal(Who,What)
+	EndIf
 
 	Return Val
 EndFunction
