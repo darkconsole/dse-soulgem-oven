@@ -32,11 +32,11 @@ Event OnEquipped(Actor Who)
 	;; then tell soulgem oven this actor should be producing.
 
 	If(Produce)
-		Main.Data.ActorModSetValue(Who,"SGO4.ActorMod.MilkProduce",".SGO4AutoMilker",1.0)
+		Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModMilkProduce,".SGO4AutoMilker",1.0)
 	EndIf
 
 	If(Rate > 0.0)
-		Main.Data.ActorModSetValue(Who,"SGO4.ActorMod.MilkRate",".SGO4AutoMilker",Rate)
+		Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModMilkRate,".SGO4AutoMilker",Rate)
 	EndIf
 
 	If(Produce && Rate > 0.0)
@@ -59,8 +59,8 @@ Event OnUnequipped(Actor Who)
 	;; tell soulgem oven we no longer wish to produce.
 
 	Main.Util.PrintDebug(Who.GetDisplayName() + " removed the milker")
-	Main.Data.ActorModUnsetValue(Who,"SGO4.ActorMod.MilkProduce",".SGO4AutoMilker")
-	Main.Data.ActorModUnsetValue(Who,"SGO4.ActorMod.MilkRate",".SGO4AutoMilker")
+	Main.Data.ActorModUnsetValue(Who,Main.Data.KeyActorModMilkProduce,".SGO4AutoMilker")
+	Main.Data.ActorModUnsetValue(Who,Main.Data.KeyActorModMilkRate,".SGO4AutoMilker")
 
 	;; throw in some flavour.
 

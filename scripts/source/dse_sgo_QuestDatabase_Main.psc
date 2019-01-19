@@ -38,11 +38,59 @@ String Property KeyActorFertilityData = "SGO4.Actor.Fertility" AutoReadOnly Hidd
 String Property KeyActorFeaturesCached = "SGO4.Actor.FeaturesCached" AutoReadOnly Hidden
 {Actor.IntValue}
 
-String Property KeyActorModListPrefix = "SGO4.Actor.Mod." AutoReadOnly Hidden
-{Generates Actor.StringLists}
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-String Property KeyActorModValuePrefix = "SGO4.Actor.ModValue." AutoReadOnly Hidden
-{Generates Actor.FloatValues}
+;; actor mods
+;; multipliers: setting a value of 0.1 means 10% more. -0.1 means 10% less.
+
+String Property KeyActorModMilkRate = "SGO4.ActorMod.MilkRate" AutoReadOnly Hidden
+{multiplier for adjusting how fast milk produces.}
+
+String Property KeyActorModMilkProduce = "SGO4.ActorMod.MilkProduce" AutoReadOnly Hidden
+{value for forcing actors to produce milk. set to 0 or 1.}
+
+String Property KeyActorModGemsMax = "SGO4.ActorMod.GemsMax" AutoReadOnly Hidden
+{value for adjusting max gems an actor can carry.}
+
+String Property KeyActorModGemsMaxMult = "SGO4.ActorMod.GemsMaxMult" AutoReadOnly Hidden
+{multiplier for adjusting max gems an actor can carry.}
+
+String Property KeyActorModMilkMax = "SGO4.ActorMod.MilkMax" AutoReadOnly Hidden
+{value for adjusting max milk an actor can carry.}
+
+String Property KeyActorModMilkMaxMult = "SGO4.ActorMod.MilkMaxMult" AutoReadOnly Hidden
+{multiplier for adjusting max milk an actor can carry.}
+
+String Property KeyActorModSemenMax = "SGO4.ActorMod.SemenMax" AutoReadOnly Hidden
+{value for adjusting max semen an actor can carry.}
+
+String Property KeyActorModSemenMaxMult = "SGO4.ActorMod.SemenMaxMult" AutoReadOnly Hidden
+{multiplier for adjusting max semen an actor can carry.}
+
+String Property KeyActorModInfluenceGemsHealth = "SGO4.ActorMod.InfluenceGemsHealth" AutoReadOnly Hidden
+{value for adjusting health gained by incubating gems.}
+
+String Property KeyActorModInfluenceGemsHealthMult = "SGO4.ActorMod.InfluenceGemsHealthMult" AutoReadOnly Hidden
+{multiplier for adjusting health gained by incubating gems.}
+
+String Property KeyActorModInfluenceGemsMagicka = "SGO4.ActorMod.InfluenceGemsMagicka" AutoReadOnly Hidden
+{value for adjusting health gained by incubating gems.}
+
+String Property KeyActorModInfluenceGemsMagickaMult = "SGO4.ActorMod.InfluenceGemsMagickaMult" AutoReadOnly Hidden
+{multiplier for adjusting health gained by incubating gems.}
+
+String Property KeyActorModInfluenceMilkSpeech = "SGO4.ActorMod.InfluenceMilkSpeech" AutoReadOnly Hidden
+{value for adjusting speech gained by bigger breasts.}
+
+String Property KeyActorModInfluenceMilkSpeechMult = "SGO4.ActorMod.InfluenceMilkSpeechMult" AutoReadOnly Hidden
+{multiplier for adjusting speech gained by bigger breasts.}
+
+String Property KeyActorModInfluenceMilkSpeechExposed  = "SGO4.ActorMod.InfluenceMilkSpeechExposed" AutoReadOnly Hidden
+{value for adjusting speech gained by bigger breasts while nude.}
+
+String Property KeyActorModInfluenceMilkSpeechExposedMult = "SGO4.ActorMod.InfluenceMilkSpeechExposedMult" AutoReadOnly Hidden
+{multiplier for adjusting speech gained by bigger breasts while nude.}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -528,10 +576,10 @@ event with mods its a fraction of a gem.}
 	Float Val
 
 	;; apply multiplictative.
-	Val = self.ActorModGetFinal(Who,"SGO4.ActorMod.GemsMaxMult",Base,TRUE)
+	Val = self.ActorModGetFinal(Who,self.KeyActorModGemsMaxMult,Base,TRUE)
 	
 	;; apply additive.
-	Val = self.ActorModGetFinal(Who,"SGO4.ActorMod.GemsMax",Val,FALSE)
+	Val = self.ActorModGetFinal(Who,self.KeyActorModGemsMax,Val,FALSE)
 	
 	Return Main.Util.RoundToInt(Val)
 EndFunction
@@ -741,10 +789,10 @@ Int Function ActorMilkMax(Actor Who)
 	Float Val
 
 	;; apply multiplictative.
-	Val = self.ActorModGetFinal(Who,"SGO4.ActorMod.MilkMaxMult",Base,TRUE)
+	Val = self.ActorModGetFinal(Who,self.KeyActorModMilkMaxMult,Base,TRUE)
 	
 	;; apply additive.
-	Val = self.ActorModGetFinal(Who,"SGO4.ActorMod.MilkMax",Val,FALSE)
+	Val = self.ActorModGetFinal(Who,self.KeyActorModMilkMax,Val,FALSE)
 
 	Return Main.Util.RoundToInt(Val)
 EndFunction
@@ -766,8 +814,8 @@ actor is physically not capable of producing this item.}
 	Float PregNeeded = Main.Config.GetFloat(".MilksPregPercent") / 100.0
 	Float PerDay = Main.Config.GetFloat(".MilksPerDay")
 	Float Inc = ((TimeSince * PerDay) / 24.0)
-	Float ModRate = self.ActorModGetFinal(Who,"SGO4.ActorMod.MilkRate",1.0)
-	Bool ModForceProduce = (self.ActorModGetTotal(Who,"SGO4.ActorMod.MilkProduce") > 0.0)
+	Float ModRate = self.ActorModGetFinal(Who,self.KeyActorModMilkRate,1.0)
+	Bool ModForceProduce = (self.ActorModGetTotal(Who,self.KeyActorModMilkProduce) > 0.0)
 	Int MilkMax = self.ActorMilkMax(Who)
 	Int MilkOld
 	Int MilkNew
@@ -893,10 +941,10 @@ Int Function ActorSemenMax(Actor Who)
 	Float Val
 
 	;; apply multiplictative.
-	Val = self.ActorModGetFinal(Who,"SGO4.ActorMod.SemenMaxMult",Base,TRUE)
+	Val = self.ActorModGetFinal(Who,self.KeyActorModSemenMaxMult,Base,TRUE)
 	
 	;; apply additive.
-	Val = self.ActorModGetFinal(Who,"SGO4.ActorMod.SemenMax",Val,FALSE)
+	Val = self.ActorModGetFinal(Who,self.KeyActorModSemenMax,Val,FALSE)
 
 	Return Main.Util.RoundToInt(Val)
 EndFunction
