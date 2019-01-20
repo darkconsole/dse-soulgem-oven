@@ -44,8 +44,11 @@ String Property KeyActorFeaturesCached = "SGO4.Actor.FeaturesCached" AutoReadOnl
 ;; actor mods
 ;; multipliers: setting a value of 0.1 means 10% more. -0.1 means 10% less.
 
+String Property KeyActorModGemsRate = "SGO4.ActorMod.GemsRate" AutoReadOnly Hidden
+{multiplier for adjusting how fast gems mature. positive is faster.}
+
 String Property KeyActorModMilkRate = "SGO4.ActorMod.MilkRate" AutoReadOnly Hidden
-{multiplier for adjusting how fast milk produces.}
+{multiplier for adjusting how fast milk produces. positive is faster.}
 
 String Property KeyActorModMilkProduce = "SGO4.ActorMod.MilkProduce" AutoReadOnly Hidden
 {value for forcing actors to produce milk. set to 0 or 1.}
@@ -671,6 +674,7 @@ actor is physically not capable of producing this item.}
 	Int GemIter = 0
 	Int GemOld
 	Int GemNew
+	Float ModRate
 	Bool Growth = FALSE
 
 	;;;;;;;;
@@ -683,6 +687,9 @@ actor is physically not capable of producing this item.}
 		Main.Util.PrintDebug(Who.GetDisplayName() + " is not incubating gems.")
 		Return TRUE
 	EndIf
+
+	ModRate = self.ActorModGetFinal(Who,self.KeyActorModGemsRate) * -1.0
+	Inc *= ModRate
 
 	;;;;;;;;
 
