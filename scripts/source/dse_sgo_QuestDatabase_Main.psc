@@ -820,13 +820,13 @@ Bool Function ActorMilkUpdateData(Actor Who, Float TimeSince)
 {update the actors gem data given the time progression. returns false if this
 actor is physically not capable of producing this item.}
 
-	Float PregPercent = self.ActorGemTotalPercent(Who)
-	Float PregNeeded = Main.Config.GetFloat(".MilksPregPercent") / 100.0
-	Float PerDay = Main.Config.GetFloat(".MilksPerDay")
-	Float Inc = ((TimeSince * PerDay) / 24.0)
-	Float ModRate = self.ActorModGetFinal(Who,self.KeyActorModMilkRateMult,1.0)
-	Bool ModForceProduce = (self.ActorModGetTotal(Who,self.KeyActorModMilkProduce) > 0.0)
-	Int MilkMax = self.ActorMilkMax(Who)
+	Bool ModForceProduce
+	Float PregPercent
+	Float PregNeeded
+	Float PerDay
+	Float Inc
+	Float ModRate
+	Int MilkMax
 	Int MilkOld
 	Int MilkNew
 
@@ -836,12 +836,21 @@ actor is physically not capable of producing this item.}
 		Return FALSE
 	EndIf
 
+	PregPercent = self.ActorGemTotalPercent(Who)
+	PregNeeded = Main.Config.GetFloat(".MilksPregPercent") / 100.0
+	ModForceProduce = (self.ActorModGetTotal(Who,self.KeyActorModMilkProduce) > 0.0)
+
 	If(!ModForceProduce && PregPercent < PregNeeded)
 		Main.Util.PrintDebug(Who.GetDisplayName() + " is not producing milk yet.")
 		Return TRUE
 	EndIf
 
 	;;;;;;;;
+
+	PerDay = Main.Config.GetFloat(".MilksPerDay")
+	Inc = ((TimeSince * PerDay) / 24.0)
+	MilkMax = self.ActorMilkMax(Who)
+	ModRate = self.ActorModGetFinal(Who,self.KeyActorModMilkRateMult,1.0)
 
 	If(ModForceProduce)
 		PregPercent = 1.0
