@@ -997,14 +997,16 @@ Bool Function ActorSemenUpdateData(Actor Who, Float TimeSince)
 {update the actors gem data given the time progression. returns false if this
 actor is physically not capable of producing this item.}
 
-	Float PerDay = Main.Config.GetFloat(".SemensPerDay")
-	Float Inc = ((TimeSince * PerDay) / 24.0)
+	Float PerDay
+	Float Inc
 	Float ModRate
 
 	If(!Who.IsInFaction(Main.FactionProduceSemen))
 		Return FALSE
 	EndIf
 
+	PerDay = Main.Config.GetFloat(".SemensPerDay")
+	Inc = ((TimeSince * PerDay) / 24.0)
 	ModRate = self.ActorModGetFinal(Who,self.KeyActorModSemenRateMult,1.0)
 
 	Inc *= ModRate
