@@ -668,17 +668,17 @@ Bool Function ActorGemUpdateData(Actor Who, Float TimeSince)
 {update the actors gem data given the time progression. returns false if this
 actor is physically not capable of producing this item.}
 
-	Float PerDay = Main.Config.GetFloat(".GemsPerDay")
-	Float Inc = ((TimeSince * PerDay) / 24.0)
-	Int GemCount = self.ActorGemCount(Who)
-	Int GemStages = self.GemStageCount(Who)
-	Int GemCurMax = GemCount * GemStages
-	Int GemCurTotal = 0
-	Int GemIter = 0
+	Float PerDay
+	Float Inc
+	Int GemCount
+	Int GemStages
+	Int GemCurMax
+	Int GemCurTotal
+	Int GemIter
 	Int GemOld
 	Int GemNew
 	Float ModRate
-	Bool Growth = FALSE
+	Bool Growth
 
 	;;;;;;;;
 
@@ -686,10 +686,24 @@ actor is physically not capable of producing this item.}
 		Return FALSE
 	EndIf
 
+	;;;;;;;;
+
+	GemCount = self.ActorGemCount(Who)
+
 	If(GemCount == 0)
 		Main.Util.PrintDebug(Who.GetDisplayName() + " is not incubating gems.")
 		Return TRUE
 	EndIf
+
+	;;;;;;;;
+
+	GemCurTotal = 0
+	GemIter = 0
+	Growth = FALSE
+
+	GemStages = self.GemStageCount(Who)
+	PerDay = Main.Config.GetFloat(".GemsPerDay")
+	Inc = ((TimeSince * PerDay) / 24.0)
 
 	ModRate = self.ActorModGetFinal(Who,self.KeyActorModGemsRateMult)
 	Inc *= ModRate
@@ -835,6 +849,8 @@ actor is physically not capable of producing this item.}
 	If(!Who.IsInFaction(Main.FactionProduceMilk))
 		Return FALSE
 	EndIf
+
+	;;;;;;;;
 
 	PregPercent = self.ActorGemTotalPercent(Who)
 	PregNeeded = Main.Config.GetFloat(".MilksPregPercent") / 100.0
