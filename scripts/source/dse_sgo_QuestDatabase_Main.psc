@@ -688,7 +688,7 @@ actor is physically not capable of producing this item.}
 		Return TRUE
 	EndIf
 
-	ModRate = self.ActorModGetFinal(Who,self.KeyActorModGemsRate) * -1.0
+	ModRate = self.ActorModGetFinal(Who,self.KeyActorModGemsRateMult)
 	Inc *= ModRate
 
 	;;;;;;;;
