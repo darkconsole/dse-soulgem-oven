@@ -36,7 +36,7 @@ Event OnEquipped(Actor Who)
 	EndIf
 
 	If(Rate > 0.0)
-		Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModMilkRate,".SGO4AutoMilker",Rate)
+		Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModMilkRateMult,".SGO4AutoMilker",Rate)
 	EndIf
 
 	If(Produce && Rate > 0.0)
@@ -60,7 +60,7 @@ Event OnUnequipped(Actor Who)
 
 	Main.Util.PrintDebug(Who.GetDisplayName() + " removed the milker")
 	Main.Data.ActorModUnsetValue(Who,Main.Data.KeyActorModMilkProduce,".SGO4AutoMilker")
-	Main.Data.ActorModUnsetValue(Who,Main.Data.KeyActorModMilkRate,".SGO4AutoMilker")
+	Main.Data.ActorModUnsetValue(Who,Main.Data.KeyActorModMilkRateMult,".SGO4AutoMilker")
 
 	;; throw in some flavour.
 

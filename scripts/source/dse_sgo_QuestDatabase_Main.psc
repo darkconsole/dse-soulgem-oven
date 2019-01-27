@@ -44,10 +44,13 @@ String Property KeyActorFeaturesCached = "SGO4.Actor.FeaturesCached" AutoReadOnl
 ;; actor mods
 ;; multipliers: setting a value of 0.1 means 10% more. -0.1 means 10% less.
 
-String Property KeyActorModGemsRate = "SGO4.ActorMod.GemsRate" AutoReadOnly Hidden
+String Property KeyActorModGemsRateMult = "SGO4.ActorMod.GemsRate" AutoReadOnly Hidden
 {multiplier for adjusting how fast gems mature. positive is faster.}
 
-String Property KeyActorModMilkRate = "SGO4.ActorMod.MilkRate" AutoReadOnly Hidden
+String Property KeyActorModMilkRateMult = "SGO4.ActorMod.MilkRate" AutoReadOnly Hidden
+{multiplier for adjusting how fast milk produces. positive is faster.}
+
+String Property KeyActorModSemenRateMult = "SGO4.ActorMod.SemenRate" AutoReadOnly Hidden
 {multiplier for adjusting how fast milk produces. positive is faster.}
 
 String Property KeyActorModMilkProduce = "SGO4.ActorMod.MilkProduce" AutoReadOnly Hidden
@@ -821,7 +824,7 @@ actor is physically not capable of producing this item.}
 	Float PregNeeded = Main.Config.GetFloat(".MilksPregPercent") / 100.0
 	Float PerDay = Main.Config.GetFloat(".MilksPerDay")
 	Float Inc = ((TimeSince * PerDay) / 24.0)
-	Float ModRate = self.ActorModGetFinal(Who,self.KeyActorModMilkRate,1.0)
+	Float ModRate = self.ActorModGetFinal(Who,self.KeyActorModMilkRateMult,1.0)
 	Bool ModForceProduce = (self.ActorModGetTotal(Who,self.KeyActorModMilkProduce) > 0.0)
 	Int MilkMax = self.ActorMilkMax(Who)
 	Int MilkOld
@@ -971,11 +974,15 @@ actor is physically not capable of producing this item.}
 
 	Float PerDay = Main.Config.GetFloat(".SemensPerDay")
 	Float Inc = ((TimeSince * PerDay) / 24.0)
+	Float ModRate
 
 	If(!Who.IsInFaction(Main.FactionProduceSemen))
 		Return FALSE
 	EndIf
 
+	ModRate = self.ActorModGetFinal(Who,self.KeyActorModSemenRateMult,1.0)
+
+	Inc *= ModRate
 	self.ActorSemenInc(Who,Inc)
 
 	Main.Util.PrintDebug(Who.GetDisplayName() + " semen has progressed " + Inc)
