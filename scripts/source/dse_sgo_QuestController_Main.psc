@@ -363,6 +363,7 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 	Int ActorIter
 	Float PregRoll = 0.0
 	Float PregChance = Config.GetFloat(".FertilityChance")
+	Float SemenAmount = 0.0
 
 	;; do nothing if we're powered down.
 
@@ -403,13 +404,18 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 		Util.PrintDebug("Preg Abort: " + Who.GetDisplayName() + " is not a semen producer.")
 		Return
 	ElseIf(Data.ActorSemenAmount(Who,FALSE) < 1.0)
-		;; bail if no semen.
-		Util.PrintDebug("Preg Abort: " + Who.GetDisplayName() + " does not have enough semen.")
-		Return
+		;; if they are low on semen give them a scaling chance.
+		SemenAmount = Data.ActorSemenAmount(Who,FALSE)
+		If(Utility.RandomInt(0,99) >= (SemenAmount * 100))
+			Data.ActorSemenSet(Who,0.0)
+			Util.PrintDebug("Preg Abort: " + Who.GetDisplayName() + " failed low semen chance.")
+			Return
+		EndIf
 	EndIf
 
 	;; they blew a load so deduct it.
 
+	Data.ActorSemenLimit(Who)
 	Data.ActorSemenInc(Who,-1.0)
 
 	;; determine where we do.
