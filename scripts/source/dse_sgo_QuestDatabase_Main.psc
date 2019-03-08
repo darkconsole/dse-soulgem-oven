@@ -757,6 +757,12 @@ Function ActorMilkInc(Actor Who, Float Value)
 {add/sub how much milk this actor has.}
 
 	Float Milk = StorageUtil.AdjustFloatValue(Who,self.KeyActorMilkData,Value)
+
+	If(Milk < 0.0)
+		Milk = 0.0
+		StorageUtil.SetFloatValue(Who,self.KeyActorMilkData,Milk)
+	EndIf
+
 	Main.Util.PrintDebug(Who.GetDisplayName() + " now has " + Milk + " milk.")
 
 	self.ActorTrackingAdd(Who)
@@ -948,6 +954,12 @@ Function ActorSemenInc(Actor Who, Float Value)
 {add/sub how much semen this actor has.}
 
 	Float Semen = StorageUtil.AdjustFloatValue(Who,self.KeyActorSemenData,Value)
+
+	If(Semen < 0.0)
+		Semen = 0.0
+		StorageUtil.SetFloatValue(Who,self.KeyActorSemenData,Semen)
+	EndIf
+
 	Main.Util.PrintDebug(Who.GetDisplayName() + " now has " + Semen + " semen.")
 
 	self.ActorTrackingAdd(Who)
