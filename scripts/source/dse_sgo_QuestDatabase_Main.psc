@@ -701,6 +701,7 @@ actor is physically not capable of producing this item.}
 	GemIter = 0
 	Growth = FALSE
 
+	GemCurMax = self.ActorGemMax(Who)
 	GemStages = self.GemStageCount(Who)
 	PerDay = Main.Config.GetFloat(".GemsPerDay")
 	Inc = ((TimeSince * PerDay) / 24.0)
