@@ -179,7 +179,7 @@ Event OnDone(Form What)
 		Return
 	EndIf
 
-	If(Main.Data.ActorSemenAmount(self.SemenFrom) > 1.0)
+	If(Main.Data.ActorSemenAmount(self.SemenFrom) >= 1.0)
 		self.HandleTimeoutRenew()
 		Main.Body.ActorAnimateSolo(self.SemenFrom,Main.Body.AniWanking01)
 		Return
