@@ -202,13 +202,18 @@
     <array name="annotationTracks" size="242">
       <struct>
         <string name="trackName">NPC Root [Root]</string>
-        <array name="annotations" size="2">
+        <array name="annotations" size="3">
           <struct>
-            <string name="text">FootLeft</string>
+            <real name="time">x3e99999a <!-- 0.3 --></real>
+            <string name="text">SGO4.ActorMoan</string>
           </struct>
           <struct>
-            <real name="time">x3f2aaaab <!-- 0.666667 --></real>
-            <string name="text">FootRight</string>
+            <real name="time">x40200000 <!-- 2.5 --></real>
+            <string name="text">SGO4.ActorSpawnSemen</string>
+          </struct>
+          <struct>
+            <real name="time">x40355555 <!-- 2.83333 --></real>
+            <string name="text">SGO4.ActorDone</string>
           </struct>
         </array>
       </struct>

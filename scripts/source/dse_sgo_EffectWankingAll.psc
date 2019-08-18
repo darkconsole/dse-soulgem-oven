@@ -66,7 +66,7 @@ Function HandleTimeoutRenew()
 {handle kicking the timeout timer down the street.}
 
 	self.UnregisterForUpdate()
-	self.RegisterForSingleUpdate(30)
+	self.RegisterForSingleUpdate(15)
 
 	Return
 EndFunction
@@ -155,16 +155,16 @@ Event OnUpdate()
 
 	If(!self.HasWanked)
 		self.HandleSpawnSemen(FALSE)
-		self.HandleShutdown()
 	EndIf
 
+	self.HandleShutdown()
 	Main.Util.Print("Semen Single performed fallback cleanup on " + self.SemenFrom.GetDisplayName())
 	Main.Util.PrintDebug("Semen Single performed fallback cleanup on " + self.SemenFrom.GetDisplayName())
 	Return
 EndEvent
 
 Event OnSpawnSemen(Form What)
-
+	
 	If(What != self.SemenFrom)
 		Return
 	EndIf
