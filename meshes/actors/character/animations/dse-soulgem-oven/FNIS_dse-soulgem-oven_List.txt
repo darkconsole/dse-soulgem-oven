@@ -26,8 +26,8 @@ s -h,o,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-insert01-01 insert0
 
 '' inserts a soulgem from behind.
 
-s -h,o,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable,TSGO4.ActorMoan/2.5,TSGO4.ActorInsert/-0.1 dse-sgo-insert02-01 insert02-01.hkx dse_sgo_AobjSoulgemInHand01
-+ -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable,TSGO4.ActorDone/-0.1 dse-sgo-insert02-02 insert02-02.hkx
+s -h,o,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-insert02-01 insert02-01.hkx dse_sgo_AobjSoulgemInHand01
++ -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-insert02-02 insert02-02.hkx
 
 '' simple single squat birth.
 
