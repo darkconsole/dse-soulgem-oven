@@ -14,10 +14,13 @@ Version 400
 '' -AVIbHeadTrackSpine = keep torso locked if head tracking enabled
 '' -h = head tracking enabled
 '' -a = acyclic (don't loop)
+'' -ac = animated camera
 
 '' this is a dummy animation. i am using it to define all the custom animation events that my animations will need.
 
-b -h,a,TSGO4.ActorMoan/0.01,TSGO4.ActorSpawnSemen/0.02,TSGO4.ActorDone/0.03,TSGO4.ActorInsert/0.04 dse-sgo-eventpreloader01 insert01-01.hkx
+b -h,a,TSGO4.ActorMoan/0.01,TSGO4.ActorMoanLoud/0.02,TSGO4.ActorDone/0.03,TSGO4.ActorInsert/0.04 dse-sgo-eventpreloader01 insert01-01.hkx
+b -h,a,TSGO4.ActorSpawnSemen/0.01,TSGO4.ActorSpawnGem/0.02,TSGO4.ActorSpawnMilk/0.03 dse-sgo-eventpreloader02 insert01-01.hkx
+
 
 '' inserts a soulgem from the front.
 
@@ -31,7 +34,7 @@ s -h,o,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-insert02-01 insert0
 
 '' simple single squat birth.
 
-b -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable,TSGO4.ActorMoan/2.0,TSGO4.ActorMoanLoud/4.0,TSGO4.ActorSpawnGem/4.70,TSGO4.ActorDone/-0.1 dse-sgo-birth01-01 birth01-01.hkx
+b -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-birth01-01 birth01-01.hkx
 
 '' simple single milking.
 
