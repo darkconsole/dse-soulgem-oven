@@ -16,11 +16,21 @@ Version 400
 '' -a = acyclic (don't loop)
 '' -ac = animated camera
 
-'' this is a dummy animation. i am using it to define all the custom animation events that my animations will need.
+'' these are dummy animations.
+'' it turns out animations can have totally custom animation events embedded inside them
+'' and the game will totally throw them, but only if we have fnis get those events into
+'' the behaviour tables first.
+
+'' animation note: annotations belong in NPC Root [Root] > Transforms > Notes
+'' NOT on the node itself but that transforms subsection in the max dopesheet.
 
 b -h,a,TSGO4.ActorMoan/0.01,TSGO4.ActorMoanLoud/0.02,TSGO4.ActorDone/0.03,TSGO4.ActorInsert/0.04 dse-sgo-eventpreloader01 insert01-01.hkx
 b -h,a,TSGO4.ActorSpawnSemen/0.01,TSGO4.ActorSpawnGem/0.02,TSGO4.ActorSpawnMilk/0.03 dse-sgo-eventpreloader02 insert01-01.hkx
 
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'' INSERTS ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 '' inserts a soulgem from the front.
 
@@ -32,13 +42,25 @@ s -h,o,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-insert01-01 insert0
 s -h,o,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-insert02-01 insert02-01.hkx dse_sgo_AobjSoulgemInHand01
 + -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-insert02-02 insert02-02.hkx
 
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'' BIRTHS '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
 '' simple single squat birth.
 
 b -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-birth01-01 birth01-01.hkx
 
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'' MILKINGS '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
 '' simple single milking.
 
 b -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-milking01-01 milking01-01.hkx
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'' WANKING ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 '' simple single wanking.
 
