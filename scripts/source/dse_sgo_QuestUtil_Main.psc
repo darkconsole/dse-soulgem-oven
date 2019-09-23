@@ -421,3 +421,60 @@ Bool Function ActorIsValid(Actor Who)
 
 	Return TRUE
 EndFunction
+
+String Function GetBirthingAnimationName(Int Offset)
+{0 = random, 1 and higher specific animation.}
+
+	String[] AniList = new String[1]
+	AniList[0] = Main.Body.AniBirth01
+	Offset = PapyrusUtil.ClampInt(Offset,0,AniList.Length) - 1
+
+	If(Offset == -1)
+		Offset = Utility.RandomInt(0,(AniList.Length - 1))
+	EndIf
+
+	Return AniList[Offset]
+EndFunction
+
+String Function GetInsertingAnimationName(Int Offset)
+{0 = random, 1 and higher specific animation.}
+
+	String[] AniList = new String[2]
+	AniList[0] = Main.Body.AniInsert01
+	AniList[1] = Main.Body.AniInsert02
+	Offset = PapyrusUtil.ClampInt(Offset,0,AniList.Length) - 1
+
+	If(Offset == -1)
+		Offset = Utility.RandomInt(0,(AniList.Length - 1))
+	EndIf
+
+	Return AniList[Offset]
+EndFunction
+
+String Function GetMilkingAnimationName(Int Offset)
+{0 = random, 1 and higher specific animation.}
+
+	String[] AniList = new String[1]
+	AniList[0] = Main.Body.AniMilking01
+	Offset = PapyrusUtil.ClampInt(Offset,0,AniList.Length) - 1
+
+	If(Offset == -1)
+		Offset = Utility.RandomInt(0,(AniList.Length - 1))
+	EndIf
+
+	Return AniList[Offset]
+EndFunction
+
+String Function GetWankingAnimationName(Int Offset)
+{0 = random, 1 and higher specific animation.}
+
+	String[] AniList = new String[1]
+	AniList[0] = Main.Body.AniWanking01
+	Offset = PapyrusUtil.ClampInt(Offset,0,AniList.Length) - 1
+
+	If(Offset == -1)
+		Offset = Utility.RandomInt(0,(AniList.Length - 1))
+	EndIf
+
+	Return AniList[Offset]
+EndFunction

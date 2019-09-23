@@ -104,7 +104,7 @@ Function HandleStartAnimation()
 	Utility.Wait(0.25)
 	Debug.SendAnimationEvent(self.SemenFrom,"SOSFastErect")
 	Utility.Wait(0.25)
-	Main.Body.ActorAnimateSolo(self.SemenFrom,Main.Body.AniWanking01)
+	Main.Body.ActorAnimateSolo(self.SemenFrom,Main.Util.GetWankingAnimationName(0))
 
 	Return
 EndFunction
@@ -138,6 +138,7 @@ Function HandleShutdown()
 
 	Main.Body.ActorRelease(self.SemenFrom)
 	Main.Util.ActorArmourReplace(self.SemenFrom)
+	Debug.SendAnimationEvent(self.SemenFrom,"SOSFlaccid")
 
 	self.UnregisterForUpdate()
 	self.Dispel()
@@ -181,7 +182,7 @@ Event OnDone(Form What)
 
 	If(Main.Data.ActorSemenAmount(self.SemenFrom) >= 1.0)
 		self.HandleTimeoutRenew()
-		Main.Body.ActorAnimateSolo(self.SemenFrom,Main.Body.AniWanking01)
+		Main.Body.ActorAnimateSolo(self.SemenFrom,Main.Util.GetWankingAnimationName(0))
 		Return
 	EndIf
 

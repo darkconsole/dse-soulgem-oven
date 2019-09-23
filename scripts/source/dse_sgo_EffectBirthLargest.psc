@@ -92,7 +92,7 @@ Function HandleStartAnimation()
 	Main.Body.ActorLockdown(self.BirthFrom)
 	Main.Util.ActorArmourRemove(self.BirthFrom)
 	Utility.Wait(0.25)
-	Main.Body.ActorAnimateSolo(self.BirthFrom,Main.Body.AniBirth01)
+	Main.Body.ActorAnimateSolo(self.BirthFrom,Main.Util.GetBirthingAnimationName(0))
 
 	Return
 EndFunction

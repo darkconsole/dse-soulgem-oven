@@ -98,7 +98,7 @@ Function HandleStartAnimation()
 	Main.Util.ActorArmourRemove(self.MilkFrom)
 	Main.Body.ActorLockdown(self.MilkFrom)
 	Utility.Wait(0.25)
-	Main.Body.ActorAnimateSolo(self.MilkFrom,Main.Body.AniMilking01)
+	Main.Body.ActorAnimateSolo(self.MilkFrom,Main.Util.GetMilkingAnimationName(0))
 
 	Return
 EndFunction
