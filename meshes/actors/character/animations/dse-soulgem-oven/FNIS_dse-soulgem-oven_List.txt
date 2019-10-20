@@ -35,12 +35,12 @@ b -h,a,TSGO4.ActorSpawnSemen/0.01,TSGO4.ActorSpawnGem/0.02,TSGO4.ActorSpawnMilk/
 '' inserts a soulgem from the front.
 
 s -h,o,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-insert01-01 insert01-01.hkx dse_sgo_AobjSoulgemInHand01
-+ -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-insert01-02 insert01-02.hkx
++ -h,a dse-sgo-insert01-02 insert01-02.hkx
 
 '' inserts a soulgem from behind.
 
 s -h,o,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-insert02-01 insert02-01.hkx dse_sgo_AobjSoulgemInHand01
-+ -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-insert02-02 insert02-02.hkx
++ -h,a dse-sgo-insert02-02 insert02-02.hkx
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '' BIRTHS '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
