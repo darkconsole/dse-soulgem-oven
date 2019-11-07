@@ -658,25 +658,25 @@ Function MenuMainOpen(Actor Who=None)
 
 	If(Result == 0)
 		;; insert gems
-		self.SpellInsertGems.Cast(self.Player,self.Player)
+		self.SpellInsertGems.Cast(Who,Who)
 	ElseIf(Result == 1)
 		;; xfer gems
 		self.MenuTransferGemsOpen(Who)
 	ElseIf(Result == 2)
 		;; inseminate
-		self.SpellInsertSemens.Cast(self.Player,self.Player)
+		self.SpellInsertSemens.Cast(Who,Who)
 	ElseIf(Result == 3)
 		;; actor options
 		self.MenuActorOptionsOpen(Who)
 	ElseIf(Result == 4)
 		;; birth
-		self.SpellBirthLargest.Cast(self.Player,self.Player)
+		self.SpellBirthLargest.Cast(Who,Who)
 	ElseIf(Result == 5)
 		;; milk
-		self.SpellMilkingAction.Cast(self.Player,self.Player)
+		self.SpellMilkingAction.Cast(Who,Who)
 	ElseIf(Result == 6)
 		;; wank
-		self.SpellWankingAction.Cast(self.Player,self.Player)
+		self.SpellWankingAction.Cast(Who,Who)
 	ElseIf(Result == 7)
 		;; stats
 		self.MenuActorStatsOpen(Who)
