@@ -28,8 +28,9 @@ Event OnLoad()
 	self.InsertInto = StorageUtil.GetFormValue(self,"SGO4.InsertInto") as Actor
 	StorageUtil.UnsetFormValue(self,"SGO4.InsertInto")
 
-	If(self.InsertInto == None)
-		self.InsertInto = Main.Player
+	If(self.InsertInto == NONE)
+		Main.Util.PrintLookup("ErrorNoTarget")
+		Return
 	EndIf
 
 	;; figure out if we even can.
