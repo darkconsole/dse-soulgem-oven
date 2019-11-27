@@ -24,8 +24,8 @@ Version 400
 '' animation note: annotations belong in NPC Root [Root] > Transforms > Notes
 '' NOT on the node itself but that transforms subsection in the max dopesheet.
 
-b -h,a,TSGO4.ActorMoan/0.01,TSGO4.ActorMoanLoud/0.02,TSGO4.ActorDone/0.03,TSGO4.ActorInsert/0.04 dse-sgo-eventpreloader01 insert01-01.hkx
-b -h,a,TSGO4.ActorSpawnSemen/0.01,TSGO4.ActorSpawnGem/0.02,TSGO4.ActorSpawnMilk/0.03 dse-sgo-eventpreloader02 insert01-01.hkx
+b -TSGO4.ActorMoan/0.01,TSGO4.ActorMoanLoud/0.02,TSGO4.ActorDone/0.03,TSGO4.ActorInsert/0.04 dse-sgo-eventpreloader01 insert01-01.hkx
+b -TSGO4.ActorSpawnSemen/0.01,TSGO4.ActorSpawnGem/0.02,TSGO4.ActorSpawnMilk/0.03 dse-sgo-eventpreloader02 insert01-01.hkx
 
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -34,13 +34,13 @@ b -h,a,TSGO4.ActorSpawnSemen/0.01,TSGO4.ActorSpawnGem/0.02,TSGO4.ActorSpawnMilk/
 
 '' inserts a soulgem from the front.
 
-s -h,o,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-insert01-01 insert01-01.hkx dse_sgo_AobjSoulgemInHand01
-+ -h,a dse-sgo-insert01-02 insert01-02.hkx
+s -o,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-insert01-01 insert01-01.hkx dse_sgo_AobjSoulgemInHand01
++ dse-sgo-insert01-02 insert01-02.hkx
 
 '' inserts a soulgem from behind.
 
-s -h,o,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-insert02-01 insert02-01.hkx dse_sgo_AobjSoulgemInHand01
-+ -h,a dse-sgo-insert02-02 insert02-02.hkx
+s -o,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-insert02-01 insert02-01.hkx dse_sgo_AobjSoulgemInHand01
++ dse-sgo-insert02-02 insert02-02.hkx
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '' BIRTHS '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -48,7 +48,7 @@ s -h,o,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-insert02-01 insert0
 
 '' simple single squat birth.
 
-b -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-birth01-01 birth01-01.hkx
+b -a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-birth01-01 birth01-01.hkx
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '' MILKINGS '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -56,7 +56,7 @@ b -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-birth01-01 birth01-01
 
 '' simple single milking.
 
-b -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-milking01-01 milking01-01.hkx
+b -a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-milking01-01 milking01-01.hkx
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '' WANKING ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -64,4 +64,4 @@ b -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-milking01-01 milking0
 
 '' simple single wanking.
 
-b -h,a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-wanking01-01 wanking01-01.hkx
+b -a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-wanking01-01 wanking01-01.hkx
