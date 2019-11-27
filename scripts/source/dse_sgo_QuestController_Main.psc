@@ -207,6 +207,10 @@ Bool Function CheckForDeps(Bool Popup)
 
 	Bool Output = TRUE
 
+	;;;;;;;;
+
+	;; serious things that should brick the game if they aren't correct.
+
 	If(!self.CheckForDeps_SKSE(Popup))
 		Output = FALSE
 	EndIf
@@ -230,6 +234,12 @@ Bool Function CheckForDeps(Bool Popup)
 	If(!self.CheckForDeps_UIExtensions(Popup))
 		Output = FALSE
 	EndIf
+
+	;; non serious things that should not break the game.
+
+	self.CheckForDeps_RaceMenuMorphs(Popup)
+
+	;;;;;;;;
 
 	Return Output
 EndFunction
@@ -325,12 +335,35 @@ Bool Function CheckForDeps_RaceMenu(Bool Popup)
 		Output = FALSE
 	EndIf
 
-	;; soft fail if no morph sliders.
-	
-	If(!Game.IsPluginInstalled("RaceMenuMorphsCBBE.esp") && !Game.IsPluginInstalled("RaceMenuMorphsTBD.esp") && !Game.IsPluginInstalled("RaceMenuMorphsUUNP.esp"))
-		If(Popup)
-			self.Util.PopupError("You have no BodyMorphs installed. Currently the only known ones are CBBE and TBD. You will not see any body scaling until you fix this.")
+	Return Output
+EndFunction
+
+Bool Function CheckForDeps_RaceMenuMorphs(Bool Popup)
+{make sure we have race menu morphs installed.}
+
+	Bool Output = FALSE
+	Int Iter
+
+	;;;;;;;;
+
+	String[] Plugins = new String[3]
+	Plugins[0] = "RaceMenuMorphsCBBE.esp"
+	Plugins[1] = "RaceMenuMorphsTBD.esp"
+	Plugins[2] = "RaceMenuMorphsUUNP.esp"
+
+	;;;;;;;;
+
+	Iter = 0
+	While(Iter < Plugins.Length)
+		If(Game.IsPluginInstalled(Plugins[Iter]))
+			Output = TRUE
+			Iter = Plugins.Length
 		EndIf
+		Iter += 1
+	EndWhile
+
+	If(!Output && Popup)
+		self.Util.PopupError("It appears have no BodyMorphs installed. You may not see any body scaling.")
 	EndIf
 
 	Return Output
