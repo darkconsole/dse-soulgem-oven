@@ -34,7 +34,6 @@ Event OnUpdate()
 	ActorIter = 0
 	ActorCull = FALSE
 
-
 	While(ActorIter < ActorCount)
 		Who = Main.Data.ActorTrackingGet(ActorIter)
 

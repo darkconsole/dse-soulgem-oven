@@ -333,7 +333,7 @@ added to this list.}
 	Who.UnregisterForUpdate()
 	Who.RegisterForUpdate(600)
 
-	Main.Util.PrintDebug(Who.GetDisplayName() + " is now being tracked.")
+	Main.Util.PrintDebug(Who.GetDisplayName() + " " + Who + " " + " is now being tracked.")
 
 	;;Ev = ModEvent.Create("SGO4.Actor.Inspect")
 	;;ModEvent.PushForm(Ev,Who)
@@ -361,6 +361,8 @@ EndFunction
 Actor Function ActorTrackingGet(Int Index)
 {get the specified actor at the index.}
 
+	Main.Util.PrintDebug("ActorTrackingGet " + Index + " " + StorageUtil.FormListGet(None,KeyActorTracking,Index))
+
 	Return StorageUtil.FormListGet(None,KeyActorTracking,Index) As Actor
 EndFunction
 
@@ -373,7 +375,13 @@ EndFunction
 Function ActorTrackingCull()
 {remove any actors that vanished.}
 
+	Int Before = StorageUtil.FormListCount(None,KeyActorTracking)
+	Int After = 0
+
 	StorageUtil.FormListRemove(None,KeyActorTracking,None,TRUE)
+	After = StorageUtil.FormListCount(None,KeyActorTracking)
+
+	Main.Util.PrintDebug("ActorTrackingCull: " + Before + " => " + After)
 
 	Return
 EndFunction

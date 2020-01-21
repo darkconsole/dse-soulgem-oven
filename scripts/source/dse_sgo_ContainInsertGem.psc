@@ -258,6 +258,7 @@ Function HandleStartAnimation()
 {handle inserting gems via animating.}
 
 	self.GemLoop = 0
+	self.InsertInto.SetAnimationVariableBool("bForceIdleStop",TRUE)
 	Main.Util.ActorArmourRemove(self.InsertInto)
 	Main.Body.ActorLockdown(self.InsertInto)
 	Utility.Wait(0.25)
@@ -280,6 +281,7 @@ Function HandleShutdown()
 
 	Main.Body.ActorRelease(self.InsertInto)
 	Main.Util.ActorArmourReplace(self.InsertInto)
+	self.InsertInto.SetAnimationVariableBool("bForceIdleStop",FALSE)
 
 	self.RemoveAllItems(None)
 	self.UnregisterForUpdate()

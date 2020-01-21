@@ -458,6 +458,9 @@ EndFunction
 Function ActorAnimateSolo(Actor Who, String AniName)
 {force an actor to perform some sort of blocking/busy animation.}
 
+	Utility.Wait(1.0)
+	Debug.SendAnimationEvent(Who,"IdleForceDefaultState")
+	Utility.Wait(0.25)
 	Debug.SendAnimationEvent(Who,AniName)
 
 	Return
