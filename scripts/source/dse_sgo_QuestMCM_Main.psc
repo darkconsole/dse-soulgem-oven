@@ -377,7 +377,7 @@ Event OnOptionSliderOpen(Int Item)
 
 		EndWhile
 
-		Min = 0.0
+		Min = -3.0
 		Max = 3.0
 		Interval = 0.05
 	EndIf
