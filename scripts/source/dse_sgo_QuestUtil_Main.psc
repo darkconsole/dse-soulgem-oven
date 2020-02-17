@@ -61,6 +61,34 @@ Form Function GetFormFrom(String ModName, Int FormID)
 	Return Game.GetFormFromFile(FormID,ModName)
 EndFunction
 
+
+Function SortByDisplayName(Actor[] ItemList)
+{sort a list of actors by their name.}
+
+	Actor TmpForm
+	Int Iter
+	Bool Changed = TRUE
+
+	While(Changed)
+		Iter = 0
+		Changed = FALSE
+
+		While(Iter < (ItemList.Length - 1))
+
+			If(ItemList[Iter].GetDisplayName() > ItemList[(Iter+1)].GetDisplayName())
+				TmpForm = ItemList[Iter]
+				ItemList[Iter] = ItemList[(Iter+1)]
+				ItemList[(Iter+1)] = TmpForm
+				Changed = TRUE
+			EndIf
+
+			Iter += 1
+		EndWhile
+	EndWhile
+
+	Return
+EndFunction
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -105,6 +133,56 @@ a float into a string directly.}
 			Output += Last As String
 
 			Dec -= 1
+		EndWhile
+	EndIf
+
+	Return Output
+EndFunction
+
+String[] Function FloatsToStrings(Float[] Vals, Int Dec=0)
+{convert a list of floats into strings using FloatToString.}
+
+	String[] Output = Utility.CreateStringArray(Vals.Length)
+	Int Iter = Vals.Length
+
+	While(Iter > 0)
+		Iter -= 1
+		Output[Iter] = self.FloatToString(Vals[Iter],Dec)
+	EndWhile
+
+	Return Output
+EndFunction
+
+String Function DecToHex(Int Number)
+
+	String Output = ""
+	String[] HexChar = new String[16]
+	Int HexKey = 0
+
+	If(Number == 0)
+		Output = "0"
+	Else
+		HexChar[0] = "0"
+		HexChar[1] = "1"
+		HexChar[2] = "2"
+		HexChar[3] = "3"
+		HexChar[4] = "4"
+		HexChar[5] = "5"
+		HexChar[6] = "6"
+		HexChar[7] = "7"
+		HexChar[8] = "8"
+		HexChar[9] = "9"
+		HexChar[10] = "A"
+		HexChar[11] = "B"
+		HexChar[12] = "C"
+		HexChar[13] = "D"
+		HexChar[14] = "E"
+		HexChar[15] = "F"
+
+		While(Number != 0)
+			HexKey = Math.LogicalAnd(Number,0xF)
+			Number = Math.RightShift(Number,4)
+			Output = HexChar[HexKey] + Output
 		EndWhile
 	EndIf
 

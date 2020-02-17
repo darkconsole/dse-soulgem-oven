@@ -366,6 +366,20 @@ Actor Function ActorTrackingGet(Int Index)
 	Return StorageUtil.FormListGet(None,KeyActorTracking,Index) As Actor
 EndFunction
 
+Actor[] Function ActorTrackingGetList()
+{fetch an array dataset.}
+
+	Int Count = self.ActorTrackingCount()
+	Actor[] ActorList = PapyrusUtil.ActorArray(Count)
+
+	While(Count > 0)
+		Count -= 1
+		ActorList[Count] = self.ActorTrackingGet(Count)
+	EndWhile
+
+	Return ActorList
+EndFunction
+
 Int Function ActorTrackingCount()
 {count how many actors we are tracking.}
 
@@ -563,6 +577,23 @@ Float Function ActorGemGet(Actor Who, Int Index, Bool Limit=TRUE)
 	EndIf
 
 	Return Gem
+EndFunction
+
+Float[] Function ActorGemGetList(Actor Who, Bool Limit=TRUE)
+{get the value of a specific gem in an actor.}
+
+	Float Max = self.GemStageCount(Who) As Float
+	Float[] Gems = StorageUtil.FloatListToArray(Who,KeyActorGemData)
+	Int Iter = 0
+
+	If(Limit)
+		While(Iter < Gems.Length)
+			Gems[Iter] = PapyrusUtil.ClampFloat(Gems[Iter],0.0,Max)
+			Iter += 1
+		EndWhile
+	EndIf
+
+	Return Gems
 EndFunction
 
 Float Function ActorGemInc(Actor Who, Int Index, Float Inc)

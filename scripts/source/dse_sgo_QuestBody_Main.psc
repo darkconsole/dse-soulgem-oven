@@ -418,15 +418,20 @@ Function ActorLockdown(Actor Who, Package Pkg=NONE)
 	If(Who == Main.Player)
 		Game.SetPlayerAIDriven(TRUE)
 		Game.DisablePlayerControls()
+	Else
+		Who.SetDontMove(TRUE)
+		Who.SetRestrained(TRUE)
 	EndIf
 	
 	StorageUtil.SetFormValue(Who,"SGO4.Actor.Lockdown",Pkg)
+	Who.SetAnimationVariableInt("IsNPC",0)
+	Utility.Wait(0.2)
 
 	ActorUtil.AddPackageOverride(Who,Pkg,100)
 	Who.EvaluatePackage()
-
 	self.RegisterForCustomAnimationEvents(Who)
-	;;Debug.SendAnimationEvent(Who,self.AniDefault)
+
+	Utility.Wait(1.0)
 	Return
 EndFunction
 
@@ -436,6 +441,10 @@ Function ActorRelease(Actor Who)
 
 	If(Pkg == None)
 		Pkg = Main.PackageDoNothing
+	EndIf
+
+	If(Who != Main.Player)
+		Who.SetAnimationVariableInt("IsNPC",1)
 	EndIf
 
 	ActorUtil.RemovePackageOverride(Who,Pkg)
@@ -451,6 +460,9 @@ Function ActorRelease(Actor Who)
 		Game.SetPlayerAIDriven(FALSE)
 		Game.EnablePlayerControls()
 	EndIf
+
+	Who.SetDontMove(FALSE)
+	Who.SetRestrained(FALSE)
 
 	Return
 EndFunction

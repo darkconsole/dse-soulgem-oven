@@ -70,27 +70,30 @@ String PageCurrentKey
 Event OnConfigInit()
 {things to do when the menu initalises (is opening)}
 
-	self.Pages = new String[7]
+	self.Pages = new String[8]
+
+	self.Pages[0] = "$SGO4_Menu_Databank"
+	;; sgo actor tracking data.
 	
-	self.Pages[0] = "$SGO4_Menu_General"
+	self.Pages[1] = "$SGO4_Menu_General"
 	;; info, enable/disable, uninstall.
 
-	self.Pages[1] = "$SGO4_Menu_Gameplay"
+	self.Pages[2] = "$SGO4_Menu_Gameplay"
 	;; gameplay settings
 
-	self.Pages[2] = "$SGO4_Menu_GemSliders"
+	self.Pages[3] = "$SGO4_Menu_GemSliders"
 	;; pregnancy sliders
 
-	self.Pages[3] = "$SGO4_Menu_MilkSliders"
+	self.Pages[4] = "$SGO4_Menu_MilkSliders"
 	;; milking sliders
 
-	self.Pages[4] = "$SGO4_Menu_Widgets"
+	self.Pages[5] = "$SGO4_Menu_Widgets"
 	;; widget settings utilities
 
-	self.Pages[5] = "$SGO4_Menu_Debug"
+	self.Pages[6] = "$SGO4_Menu_Debug"
 	;; testing utilities
 
-	self.Pages[6] = "$SGO4_Menu_Splash"
+	self.Pages[7] = "$SGO4_Menu_Splash"
 	;; splash screen
 
 	Return
@@ -123,6 +126,8 @@ Event OnPageReset(String Page)
 
 	If(Page == "$SGO4_Menu_General")
 		self.ShowPageGeneral()
+	ElseIf(Page == "$SGO4_Menu_Databank")
+		self.ShowPageDatabank()
 	ElseIf(Page == "$SGO4_Menu_Gameplay")
 		self.ShowPageGameplay()
 	ElseIf(Page == "$SGO4_Menu_Widgets")
@@ -709,6 +714,62 @@ Function ShowPageGeneral()
 	AddHeaderOption("")
 
 	ItemSexLabStrip = AddToggleOption("$SGO4_MenuOpt_SexLabStrip",Main.Config.GetBool(".SexLabStrip"))
+
+	Return
+EndFunction
+
+;/*****************************************************************************
+*****************************************************************************/;
+
+Function ShowPageDatabank()
+
+	Int Iter
+	Actor[] ActorList = Main.Data.ActorTrackingGetList()
+	Float[] ActorGemList
+	String Info1 = ""
+	String Info2 = ""
+	String Info3 = ""
+	String Info4 = ""
+
+	;;;;;;;;
+
+	Main.Util.SortByDisplayName(ActorList)
+
+	;;;;;;;;
+
+	self.SetTitleText("$SGO4_MenuTitle_Databank")
+	self.SetCursorFillMode(LEFT_TO_RIGHT)
+	self.SetCursorPosition(0)
+
+	Iter = 0
+	While(Iter < ActorList.Length)
+		If(!ActorList[Iter].IsInFaction(Main.FactionProduceGems))
+			;; skip actors not capable of producing gems.
+		Else
+			ActorGemList = Main.Data.ActorGemGetList(ActorList[Iter])
+
+			Info1 = ActorList[Iter].GetDisplayName()
+
+			Info2 = ActorList[Iter].GetRace().GetName()
+			Info2 += " - "
+			Info2 += Main.Util.DecToHex(ActorList[Iter].GetFormID())
+
+			Info3 = Main.Util.StringLookup("MenuGemCount",ActorGemList.Length)
+			Info3 += " - "
+			Info3 += Main.Util.FloatToString((Main.Data.ActorGemTotalPercent(ActorList[Iter],TRUE) * 100.0),1)
+			Info3 += "%"
+
+			Info4 = "[ "
+			Info4 += PapyrusUtil.StringJoin(Main.Util.FloatsToStrings(ActorGemList,1),", ")
+			Info4 += " ]"
+
+			AddHeaderOption((Info1 + " - " + Info2))
+			AddTextOption((Info3 + " " + Info4),OPTION_FLAG_DISABLED)
+		EndIf
+
+		Iter += 1
+	EndWhile
+
 
 	Return
 EndFunction
