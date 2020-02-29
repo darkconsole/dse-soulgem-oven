@@ -453,7 +453,9 @@ Function ActorRelease(Actor Who)
 	self.UnregisterForCustomAnimationEvents(Who)
 
 	If(!Main.Util.ActorHasPackageOverrides(Who))
-		Debug.SendAnimationEvent(Who,self.AniDefault)
+		;;Debug.SendAnimationEvent(Who,self.AniDefault)
+		ConsoleUtil.SetSelectedReference(Who)
+		ConsoleUtil.ExecuteCommand("sae " + self.AniDefault)
 	EndIf
 
 	If(Who == Main.Player)
@@ -470,10 +472,13 @@ EndFunction
 Function ActorAnimateSolo(Actor Who, String AniName)
 {force an actor to perform some sort of blocking/busy animation.}
 
-	Utility.Wait(1.0)
-	Debug.SendAnimationEvent(Who,"IdleForceDefaultState")
-	Utility.Wait(0.25)
-	Debug.SendAnimationEvent(Who,AniName)
+	;;Utility.Wait(1.0)
+	;;Debug.SendAnimationEvent(Who,"IdleForceDefaultState")
+	;;Utility.Wait(0.25)
+	
+	;;Debug.SendAnimationEvent(Who,AniName)
+	ConsoleUtil.SetSelectedReference(Who)
+	ConsoleUtil.ExecuteCommand("sae " + AniName)
 
 	Return
 EndFunction
