@@ -750,6 +750,8 @@ Function ShowPageDatabank()
 
 	AddHeaderOption("Character - Race - Ref ID")
 	AddTextOption("[Gems][Milk][Semen]","Gem Data",OPTION_FLAG_DISABLED)
+	AddHeaderOption("")
+	AddHeaderOption("")
 
 	Iter = 0
 	While(Iter < ActorList.Length)
