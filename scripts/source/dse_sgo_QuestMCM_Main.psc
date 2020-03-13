@@ -250,6 +250,10 @@ Event OnOptionSelect(Int Item)
 		Val = !Main.Config.DebugMode
 		Main.Config.DebugMode = Val
 
+	ElseIf(Item == ItemDatabankShowAll)
+		Val = !Main.Config.GetBool(".DatabankShowAll")
+		Main.Config.SetBool(".DatabankShowAll",Val)
+
 	;;;;;;;;
 
 	ElseIf(Item == ItemModStatus)
@@ -662,6 +666,8 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_UpdateAfterWait"
 	ElseIf(Item == ItemDebug)
 		Txt = "$SGO4_MenuTip_Debug"
+	ElseIf(Item == ItemDatabankShowAll)
+		Txt = "$SGO4_MenuTip_DatabankShowAll"
 	EndIf
 
 	self.SetInfoText(Txt)
@@ -686,6 +692,7 @@ Int ItemUpdateLoopFreq
 Int ItemUpdateLoopDelay
 Int ItemUpdateGameHours
 Int ItemUpdateAfterWait
+Int ItemDatabankShowAll
 
 Function ShowPageGeneral()
 
@@ -707,7 +714,7 @@ Function ShowPageGeneral()
 	ItemUpdateLoopDelay = AddSliderOption("$SGO4_MenuOpt_UpdateLoopDelay",Main.Config.GetFloat(".UpdateLoopDelay"),"{2} sec")
 	ItemUpdateGameHours = AddSliderOption("$SGO4_MenuOpt_UpdateGameHours",Main.Config.GetFloat(".UpdateGameHours"),"{1} hr")
 	ItemUpdateAfterWait = AddToggleOption("$SGO4_MenuOpt_UpdateAfterWait",Main.Config.GetBool(".UpdateAfterWait"))
-	AddEmptyOption()
+	ItemDatabankShowAll = AddToggleOption("$SGO4_MenuOpt_DatabankShowAll",Main.Config.GetBool(".DatabankShowAll"))
 	AddEmptyOption()
 
 	AddHeaderOption("$SGO4_MenuOpt_Misc")
@@ -741,11 +748,13 @@ Function ShowPageDatabank()
 	self.SetCursorFillMode(LEFT_TO_RIGHT)
 	self.SetCursorPosition(0)
 
+	AddHeaderOption("Character - Race - Ref ID")
+	AddTextOption("[Gems][Milk][Semen]","Gem Data",OPTION_FLAG_DISABLED)
+
 	Iter = 0
 	While(Iter < ActorList.Length)
-		If(!ActorList[Iter].IsInFaction(Main.FactionProduceGems))
-			;; skip actors not capable of producing gems.
-		Else
+		If(Main.Config.GetBool(".DatabankShowAll") || ActorList[Iter].IsInFaction(Main.FactionProduceGems))
+
 			ActorGemList = Main.Data.ActorGemGetList(ActorList[Iter])
 
 			Info1 = ActorList[Iter].GetDisplayName()
@@ -754,17 +763,29 @@ Function ShowPageDatabank()
 			Info2 += " - "
 			Info2 += Main.Util.DecToHex(ActorList[Iter].GetFormID())
 
-			Info3 = Main.Util.StringLookup("MenuGemCount",ActorGemList.Length)
-			Info3 += " - "
-			Info3 += Main.Util.FloatToString((Main.Data.ActorGemTotalPercent(ActorList[Iter],TRUE) * 100.0),1)
-			Info3 += "%"
+			Info3 = ""
+			Info4 = ""
 
-			Info4 = "[ "
-			Info4 += PapyrusUtil.StringJoin(Main.Util.FloatsToStrings(ActorGemList,1),", ")
-			Info4 += " ]"
+			If(ActorList[Iter].IsInFaction(Main.FactionProduceGems))
+				Info3 += "[G=" + Main.Util.FloatToString((Main.Data.ActorGemTotalPercent(ActorList[Iter],TRUE) * 100),1) + "%]"
+			EndIf
+
+			If(ActorList[Iter].IsInFaction(Main.FactionProduceMilk))
+				Info3 += "[M=" + Main.Util.FloatToString((Main.Data.ActorMilkTotalPercent(ActorList[Iter]) * 100),1) + "%]"
+			EndIf
+
+			If(ActorList[Iter].IsInFaction(Main.FactionProduceSemen))
+				Info3 += "[S=" + Main.Util.FloatToString((Main.Data.ActorSemenTotalPercent(ActorList[Iter]) * 100),1) + "%]"
+			EndIf
+
+			If(ActorList[Iter].IsInFaction(Main.FactionProduceGems))
+				Info4 = "[ " + PapyrusUtil.StringJoin(Main.Util.FloatsToStrings(ActorGemList,1),", ") + " ]"
+			Else
+				Info4 = "N/A"
+			EndIf
 
 			AddHeaderOption((Info1 + " - " + Info2))
-			AddTextOption((Info3 + " " + Info4),OPTION_FLAG_DISABLED)
+			AddTextOption(Info3,Info4,OPTION_FLAG_DISABLED)
 		EndIf
 
 		Iter += 1
