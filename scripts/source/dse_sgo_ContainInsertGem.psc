@@ -30,6 +30,8 @@ Event OnLoad()
 
 	If(self.InsertInto == NONE)
 		Main.Util.PrintLookup("ErrorNoTarget")
+		self.Disable()
+		self.Delete()
 		Return
 	EndIf
 
