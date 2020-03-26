@@ -102,6 +102,7 @@ Function HandleSpawnGem(Bool FromAni)
 
 	Int TypeVal = Math.Floor(Main.Data.ActorGemRemoveLargest(self.BirthFrom))
 	Form Type = Main.Data.GemStageGet(TypeVal)
+	Float[] Pos = Main.Util.GetNodePositionAtDistance(self.BirthFrom,"NPC Pelvis [Pelv]",30)
 	ObjectReference Gem
 
 	If(FromAni)
@@ -110,8 +111,9 @@ Function HandleSpawnGem(Bool FromAni)
 		Gem.MoveToNode(self.BirthFrom,"AnimObjectA")
 		Gem.Enable()
 	Else
-		self.BirthFrom.AddItem(Type,1,TRUE)
-		Gem = self.BirthFrom.DropObject(Type,1)
+		Gem = self.BirthFrom.PlaceAtMe(Type,1,FALSE,TRUE)
+		Gem.SetPosition(Pos[1],Pos[2],Pos[3])
+		Gem.Enable()
 	EndIf
 
 	Gem.SetActorOwner(Main.Player.GetActorBase())

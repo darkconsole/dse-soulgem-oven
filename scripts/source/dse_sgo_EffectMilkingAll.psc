@@ -110,6 +110,7 @@ EndFunction
 Function HandleSpawnMilk(Bool FromAni)
 
 	ObjectReference Bottle
+	Float[] Pos = Main.Util.GetNodePositionAtDistance(self.MilkFrom,"NPC Pelvis [Pelv]",30)
 
 	Main.Data.ActorMilkInc(self.MilkFrom,-1.0)
 
@@ -119,8 +120,9 @@ Function HandleSpawnMilk(Bool FromAni)
 		Bottle.MoveToNode(self.MilkFrom,"AnimObjectA")
 		Bottle.Enable()
 	Else
-		self.MilkFrom.AddItem(self.Milk,1,TRUE)
-		Bottle = self.MilkFrom.DropObject(self.Milk,1)
+		Bottle = self.MilkFrom.PlaceAtMe(self.Milk,1,FALSE,TRUE)
+		Bottle.SetPosition(Pos[1],Pos[2],Pos[3])
+		Bottle.Enable()
 	EndIf
 
 	Bottle.SetActorOwner(Main.Player.GetActorBase())

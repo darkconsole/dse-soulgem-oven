@@ -112,6 +112,7 @@ EndFunction
 Function HandleSpawnSemen(Bool FromAni)
 
 	ObjectReference Bottle
+	Float[] Pos = Main.Util.GetNodePositionAtDistance(self.SemenFrom,"NPC Pelvis [Pelv]",30)
 
 	Main.Data.ActorSemenInc(self.SemenFrom,-1.0)
 
@@ -121,8 +122,9 @@ Function HandleSpawnSemen(Bool FromAni)
 		Bottle.MoveToNode(self.SemenFrom,"AnimObjectA")
 		Bottle.Enable()
 	Else
-		self.SemenFrom.AddItem(self.Semen,1,TRUE)
-		Bottle = self.SemenFrom.DropObject(self.Semen,1)
+		Bottle = self.SemenFrom.PlaceAtMe(self.Semen,1,FALSE,TRUE)
+		Bottle.SetPosition(Pos[1],Pos[2],Pos[3])
+		Bottle.Enable()
 	EndIf
 
 	Bottle.SetActorOwner(Main.Player.GetActorBase())

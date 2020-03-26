@@ -210,6 +210,50 @@ value will be doubled.}
 	Return (((Level / Base) * (Value * Factor)) + Value) as Float
 EndFunction
 
+Float[] Function GetNodePositionData(ObjectReference What, String Node)
+{get an object's positional data.}
+
+	Float[] Output = new Float[4]
+	Float[] NodeMat = new Float[9]
+	Float[] NodePos = new Float[3]
+	Float[] NodeRot = new Float[2]
+
+	;; get me the node position.
+
+	NetImmerse.GetNodeWorldPosition(What,Node,NodePos,FALSE)
+
+	;; get me the node rotation.
+	;; GetNodeWorldRotationEuler currently is bugged in SKSE and is returning the 
+	;; local values instead of world values. if they fix that we can get rid of this
+	;; matrix stupidness.
+
+	NetImmerse.GetNodeWorldRotationMatrix(What,Node,NodeMat,FALSE)
+	NodeRot = MatrixToEuler(NodeMat)
+
+	;;;;;;;;
+
+	Main.Util.PrintDebug("[GetNodePositionData] " + What.GetDisplayName() + " " + What.GetAngleZ() + " " + Node + " " + NodeRot[0] + "," + NodeRot[1] + "," + NodeRot[2])
+
+	Output[0] = NodeRot[2]
+	Output[1] = NodePos[0]
+	Output[2] = NodePos[1]
+	Output[3] = NodePos[2]
+
+	Return Output
+EndFunction
+
+Float[] Function GetNodePositionAtDistance(ObjectReference What, String Node, Float Dist)
+{get an objects positional data if it was to be pushed away the specified
+distance from itself.}
+
+	Float[] Data = self.GetNodePositionData(What,Node)
+
+	Data[1] = Data[1] + (Math.Sin(Data[0]) * Dist)
+	Data[2] = Data[2] + (Math.Cos(Data[0]) * Dist)
+
+	Return Data
+EndFunction
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -556,3 +600,89 @@ String Function GetWankingAnimationName(Int Offset)
 
 	Return AniList[Offset]
 EndFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; THIRD PARTY CODE. HOPEFULLY TEMPORARY. 
+
+Float[] Function MatrixToEuler(Float[] afMatrix) Global
+{Converts a rotation matrix to Euler angles. Tailored for Skyrim (extrinsic left-handed ZYX Euler).}
+
+	;; From DavidJCobb's Rotation Library
+	;; https://www.creationkit.com/index.php?title=User:DavidJCobb/Rotation_Library
+
+   ;
+   ; Source for the math: https://web.archive.org/web/20051124013711/http://skal.planet-d.net/demo/matrixfaq.htm#Q37
+   ;
+   ; The math there is righthanded, but it's easy to tailor it to 
+   ; lefthanded if you have a handy-dandy reference like the one 
+   ; at <http://www.vectoralgebra.info/eulermatrix.html>.
+   ;
+   Float[] fEuler = new Float[3]
+   ; 
+   ; We can immediately solve for Y, but we must round it to account 
+   ; for imprecision that is sometimes introduced when we have 
+   ; converted through other forms (e.g. axis-angle). fCYTest exists 
+   ; solely as part of that accounting.
+   ; 
+   Float fY = Math.asin( (((-afMatrix[2] * 1000000) as int) as float) / 1000000 )
+   Float fCY = Math.cos(fY)
+   Float fCYTest = (((fCY * 100) as int) as float) / 100
+   Float fTX
+   Float fTY
+   If fCY && fCY >= 0.00000011920929 && fCYTest
+      ;Debug.Trace("MatrixToEuler: Y == " + fY + "; cos(Y) == " + fCY)
+      fTX = afMatrix[8] / fCY
+      fTY = afMatrix[5] / fCY
+      fEuler[0] = atan2(fTY, fTX)   ; = atan(sinXcosY / cosXcosY) = atan(sin X / cos X)
+      fTX = afMatrix[0] / fCY
+      fTY = afMatrix[1] / fCY
+      fEuler[2] = atan2(fTY, fTX)   ; = atan(cosYcosZ / cosYsinZ) = atan(sin Z / cos Z)
+   Else
+      ;Debug.Trace("MatrixToEuler: cos(Y) == 0. Taking another path...")
+      ;
+      ; We can't compute X and Z by using Y, because cos(Y) is zero. Therefore, 
+      ; we have to compromise.
+      ;
+      ; We'll assume X to be zero, and dump the rest into Z.
+      ;
+      fEuler[0] = 0
+      fTX = afMatrix[4]             ; Setting X to zero simplifies this element to: 0*sinY*sinZ + 1*cosZ
+      fTY = afMatrix[3]             ; Setting X to zero simplifies this element to: 0*sinY*cosZ - 1*sinZ
+      ;
+      ; NOTE: Negating the result APPEARS to be necessary to account for our use of a 
+      ; left-handed system versus the source's use of a right-handed system. However, 
+      ; I arrived at that conclusion deductively, and I am not 100% certain of it.
+      ;
+      fEuler[2] = -atan2(fTY, fTX)   ; = atan(sin Z / cos Z)
+   EndIf
+   fEuler[1] = fY
+   Return fEuler
+EndFunction
+
+Float Function atan2(float y, float x) Global
+
+	;; From DavidJCobb's Rotation Library
+	;; https://www.creationkit.com/index.php?title=User:DavidJCobb/Rotation_Library
+
+	Float out = 0
+	If y != 0
+		out = Math.sqrt(x * x + y * y) - x
+		out /= y
+		out = Math.atan(out) * 2
+	Else
+		If x == 0
+			return 0
+		EndIf
+
+		out = Math.atan(y / x)
+		If x < 0
+			out += 180
+		EndIf
+	EndIf
+
+	return out
+EndFunction
+
+
