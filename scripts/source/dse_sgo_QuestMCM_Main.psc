@@ -151,82 +151,87 @@ EndEvent
 Event OnOptionSelect(Int Item)
 	Bool Val = FALSE
 	Int Data = -1
+	Actor Who = Game.GetCurrentCrosshairRef() as Actor
+
+	If(Who == None)
+		Who = Main.Player
+	EndIf
 
 	;;;;;;;;
 
 	If(Item == ItemDebugPlayerGemsEmpty)
 		Val = TRUE
-		Main.Data.ActorGemClear(Main.Player)
-		Main.Util.PrintDebug(Main.Player.GetDisplayName() + " has been emptied of their gems.")
+		Main.Data.ActorGemClear(Who)
+		Main.Util.PrintDebug(Who.GetDisplayName() + " has been emptied of their gems.")
 
 	;;;;;;;;
 
 	ElseIf(Item == ItemDebugPlayerGemsMin)
 		Val = TRUE
-		Main.Data.ActorGemClear(Main.Player)
-		While(Main.Data.ActorGemAdd(Main.Player,0.0))
+		Main.Data.ActorGemClear(Who)
+		While(Main.Data.ActorGemAdd(Who,0.0))
 		EndWhile
-		Main.Util.PrintDebug(Main.Player.GetDisplayName() + " has been filled with min level gems.")
+		Main.Util.PrintDebug(Who.GetDisplayName() + " has been filled with min level gems.")
 
 	;;;;;;;;
 
 	ElseIf(Item == ItemDebugPlayerGemsHalf)
 		Val = TRUE
-		Main.Data.ActorGemClear(Main.Player)
-		While(Main.Data.ActorGemAdd(Main.Player,(Main.Data.GemStageCount(Main.Player)/2)))
+		Main.Data.ActorGemClear(Who)
+		While(Main.Data.ActorGemAdd(Who,(Main.Data.GemStageCount(Who)/2)))
 		EndWhile
-		Main.Util.PrintDebug(Main.Player.GetDisplayName() + " has been filled with half level gems.")
+		Main.Util.PrintDebug(Who.GetDisplayName() + " has been filled with half level gems.")
 
 	;;;;;;;;
 
 	ElseIf(Item == ItemDebugPlayerGemsMax)
 		Val = TRUE
-		Main.Data.ActorGemClear(Main.Player)
-		While(Main.Data.ActorGemAdd(Main.Player,Main.Data.GemStageCount(Main.Player)))
+		Main.Data.ActorGemClear(Who)
+		While(Main.Data.ActorGemAdd(Who,Main.Data.GemStageCount(Who)))
 		EndWhile
-		Main.Util.PrintDebug(Main.Player.GetDisplayName() + " has been filled with max level gems.")
+		Main.Util.PrintDebug(Who.GetDisplayName() + " has been filled with max level gems.")
 
 	;;;;;;;;
 
 	ElseIf(Item == ItemDebugPlayerMilkEmpty)
 		Val = TRUE
-		Main.Data.ActorMilkClear(Main.Player)
-		Main.Util.PrintDebug(Main.Player.GetDisplayName() + " has been emptied of their milk.")
+		Main.Data.ActorMilkClear(Who)
+		Main.Util.PrintDebug(Who.GetDisplayName() + " has been emptied of their milk.")
 
 	;;;;;;;;
 
 	ElseIf(Item == ItemDebugPlayerMilkHalf)
 		Val = TRUE
-		Main.Data.ActorMilkSet(Main.Player,(Main.Data.ActorMilkMax(Main.Player)/2))
-		Main.Util.PrintDebug(Main.Player.GetDisplayName() + " has been filled half way with milk.")
+		Main.Data.ActorMilkSet(Who,(Main.Data.ActorMilkMax(Who)/2))
+		Main.Util.PrintDebug(Who.GetDisplayName() + " has been filled half way with milk.")
 
 	;;;;;;;;
 
 	ElseIf(Item == ItemDebugPlayerMilkMax)
 		Val = TRUE
-		Main.Data.ActorMilkSet(Main.Player,Main.Data.ActorMilkMax(Main.Player))
-		Main.Util.PrintDebug(Main.Player.GetDisplayName() + " has been filled full with milk.")
+		Main.Data.ActorMilkSet(Who,Main.Data.ActorMilkMax(Who))
+		Main.Util.PrintDebug(Who.GetDisplayName() + " has been filled full with milk.")
 
 	;;;;;;;;
 
 	ElseIf(Item == ItemDebugPlayerSemenEmpty)
 		Val = TRUE
-		Main.Data.ActorSemenClear(Main.Player)
-		Main.Util.PrintDebug(Main.Player.GetDisplayName() + " has been emptied of their semen.")
+		Main.Data.ActorSemenClear(Who)
+		Main.Util.PrintDebug(Who.GetDisplayName() + " has been emptied of their semen.")
 
 	;;;;;;;;
 
 	ElseIf(Item == ItemDebugPlayerSemenHalf)
 		Val = TRUE
-		Main.Data.ActorSemenSet(Main.Player,(Main.Data.ActorSemenMax(Main.Player)/2))
-		Main.Util.PrintDebug(Main.Player.GetDisplayName() + " has been filled half way with semen.")
+		Main.Data.ActorSemenSet(Who,(Main.Data.ActorSemenMax(Who)/2))
+		Main.Util.PrintDebug(Who.GetDisplayName() + " has been filled half way with semen.")
 
 	;;;;;;;;
 
 	ElseIf(Item == ItemDebugPlayerSemenMax)
 		Val = TRUE
-		Main.Data.ActorSemenSet(Main.Player,Main.Data.ActorSemenMax(Main.Player))
-		Main.Util.PrintDebug(Main.Player.GetDisplayName() + " has been filled full with semen.")
+		Main.Data.ActorSemenSet(Who,Main.Data.ActorSemenMax(Who))
+		Main.Util.PrintDebug(Who.GetDisplayName() + " has been filled full with semen.")
 
 	;;;;;;;;
 
