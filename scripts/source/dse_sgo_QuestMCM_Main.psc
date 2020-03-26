@@ -959,31 +959,32 @@ Function ShowPageDebug()
 	self.SetCursorFillMode(TOP_TO_BOTTOM)
 	self.SetCursorPosition(0)
 
-	ItemDebugPlayerGemsEmpty = AddToggleOption("Empty Player Of Gems",FALSE)
-	ItemDebugPlayerGemsMin = AddToggleOption("Fill Player Gems Min Lvl",FALSE)
-	ItemDebugPlayerGemsHalf = AddToggleOption("Fill Player Gems Half Lvl",FALSE)
-	ItemDebugPlayerGemsMax = AddToggleOption("Fill Player Gems Max Lvl",FALSE)
-	ItemDebugPlayerMilkEmpty = AddToggleOption("Empty Player Milk",FALSE)
-	ItemDebugPlayerMilkHalf = AddToggleOption("Fill Player Milk Half",FALSE)
-	ItemDebugPlayerMilkMax = AddToggleOption("Fill Player Milk Full",FALSE)
-	ItemDebugPlayerSemenEmpty = AddToggleOption("Empty Player Semen",FALSE)
-	ItemDebugPlayerSemenHalf = AddToggleOption("Fill Player Semen Half",FALSE)
-	ItemDebugPlayerSemenMax = AddToggleOption("Fill Player Semen Full",FALSE)
+	AddHeaderOption(Who.GetDisplayName())
+	ItemDebugPlayerGemsEmpty = AddToggleOption("$SGO4_MenuOpt_DebugCmdGemEmpty",FALSE)
+	ItemDebugPlayerGemsMin = AddToggleOption("$SGO4_MenuOpt_DebugCmdGemMin",FALSE)
+	ItemDebugPlayerGemsHalf = AddToggleOption("$SGO4_MenuOpt_DebugCmdGemMid",FALSE)
+	ItemDebugPlayerGemsMax = AddToggleOption("$SGO4_MenuOpt_DebugCmdGemMax",FALSE)
+	ItemDebugPlayerMilkEmpty = AddToggleOption("$SGO4_MenuOpt_DebugCmdMilkEmpty",FALSE)
+	ItemDebugPlayerMilkHalf = AddToggleOption("$SGO4_MenuOpt_DebugCmdMilkMid",FALSE)
+	ItemDebugPlayerMilkMax = AddToggleOption("$SGO4_MenuOpt_DebugCmdMilkMax",FALSE)
+	ItemDebugPlayerSemenEmpty = AddToggleOption("$SGO4_MenuOpt_DebugCmdSemenEmpty",FALSE)
+	ItemDebugPlayerSemenHalf = AddToggleOption("$SGO4_MenuOpt_DebugCmdSemenMid",FALSE)
+	ItemDebugPlayerSemenMax = AddToggleOption("$SGO4_MenuOpt_DebugCmdSemenMax",FALSE)
 
 	self.SetCursorPosition(1)
 	ItemDebug = AddToggleOption("$SGO4_MenuOpt_Debug",Main.Config.DebugMode)
 	AddEmptyOption()
 
-	AddHeaderOption(Who.GetDisplayName() + " Dataset")
+	AddHeaderOption(Who.GetDisplayName())
 
 	GemIter = 0
 	While(GemIter < GemCount)
-		AddTextOption(("Gem " + (GemIter+1)), (Main.Data.ActorGemGet(Who,GemIter) as String))
+		AddTextOption("$SGO4_Word_Gem", (Main.Data.ActorGemGet(Who,GemIter) as String))
 		GemIter += 1
 	EndWhile
 
-	AddTextOption("Milk",(Main.Data.ActorMilkAmount(Who) as String))
-	AddTextOption("Semen",(Main.Data.ActorMilkAmount(Who) as String))
+	AddTextOption("$SGO4_Word_Milk",(Main.Data.ActorMilkAmount(Who) as String))
+	AddTextOption("$SGO4_Word_Semen",(Main.Data.ActorMilkAmount(Who) as String))
 
 
 	Return
