@@ -259,6 +259,18 @@ Event OnOptionSelect(Int Item)
 		Val = !Main.Config.GetBool(".DatabankShowAll")
 		Main.Config.SetBool(".DatabankShowAll",Val)
 
+		If(PageCurrentKey == "$SGO4_Menu_Databank")
+			OnPageReset(PageCurrentKey)
+		EndIf
+
+	ElseIf(Item == ItemDatabankLoadedOnly)
+		Val = !Main.Config.GetBool(".DatabankLoadedOnly")
+		Main.Config.SetBool(".DatabankLoadedOnly",Val)
+
+		If(PageCurrentKey == "$SGO4_Menu_Databank")
+			OnPageReset(PageCurrentKey)
+		EndIf
+
 	;;;;;;;;
 
 	ElseIf(Item == ItemModStatus)
@@ -673,6 +685,8 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_Debug"
 	ElseIf(Item == ItemDatabankShowAll)
 		Txt = "$SGO4_MenuTip_DatabankShowAll"
+	ElseIf(Item == ItemDatabankShowAll)
+		Txt = "$SGO4_MenuTip_DatabankLoadedOnly"
 	EndIf
 
 	self.SetInfoText(Txt)
@@ -698,6 +712,7 @@ Int ItemUpdateLoopDelay
 Int ItemUpdateGameHours
 Int ItemUpdateAfterWait
 Int ItemDatabankShowAll
+Int itemDatabankLoadedOnly
 
 Function ShowPageGeneral()
 
@@ -720,6 +735,8 @@ Function ShowPageGeneral()
 	ItemUpdateGameHours = AddSliderOption("$SGO4_MenuOpt_UpdateGameHours",Main.Config.GetFloat(".UpdateGameHours"),"{1} hr")
 	ItemUpdateAfterWait = AddToggleOption("$SGO4_MenuOpt_UpdateAfterWait",Main.Config.GetBool(".UpdateAfterWait"))
 	ItemDatabankShowAll = AddToggleOption("$SGO4_MenuOpt_DatabankShowAll",Main.Config.GetBool(".DatabankShowAll"))
+	ItemDatabankLoadedOnly = AddToggleOption("$SGO4_MenuOpt_DatabankLoadedOnly",Main.Config.GetBool(".DatabankLoadedOnly"))
+	AddEmptyOption()
 	AddEmptyOption()
 
 	AddHeaderOption("$SGO4_MenuOpt_Misc")
@@ -742,6 +759,8 @@ Function ShowPageDatabank()
 	String Info2 = ""
 	String Info3 = ""
 	String Info4 = ""
+	Bool LoadedOnly = Main.Config.GetBool(".DatabankLoadedOnly")
+	Bool ShowAllBio = Main.Config.GetBool(".DatabankShowAll")
 
 	;;;;;;;;
 
@@ -760,7 +779,7 @@ Function ShowPageDatabank()
 
 	Iter = 0
 	While(Iter < ActorList.Length)
-		If(Main.Config.GetBool(".DatabankShowAll") || ActorList[Iter].IsInFaction(Main.FactionProduceGems))
+		If((!LoadedOnly || ActorList[Iter].Is3dLoaded()) && (ShowAllBio || ActorList[Iter].IsInFaction(Main.FactionProduceGems)))
 
 			ActorGemList = Main.Data.ActorGemGetList(ActorList[Iter])
 

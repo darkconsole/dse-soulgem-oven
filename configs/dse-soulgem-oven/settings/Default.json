@@ -33,6 +33,7 @@
 	"MilkerProduce": true,
 	"MilkerRate": 0.10,
 	"DatabankShowAll": false,
+	"DatabankLoadedOnly": false,
 	"Sliders": {
 		"Gems": [
 			{ "Name": "PregnancyBelly", "Max": 0.65 },
