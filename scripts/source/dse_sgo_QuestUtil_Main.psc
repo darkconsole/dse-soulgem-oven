@@ -601,6 +601,90 @@ String Function GetWankingAnimationName(Int Offset)
 	Return AniList[Offset]
 EndFunction
 
+String Function ActorOverlayGetSlot(Actor Who, String OverlayName, Bool OursOnly=FALSE)
+{find the next available overlay slot, or the slot we were already using.}
+
+	String NodeName
+
+	;; prefix the overlay name.
+
+	OverlayName = "SGO4.Actor.Overlay." + OverlayName
+
+	;; see if we already selected a node.
+
+	NodeName = StorageUtil.GetStringValue(Who,OverlayName)
+	If(NodeName != "" || OursOnly)
+		Return NodeName
+	EndIf
+
+	;; alright lets find an empty slot and gank it.
+
+	Int NodeCount = NiOverride.GetNumBodyOverlays()
+	Int NodeIter = 0
+	Bool NodeSex = (Who.GetLeveledActorBase().GetSex() == 1)
+	String NodeTexture
+
+	While(NodeIter < NodeCount)
+		NodeName = "Body [Ovl" + NodeIter + "]"
+		NodeTexture = NiOverride.GetNodeOverrideString(Who,NodeSex,NodeName,9,0)
+
+		If(NodeTexture == "" || NodeTexture == "textures\\Actors\\character\\overlays\\default.dds")
+			;; mine now.
+			StorageUtil.SetStringValue(Who,OverlayName,NodeName)
+			Return NodeName
+		EndIf
+
+		NodeIter += 1
+	EndWhile
+
+	Return ""
+EndFunction
+
+Function ActorOverlayApply(Actor Who, String OverlayName, String Texture, Int Colour, Float Opacity)
+{apply an overlay to an actor.}
+
+	String NodeName = self.ActorOverlayGetSlot(Who,OverlayName,FALSE)
+	Bool NodeSex = (Who.GetLeveledActorBase().GetSex() == 1)
+
+	If(NodeName == "")
+		;; we were unable to find a slot, or slots were disabled.
+		Return
+	EndIf
+
+	;; setting the texture.
+	NiOverride.AddNodeOverrideString(Who,NodeSex,NodeName,9, 0,Texture,TRUE)
+	NiOverride.AddNodeOverrideFloat( Who,NodeSex,NodeName,8,-1,Opacity,TRUE)
+	NiOverride.AddNodeOverrideInt(   Who,NodeSex,NodeName,7,-1,Colour, TRUE)
+	;; NiOverride.AddNodeOverrideInt(Who,NodeSex,NodeName,0,-1,0,TRUE)
+	;; NiOverride.AddNodeOverrideFloat(Who,NodeSex,NodeName,0,-1,1.0,TRUE)
+	NiOverride.ApplyNodeOverrides(Who)
+
+
+	Return
+EndFunction
+
+Function ActorOverlayClear(Actor Who, String OverlayName)
+{remove our overlay and free the slot up.}
+
+	String NodeName = self.ActorOverlayGetSlot(Who,OverlayName,TRUE)
+	Bool NodeSex = (Who.GetLeveledActorBase().GetSex() == 1)
+
+	If(NodeName == "")
+		;; we were unable to find a slot we set.
+		Return
+	EndIF
+
+	;;NiOverride.RemoveNodeOverride(Who,NodeSex,NodeName,9,0)
+	;;NiOverride.RemoveNodeOverride(Who,NodeSex,NodeName,8,-1)
+	;;NiOverride.RemoveNodeOverride(Who,NodeSex,NodeName,7,-1)
+	NiOverride.RemoveAllNodeNameOverrides(Who,NodeSex,NodeName)
+	NiOverride.AddNodeOverrideString(Who,NodeSex,NodeName,9,0,"textures\\Actors\\character\\overlays\\default.dds",TRUE)
+	StorageUtil.UnsetStringValue(Who,("SGO4.Actor.Overlay." + OverlayName))
+	NiOverride.ApplyNodeOverrides(Who)
+
+	Return
+EndFunction
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

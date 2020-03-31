@@ -89,6 +89,13 @@ Function ActorUpdateMilk(Actor Who)
 		self.ActorUpdateMilkInfluence(Who,MilkPercent)
 	EndIf
 	
+	If(MilkPercent >= 0.1)
+		;; todo - config option to tell me what body you are using. 
+		Main.Util.ActorOverlayApply(Who,"MilkLeak","textures\\dse-soulgem-oven\\MilkLeakCBBE.dds",1,MilkPercent)
+	Else
+		Main.Util.ActorOverlayClear(Who,"MilkLeak")
+	EndIf
+
 	If(Who.IsInFaction(Main.FactionNoBodyScale))
 		MilkPercent = 0.0
 	EndIf
