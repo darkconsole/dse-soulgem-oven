@@ -460,9 +460,9 @@ Function ActorRelease(Actor Who)
 	self.UnregisterForCustomAnimationEvents(Who)
 
 	If(!Main.Util.ActorHasPackageOverrides(Who))
-		;;Debug.SendAnimationEvent(Who,self.AniDefault)
-		ConsoleUtil.SetSelectedReference(Who)
-		ConsoleUtil.ExecuteCommand("sae " + self.AniDefault)
+		Debug.SendAnimationEvent(Who,self.AniDefault)
+		;;ConsoleUtil.SetSelectedReference(Who)
+		;;ConsoleUtil.ExecuteCommand("sae " + self.AniDefault)
 	EndIf
 
 	If(Who == Main.Player)
@@ -483,9 +483,9 @@ Function ActorAnimateSolo(Actor Who, String AniName)
 	;;Debug.SendAnimationEvent(Who,"IdleForceDefaultState")
 	;;Utility.Wait(0.25)
 	
-	;;Debug.SendAnimationEvent(Who,AniName)
-	ConsoleUtil.SetSelectedReference(Who)
-	ConsoleUtil.ExecuteCommand("sae " + AniName)
+	Debug.SendAnimationEvent(Who,AniName)
+	;;ConsoleUtil.SetSelectedReference(Who)
+	;;ConsoleUtil.ExecuteCommand("sae " + AniName)
 
 	Return
 EndFunction
