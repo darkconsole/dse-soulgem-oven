@@ -259,16 +259,18 @@ Event OnOptionSelect(Int Item)
 		Val = !Main.Config.GetBool(".DatabankShowAll")
 		Main.Config.SetBool(".DatabankShowAll",Val)
 
-		If(PageCurrentKey == "$SGO4_Menu_Databank")
-			OnPageReset(PageCurrentKey)
-		EndIf
-
 	ElseIf(Item == ItemDatabankLoadedOnly)
 		Val = !Main.Config.GetBool(".DatabankLoadedOnly")
 		Main.Config.SetBool(".DatabankLoadedOnly",Val)
 
-		If(PageCurrentKey == "$SGO4_Menu_Databank")
-			OnPageReset(PageCurrentKey)
+	ElseIf(Item == ItemActorUpdateName)
+		Val = !Main.Config.GetBool(".ActorUpdateName")
+		Main.Config.SetBool(".ActorUpdateName",Val)
+
+		If(!Val)
+			Debug.MessageBox(Main.Util.StringLookup("OnActorUpdateNameDisabled"))
+		Else
+			Debug.MessageBox(Main.Util.StringLookup("OnActorUpdateNameEnabled"))
 		EndIf
 
 	;;;;;;;;
@@ -687,6 +689,8 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_DatabankShowAll"
 	ElseIf(Item == ItemDatabankShowAll)
 		Txt = "$SGO4_MenuTip_DatabankLoadedOnly"
+	ElseIf(Item == ItemActorUpdateName)
+		Txt = "$SGO4_MenuTip_ActorUpdateName"
 	EndIf
 
 	self.SetInfoText(Txt)
@@ -712,7 +716,8 @@ Int ItemUpdateLoopDelay
 Int ItemUpdateGameHours
 Int ItemUpdateAfterWait
 Int ItemDatabankShowAll
-Int itemDatabankLoadedOnly
+Int ItemDatabankLoadedOnly
+Int ItemActorUpdateName
 
 Function ShowPageGeneral()
 
@@ -735,6 +740,7 @@ Function ShowPageGeneral()
 	ItemUpdateGameHours = AddSliderOption("$SGO4_MenuOpt_UpdateGameHours",Main.Config.GetFloat(".UpdateGameHours"),"{1} hr")
 	ItemUpdateAfterWait = AddToggleOption("$SGO4_MenuOpt_UpdateAfterWait",Main.Config.GetBool(".UpdateAfterWait"))
 	ItemDatabankShowAll = AddToggleOption("$SGO4_MenuOpt_DatabankShowAll",Main.Config.GetBool(".DatabankShowAll"))
+	ItemActorUpdateName = AddToggleOption("$SGO4_MenuOpt_ActorUpdateName",Main.Config.GetBool(".ActorUpdateName"))
 	ItemDatabankLoadedOnly = AddToggleOption("$SGO4_MenuOpt_DatabankLoadedOnly",Main.Config.GetBool(".DatabankLoadedOnly"))
 	AddEmptyOption()
 	AddEmptyOption()
@@ -783,7 +789,7 @@ Function ShowPageDatabank()
 
 			ActorGemList = Main.Data.ActorGemGetList(ActorList[Iter])
 
-			Info1 = ActorList[Iter].GetDisplayName()
+			Info1 = ActorList[Iter].GetName()
 
 			Info2 = ActorList[Iter].GetRace().GetName()
 			Info2 += " - "
@@ -797,11 +803,11 @@ Function ShowPageDatabank()
 			EndIf
 
 			If(ActorList[Iter].IsInFaction(Main.FactionProduceMilk))
-				Info3 += "[M=" + Main.Util.FloatToString((Main.Data.ActorMilkTotalPercent(ActorList[Iter]) * 100),1) + "%]"
+				Info3 += "[M=" + Main.Data.ActorMilkCount(ActorList[Iter]) + "]"
 			EndIf
 
 			If(ActorList[Iter].IsInFaction(Main.FactionProduceSemen))
-				Info3 += "[S=" + Main.Util.FloatToString((Main.Data.ActorSemenTotalPercent(ActorList[Iter]) * 100),1) + "%]"
+				Info3 += "[S=" + Main.Data.ActorSemenCount(ActorList[Iter]) + "]"
 			EndIf
 
 			If(ActorList[Iter].IsInFaction(Main.FactionProduceGems))

@@ -18,6 +18,8 @@
 	"MenuSemenCount": "Semen: %1",
 	"ScannerScanning": "Scanning %1",
 	"ScannerDone": "Done scanning %1",
+	"OnActorUpdateNameDisabled": "Names that have been updated already will be reset back to normal next time the SGO background process updates.",
+	"OnActorUpdateNameEnabled": "Names will be updated to display production values next time the SGO background process updates.",
 	"FlavourActorGemGain": [
 		"%1 is now incubating another gem.",
 		"Another gem has begun to grow within %1."

@@ -39,6 +39,7 @@ Function ActorUpdate(Actor Who, Bool Force=FALSE)
 {force the actor's body into the state described by its current dataset.}
 
 	Int Ev
+	Bool UpdateName = Main.Config.GetBool(".ActorUpdateName")
 
 	If(Force || Who.IsInFaction(Main.FactionProduceGems))
 		self.ActorUpdateGems(Who)
@@ -53,6 +54,12 @@ Function ActorUpdate(Actor Who, Bool Force=FALSE)
 		;; allow our data to have gotten updated, but there is no need to
 		;; update an actor that is not loaded.
 		NiOverride.UpdateModelWeight(Who)
+	EndIf
+
+	If(UpdateName && Main.Data.IsActorTracked(Who))
+		Main.Data.ActorUpdateNameStatus(Who)
+	Else
+		Main.Data.ActorRestoreOriginalName(Who)
 	EndIf
 
 	Ev = ModEvent.Create("SGO4.Body.ActorUpdate")

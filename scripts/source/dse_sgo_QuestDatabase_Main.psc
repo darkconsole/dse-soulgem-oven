@@ -38,6 +38,9 @@ String Property KeyActorFertilityData = "SGO4.Actor.Fertility" AutoReadOnly Hidd
 String Property KeyActorFeaturesCached = "SGO4.Actor.FeaturesCached" AutoReadOnly Hidden
 {Actor.IntValue}
 
+String Property KeyActorOriginalName = "SGO4.Actor.OriginalName" AutoReadOnly hidden
+{Actor.StringValue}
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -354,6 +357,9 @@ added to this list.}
 	;; untrack animations.
 	Main.Body.UnregisterForCustomAnimationEvents(Who)
 
+	;; reset their name if we had changed it.
+	self.ActorRestoreOriginalName(Who)
+
 	Main.Util.PrintDebug(Who.GetDisplayName() + " is no longer being tracked.")
 	Return
 EndFunction
@@ -462,6 +468,56 @@ Function ActorSetTimeUpdated(Actor Who, Float When=0.0)
 	EndIf
 
 	StorageUtil.SetFloatValue(Who,self.KeyActorTimeUpdated,When)
+	Return
+EndFunction
+
+Function ActorUpdateNameStatus(Actor Who)
+{update an actor's display name with sgo data.}
+
+	String Original = StorageUtil.GetStringValue(Who,self.KeyActorOriginalName,"")
+	String Updated = ""
+
+	;; no real point updating the player.
+
+	If(Who == Main.Player)
+		Return
+	EndIf
+
+	;; remember their original name if we haven't changed it yet.
+
+	If(Original == "")
+		Original = Who.GetDisplayName()
+		StorageUtil.SetStringValue(Who,self.KeyActorOriginalName,Original)
+	EndIf
+
+	Updated = Original + " "
+
+	If(Who.IsInFaction(Main.FactionProduceGems))
+		Updated += "[G=" + Main.Util.FloatToString((Main.Data.ActorGemTotalPercent(Who,TRUE) * 100),0) + "%]"
+	EndIf
+
+	If(Who.IsInFaction(Main.FactionProduceMilk))
+		Updated += "[M=" + Main.Data.ActorMilkCount(Who) + "]"
+	EndIf
+
+	If(Who.IsInFaction(Main.FactionProduceSemen))
+		Updated += "[S=" + Main.Data.ActorSemenCount(Who) + "]"
+	EndIf
+
+	Who.SetDisplayName(Updated)
+	Return
+EndFunction
+
+Function ActorRestoreOriginalName(Actor Who)
+{restore an actor's original name if we had changed it.}
+
+	String Original = StorageUtil.GetStringValue(Who,self.KeyActorOriginalName,"")
+
+	If(Original != "")
+		Who.SetDisplayName(Original)
+		StorageUtil.UnsetStringValue(Who,self.KeyActorOriginalName)
+	EndIf
+
 	Return
 EndFunction
 
@@ -731,7 +787,7 @@ actor is physically not capable of producing this item.}
 
 	If(GemCount == 0)
 		Main.Util.PrintDebug(Who.GetDisplayName() + " is not incubating gems.")
-		Return TRUE
+		Return FALSE
 	EndIf
 
 	;;;;;;;;
@@ -904,7 +960,7 @@ actor is physically not capable of producing this item.}
 
 	If(!ModForceProduce && PregPercent < PregNeeded)
 		Main.Util.PrintDebug(Who.GetDisplayName() + " is not producing milk yet.")
-		Return TRUE
+		Return FALSE
 	EndIf
 
 	;;;;;;;;
@@ -1037,7 +1093,7 @@ Int Function ActorSemenMax(Actor Who)
 EndFunction
 
 Float Function ActorSemenTotalPercent(Actor Who)
-{get the current state of fullness of milk.}
+{get the current state of fullness of semen.}
 
 	Float SemenAmount = self.ActorSemenAmount(Who)
 	Int ValueMax = self.ActorSemenMax(Who)
@@ -1054,6 +1110,10 @@ actor is physically not capable of producing this item.}
 	Float ModRate
 
 	If(!Who.IsInFaction(Main.FactionProduceSemen))
+		Return FALSE
+	EndIf
+
+	If(self.ActorSemenTotalPercent(Who) >= 1.0)
 		Return FALSE
 	EndIf
 
