@@ -508,6 +508,18 @@ Function ActorUpdateNameStatus(Actor Who)
 	Return
 EndFunction
 
+Function ActorGetOriginalName(Actor Who)
+{get an actor's original name.}
+
+	String Original = StorageUtil.GetStringValue(Who,self.KeyActorOriginalName,"")
+
+	If(Original != "")
+		Original = Who.GetDisplayName()
+	EndIf
+
+	Return
+EndFunction
+
 Function ActorRestoreOriginalName(Actor Who)
 {restore an actor's original name if we had changed it.}
 

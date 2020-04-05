@@ -789,7 +789,7 @@ Function ShowPageDatabank()
 
 			ActorGemList = Main.Data.ActorGemGetList(ActorList[Iter])
 
-			Info1 = ActorList[Iter].GetName()
+			Info1 = Main.Data.ActorGetOriginalname(ActorList[Iter])
 
 			Info2 = ActorList[Iter].GetRace().GetName()
 			Info2 += " - "
