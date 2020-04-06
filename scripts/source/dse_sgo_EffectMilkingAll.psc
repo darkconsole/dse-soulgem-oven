@@ -110,7 +110,7 @@ EndFunction
 Function HandleSpawnMilk(Bool FromAni)
 
 	ObjectReference Bottle
-	Float[] Pos = Main.Util.GetNodePositionAtDistance(self.MilkFrom,"NPC Pelvis [Pelv]",30)
+	Float[] Pos = Main.Util.GetNodePositionAtDistance(self.MilkFrom,"NPC Pelvis [Pelv]",Main.Config.GetFloat(".ActorDropDistance"))
 
 	Main.Data.ActorMilkInc(self.MilkFrom,-1.0)
 

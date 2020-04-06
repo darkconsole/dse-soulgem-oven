@@ -8,6 +8,7 @@
 	"ActorMilkMax": 2,
 	"ActorSemenMax": 2,
 	"ActorUpdateName": false,
+	"ActorDropDistance": 35.0,
 	"GemsPerDay": 1.0,
 	"InfluenceGemsWhen": 0.1,
 	"InfluenceGemsHealth": 75.0,

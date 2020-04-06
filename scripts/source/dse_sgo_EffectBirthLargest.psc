@@ -102,7 +102,7 @@ Function HandleSpawnGem(Bool FromAni)
 
 	Int TypeVal = Math.Floor(Main.Data.ActorGemRemoveLargest(self.BirthFrom))
 	Form Type = Main.Data.GemStageGet(TypeVal)
-	Float[] Pos = Main.Util.GetNodePositionAtDistance(self.BirthFrom,"NPC Pelvis [Pelv]",30)
+	Float[] Pos = Main.Util.GetNodePositionAtDistance(self.BirthFrom,"NPC Pelvis [Pelv]",Main.Config.GetFloat(".ActorDropDistance"))
 	ObjectReference Gem
 
 	If(FromAni)

@@ -112,7 +112,7 @@ EndFunction
 Function HandleSpawnSemen(Bool FromAni)
 
 	ObjectReference Bottle
-	Float[] Pos = Main.Util.GetNodePositionAtDistance(self.SemenFrom,"NPC Pelvis [Pelv]",30)
+	Float[] Pos = Main.Util.GetNodePositionAtDistance(self.SemenFrom,"NPC Pelvis [Pelv]",Main.Config.GetFloat(".ActorDropDistance"))
 
 	Main.Data.ActorSemenInc(self.SemenFrom,-1.0)
 
