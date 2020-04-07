@@ -798,7 +798,7 @@ actor is physically not capable of producing this item.}
 	GemCount = self.ActorGemCount(Who)
 
 	If(GemCount == 0)
-		Main.Util.PrintDebug(Who.GetDisplayName() + " is not incubating gems.")
+		;;Main.Util.PrintDebug(Who.GetDisplayName() + " is not incubating gems.")
 		Return FALSE
 	EndIf
 
@@ -824,7 +824,7 @@ actor is physically not capable of producing this item.}
 		GemCurTotal += GemNew
 
 		If(GemOld != GemNew && GemNew <= GemStages)
-			Main.Util.PrintDebug("Gem Inc " + GemOld + " => " + GemNew)
+			;;Main.Util.PrintDebug("Gem Inc " + GemOld + " => " + GemNew)
 			Main.Stats.IncInt(Who,Main.Stats.KeyGemsIncubated,(GemNew-GemOld),TRUE)
 			Growth = TRUE
 		EndIf
@@ -844,7 +844,7 @@ actor is physically not capable of producing this item.}
 		EndIf
 	EndIf
 
-	Main.Util.PrintDebug(Who.GetDisplayName() + " " + GemCount + " gems have progressed " + Inc)
+	;;Main.Util.PrintDebug(Who.GetDisplayName() + " " + GemCount + " gems have progressed " + Inc)
 	Return TRUE
 EndFunction
 
@@ -871,7 +871,7 @@ Function ActorMilkInc(Actor Who, Float Value)
 		StorageUtil.SetFloatValue(Who,self.KeyActorMilkData,Milk)
 	EndIf
 
-	Main.Util.PrintDebug(Who.GetDisplayName() + " now has " + Milk + " milk.")
+	;;Main.Util.PrintDebug(Who.GetDisplayName() + " now has " + Milk + " milk.")
 
 	self.ActorTrackingAdd(Who)
 	Main.Body.ActorUpdate(Who)
@@ -971,7 +971,7 @@ actor is physically not capable of producing this item.}
 	ModForceProduce = (self.ActorModGetTotal(Who,self.KeyActorModMilkProduce) > 0.0)
 
 	If(!ModForceProduce && PregPercent < PregNeeded)
-		Main.Util.PrintDebug(Who.GetDisplayName() + " is not producing milk yet.")
+		;;Main.Util.PrintDebug(Who.GetDisplayName() + " is not producing milk yet.")
 		Return FALSE
 	EndIf
 
@@ -1007,7 +1007,7 @@ actor is physically not capable of producing this item.}
 		EndIf
 	EndIf
 
-	Main.Util.PrintDebug(Who.GetDisplayName() + " milk has progressed " + Inc)
+	;;Main.Util.PrintDebug(Who.GetDisplayName() + " milk has progressed " + Inc)
 	Return TRUE
 EndFunction
 
@@ -1068,7 +1068,7 @@ Function ActorSemenInc(Actor Who, Float Value)
 		StorageUtil.SetFloatValue(Who,self.KeyActorSemenData,Semen)
 	EndIf
 
-	Main.Util.PrintDebug(Who.GetDisplayName() + " now has " + Semen + " semen.")
+	;;Main.Util.PrintDebug(Who.GetDisplayName() + " now has " + Semen + " semen.")
 
 	self.ActorTrackingAdd(Who)
 	Main.Body.ActorUpdate(Who)
@@ -1136,7 +1136,7 @@ actor is physically not capable of producing this item.}
 	Inc *= ModRate
 	self.ActorSemenInc(Who,Inc)
 
-	Main.Util.PrintDebug(Who.GetDisplayName() + " semen has progressed " + Inc)
+	;;Main.Util.PrintDebug(Who.GetDisplayName() + " semen has progressed " + Inc)
 	Return TRUE
 EndFunction
 
@@ -1261,7 +1261,7 @@ the actor is not biologically able to produce gems.}
 	;; update our fertile value.
 
 	StorageUtil.SetFloatValue(Who,self.KeyActorFertilityData,Nval)
-	Main.Util.PrintDebug(Who.GetDisplayName() + " fertility data " + Nval + " " + self.ActorFertilityFactor(Who))
+	;;Main.Util.PrintDebug(Who.GetDisplayName() + " fertility data " + Nval + " " + self.ActorFertilityFactor(Who))
 
 	;; todo: immersive messages comparing fval and nval.
 

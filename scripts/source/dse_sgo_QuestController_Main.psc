@@ -68,7 +68,6 @@ Faction Property FactionProduceSemen Auto
 Faction Property FactionNoBodyScale Auto
 Spell Property SpellActorDataScan Auto
 Spell Property SpellActorDataScanToggle Auto
-Spell Property SpellBirthLargest Auto
 Spell Property SpellInsertGems Auto
 Spell Property SpellInsertSemens Auto
 Spell Property SpellInfluenceGems Auto

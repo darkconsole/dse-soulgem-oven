@@ -61,6 +61,7 @@ o -AVbHumanoidFootIKDisable dse-sgo-insert02-01 insert02-01.hkx dse_sgo_AobjSoul
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 '' simple single squat birth.
+'' these are intentionally non-sequenced sequenced animations.
 
 b -AVbHumanoidFootIKDisable,a,Tn dse-sgo-birth01-01 birth01-01.hkx
 b -AVbHumanoidFootIKDisable dse-sgo-birth01-02 birth01-02.hkx
@@ -71,6 +72,7 @@ b -AVbHumanoidFootIKDisable,a dse-sgo-birth01-03 birth01-03.hkx
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 '' simple single milking.
+'' these are intentionally non-sequenced sequenced animations.
 
 b -AVbHumanoidFootIKDisable,a,Tn dse-sgo-milking01-01 milking01-01.hkx
 b -AVbHumanoidFootIKDisable dse-sgo-milking01-02 milking01-02.hkx
@@ -81,6 +83,7 @@ b -AVbHumanoidFootIKDisable,a dse-sgo-milking01-03 milking01-03.hkx
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 '' simple single wanking.
+'' these are intentionally non-sequenced sequenced animations.
 
 b -AVbHumanoidFootIKDisable,a,Tn dse-sgo-wanking01-01 wanking01-01.hkx
 b -AVbHumanoidFootIKDisable dse-sgo-wanking01-02 wanking01-02.hkx
