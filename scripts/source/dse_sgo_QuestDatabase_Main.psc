@@ -367,7 +367,7 @@ EndFunction
 Actor Function ActorTrackingGet(Int Index)
 {get the specified actor at the index.}
 
-	Main.Util.PrintDebug("ActorTrackingGet " + Index + " " + StorageUtil.FormListGet(None,KeyActorTracking,Index))
+	;;Main.Util.PrintDebug("ActorTrackingGet " + Index + " " + StorageUtil.FormListGet(None,KeyActorTracking,Index))
 
 	Return StorageUtil.FormListGet(None,KeyActorTracking,Index) As Actor
 EndFunction
@@ -425,7 +425,7 @@ Function ActorUpdate(Actor Who)
 	Bool Fertility
 
 	If(TimeSince < Main.Config.GetFloat(".UpdateGameHours"))
-		Main.Util.PrintDebug(Who.GetDisplayName() + " not ready for calc.")
+		;;Main.Util.PrintDebug(Who.GetDisplayName() + " not ready for calc.")
 		Return
 	EndIf
 	

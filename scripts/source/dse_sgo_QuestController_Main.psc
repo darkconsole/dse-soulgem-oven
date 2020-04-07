@@ -74,9 +74,16 @@ Spell Property SpellInsertSemens Auto
 Spell Property SpellInfluenceGems Auto
 Spell Property SpellInfluenceMilk Auto
 Spell Property SpellMenuMainOpen Auto
+Spell Property SpellBirthingAction Auto
 Spell Property SpellMilkingAction Auto
 Spell Property SpellWankingAction Auto
 Package Property PackageDoNothing Auto
+
+FormList Property ListPackageBirth Auto
+FormList Property ListPackageMilking Auto
+FormList Property ListPackageWanking Auto
+;;FormList Property ListPackageInserting Auto
+;;FormList Property ListPackageInseminating Auto
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -703,7 +710,7 @@ Function MenuMainOpen(Actor Who=None)
 		self.MenuActorOptionsOpen(Who)
 	ElseIf(Result == 4)
 		;; birth
-		self.SpellBirthLargest.Cast(Who,Who)
+		self.SpellBirthingAction.Cast(Who,Who)
 	ElseIf(Result == 5)
 		;; milk
 		self.SpellMilkingAction.Cast(Who,Who)

@@ -133,7 +133,7 @@ Function WidgetReady(String EvName)
 	Int Ev = ModEvent.Create(EvName)
 	ModEvent.Send(Ev)
 
-	Main.Util.PrintDebug(WidgetRoot + " is ready.")
+	;;Main.Util.PrintDebug(WidgetRoot + " is ready.")
 
 	Return
 EndFunction
@@ -255,7 +255,7 @@ be snapped to that percentage rather than animated to it.}
 	self.Percent = Value
 	UI.InvokeFloatA(HUD_MENU, GetMethod(".setPercent"), Args)
 
-	Main.Util.PrintDebug(WidgetRoot + " percent " + Args[0] + " " + Args[1])
+	;;Main.Util.PrintDebug(WidgetRoot + " percent " + Args[0] + " " + Args[1])
 
 	Return
 EndFunction

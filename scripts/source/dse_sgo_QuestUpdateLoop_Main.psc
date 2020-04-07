@@ -38,7 +38,7 @@ Event OnUpdate()
 		Who = Main.Data.ActorTrackingGet(ActorIter)
 
 		If(Who != None)
-			Main.Util.PrintDebug("Update " + Who.GetDisplayName())
+			;;Main.Util.PrintDebug("Update " + Who.GetDisplayName())
 			Main.Data.ActorUpdate(Who)
 			Main.Body.ActorUpdate(Who)
 		Else
@@ -46,7 +46,7 @@ Event OnUpdate()
 		EndIf
 		
 		ActorIter += 1
-		Main.Util.PrintDebug("Update Loop Delay " + Delay)
+		;;Main.Util.PrintDebug("Update Loop Delay " + Delay)
 		Utility.Wait(Delay)
 	EndWhile
 

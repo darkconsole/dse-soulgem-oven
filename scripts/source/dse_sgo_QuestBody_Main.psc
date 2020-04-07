@@ -202,13 +202,13 @@ Function ActorSlidersApply(Actor Who, String Prefix, Float Percent)
 		Return
 	EndIf
 
-	Main.Util.PrintDebug(Who.GetDisplayName() + " Slider Count: " + Prefix + " " + SliderCount)
+	;;Main.Util.PrintDebug(Who.GetDisplayName() + " Slider Count: " + Prefix + " " + SliderCount)
 
 	While(SliderIter < SliderCount)
 		SliderName = Main.Config.GetString(Prefix + "[" + SliderIter + "].Name")
 		SliderMax = Main.Config.GetFloat(Prefix + "[" + SliderIter + "].Max")
 
-		Main.Util.PrintDebug(Who.GetDisplayName() + " Apply " + Prefix + " Slider " + SliderName + " " + (SliderMax*Percent))
+		;;Main.Util.PrintDebug(Who.GetDisplayName() + " Apply " + Prefix + " Slider " + SliderName + " " + (SliderMax*Percent))
 
 		If(Percent > 0)
 			NiOverride.SetBodyMorph(Who,SliderName,MorphKey,(SliderMax * Percent))
@@ -425,6 +425,8 @@ EndFunction
 
 Function ActorLockdown(Actor Who, Package Pkg=NONE)
 
+	Package OldPkg = StorageUtil.GetFormValue(Who,"SGO4.Actor.Lockdown") as Package
+
 	If(Pkg == None)
 		Pkg = Main.PackageDoNothing
 	EndIf
@@ -438,14 +440,17 @@ Function ActorLockdown(Actor Who, Package Pkg=NONE)
 	EndIf
 	
 	StorageUtil.SetFormValue(Who,"SGO4.Actor.Lockdown",Pkg)
-	Who.SetAnimationVariableInt("IsNPC",0)
 	Utility.Wait(0.2)
+
+	If(OldPkg != NONE)
+		ActorUtil.RemovePackageOverride(Who,OldPkg)
+	EndIf
 
 	ActorUtil.AddPackageOverride(Who,Pkg,100)
 	Who.EvaluatePackage()
 	self.RegisterForCustomAnimationEvents(Who)
 
-	Utility.Wait(1.0)
+	Utility.Wait(0.5)
 	Return
 EndFunction
 
@@ -457,10 +462,6 @@ Function ActorRelease(Actor Who)
 		Pkg = Main.PackageDoNothing
 	EndIf
 
-	If(Who != Main.Player)
-		Who.SetAnimationVariableInt("IsNPC",1)
-	EndIf
-
 	ActorUtil.RemovePackageOverride(Who,Pkg)
 	Who.EvaluatePackage()
 
@@ -468,8 +469,6 @@ Function ActorRelease(Actor Who)
 
 	If(!Main.Util.ActorHasPackageOverrides(Who))
 		Debug.SendAnimationEvent(Who,self.AniDefault)
-		;;ConsoleUtil.SetSelectedReference(Who)
-		;;ConsoleUtil.ExecuteCommand("sae " + self.AniDefault)
 	EndIf
 
 	If(Who == Main.Player)

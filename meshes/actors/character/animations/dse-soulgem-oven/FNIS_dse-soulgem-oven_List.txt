@@ -24,9 +24,25 @@ Version 400
 '' animation note: annotations belong in NPC Root [Root] > Transforms > Notes
 '' NOT on the node itself but that transforms subsection in the max dopesheet.
 
-b -TSGO4.ActorMoan/0.01,TSGO4.ActorMoanLoud/0.02,TSGO4.ActorDone/0.03,TSGO4.ActorInsert/0.04 dse-sgo-eventpreloader01 insert01-01.hkx
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'' FRAMEWORKING '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+'' predefining these events allow me to call them from animations and have the
+'' game respond to them. its a funny trick that is documented literally nowhere
+'' so i might be the first to discover it >_> without doing this listening for
+'' them in the game will never work.
+
+b -TSGO4.ActorMoan/0.01,TSGO4.ActorMoanLoud/0.02,TSGO4.ActorDone/0.03,TSGO4.ActorInsert/0.04,TSGO4.ActorEnd/0.05 dse-sgo-eventpreloader01 insert01-01.hkx
 b -TSGO4.ActorSpawnSemen/0.01,TSGO4.ActorSpawnGem/0.02,TSGO4.ActorSpawnMilk/0.03 dse-sgo-eventpreloader02 insert01-01.hkx
 
+'' this is a simple animation that just emits all of the shutdown animation
+'' events i use to try and unfuck someone who got stuck. it is mostly only used
+'' as the default value in the package-on-begin-tell-me-ur-ending hackery. but
+'' i'll probably also tell people to try to sae it in the event it all goes
+'' wrong.
+
+b dse-sgo-try-to-unfuck milking01-03.hkx
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '' INSERTS ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -34,11 +50,11 @@ b -TSGO4.ActorSpawnSemen/0.01,TSGO4.ActorSpawnGem/0.02,TSGO4.ActorSpawnMilk/0.03
 
 '' inserts a soulgem from the front.
 
-o -a,AVbHumanoidFootIKDisable dse-sgo-insert01-01 insert01-01.hkx dse_sgo_AobjSoulgemInHand01
+o -AVbHumanoidFootIKDisable dse-sgo-insert01-01 insert01-01.hkx dse_sgo_AobjSoulgemInHand01
 
 '' inserts a soulgem from behind.
 
-o -a,AVbHumanoidFootIKDisable dse-sgo-insert02-01 insert02-01.hkx dse_sgo_AobjSoulgemInHand01
+o -AVbHumanoidFootIKDisable dse-sgo-insert02-01 insert02-01.hkx dse_sgo_AobjSoulgemInHand01
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '' BIRTHS '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -46,7 +62,9 @@ o -a,AVbHumanoidFootIKDisable dse-sgo-insert02-01 insert02-01.hkx dse_sgo_AobjSo
 
 '' simple single squat birth.
 
-b -a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-birth01-01 birth01-01.hkx
+b -AVbHumanoidFootIKDisable,a,Tn dse-sgo-birth01-01 birth01-01.hkx
+b -AVbHumanoidFootIKDisable dse-sgo-birth01-02 birth01-02.hkx
+b -AVbHumanoidFootIKDisable,a dse-sgo-birth01-03 birth01-03.hkx
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '' MILKINGS '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -54,7 +72,9 @@ b -a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-birth01-01 birth01-01.h
 
 '' simple single milking.
 
-b -a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-milking01-01 milking01-01.hkx
+b -AVbHumanoidFootIKDisable,a,Tn dse-sgo-milking01-01 milking01-01.hkx
+b -AVbHumanoidFootIKDisable dse-sgo-milking01-02 milking01-02.hkx
+b -AVbHumanoidFootIKDisable,a dse-sgo-milking01-03 milking01-03.hkx
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '' WANKING ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -62,4 +82,6 @@ b -a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-milking01-01 milking01-
 
 '' simple single wanking.
 
-b -a,AVIbHeadTrackSpine,AVbHumanoidFootIKDisable dse-sgo-wanking01-01 wanking01-01.hkx
+b -AVbHumanoidFootIKDisable,a,Tn dse-sgo-wanking01-01 wanking01-01.hkx
+b -AVbHumanoidFootIKDisable dse-sgo-wanking01-02 wanking01-02.hkx
+b -AVbHumanoidFootIKDisable,a dse-sgo-wanking01-03 wanking01-03.hkx
