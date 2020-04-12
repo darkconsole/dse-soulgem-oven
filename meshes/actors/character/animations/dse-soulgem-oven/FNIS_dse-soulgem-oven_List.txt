@@ -50,11 +50,11 @@ b dse-sgo-try-to-unfuck milking01-03.hkx
 
 '' inserts a soulgem from the front.
 
-o -AVbHumanoidFootIKDisable dse-sgo-insert01-01 insert01-01.hkx dse_sgo_AobjSoulgemInHand01
+o -AVbHumanoidFootIKDisable,a dse-sgo-insert01-01 insert01-01.hkx dse_sgo_AobjSoulgemInHand01
 
 '' inserts a soulgem from behind.
 
-o -AVbHumanoidFootIKDisable dse-sgo-insert02-01 insert02-01.hkx dse_sgo_AobjSoulgemInHand01
+o -AVbHumanoidFootIKDisable,a dse-sgo-insert02-01 insert02-01.hkx dse_sgo_AobjSoulgemInHand01
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '' BIRTHS '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
