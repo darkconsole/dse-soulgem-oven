@@ -38,8 +38,11 @@ String Property KeyActorFertilityData = "SGO4.Actor.Fertility" AutoReadOnly Hidd
 String Property KeyActorFeaturesCached = "SGO4.Actor.FeaturesCached" AutoReadOnly Hidden
 {Actor.IntValue}
 
-String Property KeyActorOriginalName = "SGO4.Actor.OriginalName" AutoReadOnly hidden
+String Property KeyActorOriginalName = "SGO4.Actor.OriginalName" AutoReadOnly Hidden
 {Actor.StringValue}
+
+String Property KeyActorWeightGain = "SGO4.Actor.WeightGain" AutoReadOnly Hidden
+{Actor.FloatValue}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -508,16 +511,16 @@ Function ActorUpdateNameStatus(Actor Who)
 	Return
 EndFunction
 
-Function ActorGetOriginalName(Actor Who)
+String Function ActorGetOriginalName(Actor Who, Bool Fallback=FALSE)
 {get an actor's original name.}
 
 	String Original = StorageUtil.GetStringValue(Who,self.KeyActorOriginalName,"")
 
-	If(Original != "")
+	If(Original == "")
 		Original = Who.GetDisplayName()
 	EndIf
 
-	Return
+	Return Original
 EndFunction
 
 Function ActorRestoreOriginalName(Actor Who)
@@ -609,6 +612,22 @@ EndFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Float Function ActorWeightGet(Actor Who)
+{get an actor current weight value.}
+
+	Return StorageUtil.GetFloatValue(Who,self.KeyActorWeightGain,0.0)
+EndFunction
+
+Float Function ActorWeightSet(Actor Who, Float Value)
+{set an actor current weight gain. 0 to 1.}
+
+	Value = PapyrusUtil.Clampfloat(Value,0.0,1.0)
+	StorageUtil.SetFloatValue(Who,self.KeyActorWeightGain,Value)
+
+	Main.Util.PrintDebug("[ActorWeightSet] " + self.ActorGetOriginalName(Who) + " " + Value)
+	Return Value
+EndFunction
 
 Bool Function ActorGemAdd(Actor Who, Float Val=0.0)
 {insert a new gem into the dataset. returns if successful or not.}
@@ -784,6 +803,10 @@ actor is physically not capable of producing this item.}
 	Int GemIter
 	Int GemOld
 	Int GemNew
+	Float GemPregPercentDone
+	Float WeightCur
+	Float WeightDrain
+	Float WeightDays
 	Float ModRate
 	Bool Growth
 
@@ -793,12 +816,30 @@ actor is physically not capable of producing this item.}
 		Return FALSE
 	EndIf
 
+	WeightDays = Main.Config.GetFloat(".ActorWeightDays")
+	WeightCur = self.ActorWeightGet(Who)
+	WeightDrain = WeightCur + 1.0
+
+	If(WeightDays > 0.0)
+		WeightDrain = 1.0 / (Main.Config.GetFloat(".ActorWeightDays") * 24)
+		WeightDrain *= TimeSince
+	EndIf
+
 	;;;;;;;;
 
 	GemCount = self.ActorGemCount(Who)
 
 	If(GemCount == 0)
-		;;Main.Util.PrintDebug(Who.GetDisplayName() + " is not incubating gems.")
+		If(WeightCur >= 0.0)
+			WeightCur = self.ActorWeightSet(Who,(WeightCur - WeightDrain))
+
+			;; don't tell the background loop to stop tracking if there
+			;; is still weight to drain.
+			If(WeightCur > 0.0)
+				Return TRUE
+			EndIf
+		EndIf
+
 		Return FALSE
 	EndIf
 
@@ -831,6 +872,17 @@ actor is physically not capable of producing this item.}
 
 		GemIter += 1
 	EndWhile
+
+	;;;;;;;;
+
+	;; update weight gain values.
+
+	GemPregPercentDone = self.ActorGemTotalPercent(Who,TRUE)
+
+	If(GemPregPercentDone > WeightCur)
+		;; don't instantly get thicc, slowly add it every update.
+		self.ActorWeightSet(Who,(WeightCur + ((GemPregPercentDone * 0.1) * TimeSince)))
+	EndIf
 
 	;;;;;;;;
 
@@ -949,6 +1001,7 @@ Bool Function ActorMilkUpdateData(Actor Who, Float TimeSince)
 actor is physically not capable of producing this item.}
 
 	Bool ModForceProduce
+	Float WeightPercent
 	Float PregPercent
 	Float PregNeeded
 	Float PerDay
@@ -966,13 +1019,18 @@ actor is physically not capable of producing this item.}
 
 	;;;;;;;;
 
+	WeightPercent = self.ActorWeightGet(Who)
 	PregPercent = self.ActorGemTotalPercent(Who)
 	PregNeeded = Main.Config.GetFloat(".MilksPregPercent") / 100.0
 	ModForceProduce = (self.ActorModGetTotal(Who,self.KeyActorModMilkProduce) > 0.0)
 
-	If(!ModForceProduce && PregPercent < PregNeeded)
+	If(!ModForceProduce && PregPercent < PregNeeded && WeightPercent < PregNeeded)
 		;;Main.Util.PrintDebug(Who.GetDisplayName() + " is not producing milk yet.")
 		Return FALSE
+	EndIf
+
+	If(WeightPercent > PregPercent)
+		PregPercent = WeightPercent
 	EndIf
 
 	;;;;;;;;

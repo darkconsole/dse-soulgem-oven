@@ -29,6 +29,7 @@ String Property AniWanking01 = "dse-sgo-wanking01-01" AutoReadOnly Hidden
 String Property KeySliders = ".Sliders" AutoReadOnly Hidden
 String Property KeySlidersGems = ".Sliders.Gems" AutoReadOnly Hidden
 String Property KeySlidersMilk = ".Sliders.Milk" AutoReadOnly Hidden
+String Property KeySliderBelly = ".Sliders.Belly" AutoReadOnly Hidden
 String Property KeyMorphGems = "SGO4Gems" AutoReadOnly Hidden
 String Property KeyMorphMilk = "SGO4Milk" AutoReadOnly Hidden
 
@@ -73,6 +74,7 @@ Function ActorUpdateGems(Actor Who)
 {handle body updates based on the state of their gems.}
 
 	Float GemPercent = Main.Data.ActorGemTotalPercent(Who)
+	Float WeightPercent = Main.Data.ActorWeightGet(Who)
 
 	If(Who == Main.Player)
 		self.ActorUpdateGemsInfluence(Who,GemPercent)
@@ -80,9 +82,10 @@ Function ActorUpdateGems(Actor Who)
 
 	If(Who.IsInFaction(Main.FactionNoBodyScale))
 		GemPercent = 0.0
+		WeightPercent = 0.0
 	EndIf
 
-	self.ActorSlidersApply(Who,self.KeySlidersGems,GemPercent)
+	self.ActorSlidersApply(Who,self.KeySlidersGems,GemPercent,WeightPercent)
 
 	Return
 EndFunction
@@ -183,14 +186,16 @@ EndFunction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Function ActorSlidersApply(Actor Who, String Prefix, Float Percent)
+Function ActorSlidersApply(Actor Who, String Prefix, Float Percent, Float AltPercent=0.0)
 {apply a specific set of sliders at a percentage of their max value.}
 
 	String MorphKey = ""
+	String SliderBelly = Main.Config.GetString(".Sliders.Belly")
 	Int SliderCount = Main.Config.GetCount(Prefix)
 	Int SliderIter = 0
 	String SliderName
 	Float SliderMax
+	Float SliderPercent
 
 	If(Prefix == self.KeySlidersGems)
 		MorphKey = self.KeyMorphGems;
@@ -202,25 +207,25 @@ Function ActorSlidersApply(Actor Who, String Prefix, Float Percent)
 		Return
 	EndIf
 
-	;;Main.Util.PrintDebug(Who.GetDisplayName() + " Slider Count: " + Prefix + " " + SliderCount)
-
 	While(SliderIter < SliderCount)
 		SliderName = Main.Config.GetString(Prefix + "[" + SliderIter + "].Name")
 		SliderMax = Main.Config.GetFloat(Prefix + "[" + SliderIter + "].Max")
+		SliderPercent = Percent
 
-		;;Main.Util.PrintDebug(Who.GetDisplayName() + " Apply " + Prefix + " Slider " + SliderName + " " + (SliderMax*Percent))
+		;; if are processing gem influence determine if we should use
+		;; the alternate weight value instead.
 
-		If(Percent > 0)
-			NiOverride.SetBodyMorph(Who,SliderName,MorphKey,(SliderMax * Percent))
+		If(MorphKey == self.KeyMorphGems)
+			If(SliderName != SliderBelly)
+				SliderPercent = AltPercent
+			EndIf
+		EndIf
+
+		If(SliderPercent > 0)
+			NiOverride.SetBodyMorph(Who,SliderName,MorphKey,(SliderMax * SliderPercent))
 		Else
 			NiOverride.ClearBodyMorph(Who,SliderName,MorphKey)
 		EndIf
-
-		;; these should be removed after a few versions. just a cleanup.
-		;;NiOverride.ClearBodyMorph(Who,SliderName,"SGO4.Morph.Gems")
-		;;NiOverride.ClearBodyMorph(Who,SliderName,"SGO4.Morph.Milk")
-		;;NiOverride.ClearBodyMorph(Who,SliderName,"SGO4.Morph..Sliders.Gems")
-		;;NiOverride.ClearBodyMorph(Who,SliderName,"SGO4.Morph..Sliders.Milk")
 
 		SliderIter += 1
 	EndWhile

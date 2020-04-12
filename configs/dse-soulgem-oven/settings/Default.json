@@ -9,6 +9,7 @@
 	"ActorSemenMax": 2,
 	"ActorUpdateName": false,
 	"ActorDropDistance": 35.0,
+	"ActorWeightDays": 2.0,
 	"GemsPerDay": 1.0,
 	"InfluenceGemsWhen": 0.1,
 	"InfluenceGemsHealth": 75.0,
@@ -37,6 +38,7 @@
 	"DatabankShowAll": false,
 	"DatabankLoadedOnly": false,
 	"Sliders": {
+		"Belly": "PregnancyBelly",
 		"Gems": [
 			{ "Name": "PregnancyBelly", "Max": 0.65 },
 			{ "Name": "ChubbyArms", "Max": 0.7 },

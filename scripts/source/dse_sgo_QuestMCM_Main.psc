@@ -161,6 +161,7 @@ Event OnOptionSelect(Int Item)
 
 	If(Item == ItemDebugPlayerGemsEmpty)
 		Val = TRUE
+		Main.Data.ActorWeightSet(Who,0.0)
 		Main.Data.ActorGemClear(Who)
 		Main.Util.PrintDebug(Who.GetDisplayName() + " has been emptied of their gems.")
 
@@ -169,6 +170,7 @@ Event OnOptionSelect(Int Item)
 	ElseIf(Item == ItemDebugPlayerGemsMin)
 		Val = TRUE
 		Main.Data.ActorGemClear(Who)
+		Main.Data.ActorWeightSet(Who,0.0)
 		While(Main.Data.ActorGemAdd(Who,0.0))
 		EndWhile
 		Main.Util.PrintDebug(Who.GetDisplayName() + " has been filled with min level gems.")
@@ -178,6 +180,7 @@ Event OnOptionSelect(Int Item)
 	ElseIf(Item == ItemDebugPlayerGemsHalf)
 		Val = TRUE
 		Main.Data.ActorGemClear(Who)
+		Main.Data.ActorWeightSet(Who,0.5)
 		While(Main.Data.ActorGemAdd(Who,(Main.Data.GemStageCount(Who)/2)))
 		EndWhile
 		Main.Util.PrintDebug(Who.GetDisplayName() + " has been filled with half level gems.")
@@ -187,6 +190,7 @@ Event OnOptionSelect(Int Item)
 	ElseIf(Item == ItemDebugPlayerGemsMax)
 		Val = TRUE
 		Main.Data.ActorGemClear(Who)
+		Main.Data.ActorWeightSet(Who,1.0)
 		While(Main.Data.ActorGemAdd(Who,Main.Data.GemStageCount(Who)))
 		EndWhile
 		Main.Util.PrintDebug(Who.GetDisplayName() + " has been filled with max level gems.")
@@ -391,6 +395,11 @@ Event OnOptionSliderOpen(Int Item)
 		Min = 0.5
 		Max = 2.0
 		Interval = 0.1
+	ElseIf(Item == ItemActorWeightDays)
+		Val = Main.Config.GetFloat(".ActorWeightDays")
+		Min = 0.0
+		Max = 10.0
+		Interval = 0.05
 	ElseIf(PageCurrentKey == "$SGO4_Menu_GemSliders" || PageCurrentKey == "$SGO4_Menu_MilkSliders")
 
 		Int ItemCount = ItemSliderVal.Length
@@ -473,6 +482,9 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 	ElseIf(Item == ItemUpdateGameHours)
 		Fmt = "{1} hr"
 		Main.Config.SetFloat(".UpdateGameHours",Val)
+	ElseIf(Item == ItemActorWeightDays)
+		Fmt = "{2}"
+		Main.Config.SetFloat(".ActorWeightDays",Val)
 
 	ElseIf(PageCurrentKey == "$SGO4_Menu_GemSliders" || PageCurrentKey == "$SGO4_Menu_MilkSliders")
 
@@ -538,6 +550,9 @@ Event OnOptionMenuOpen(Int Item)
 	ElseIf(Item == ItemSliderDel)
 		self.OnOptionMenuOpen_SliderDelete(Item,ItemSliderType)
 		Return
+	ElseIf(Item == ItemSliderBelly)
+		self.OnOptionMenuOpen_SliderBellySelect(Item,ItemSliderType)
+		Return
 	EndIf
 
 	SetMenuDialogDefaultIndex(0)
@@ -558,6 +573,24 @@ Function OnOptionMenuOpen_SliderDelete(Int Item, String SliderKey)
 	While(Iter < SliderCount)
 		Opts[Iter] = Main.Body.SliderNameByOffset(SliderKey,Iter)
 		;;Main.Util.PrintDebug("MenuOpenSliderDeleteSlider " + Opts[Iter])
+		Iter += 1
+	EndWhile
+
+	SetMenuDialogDefaultIndex(-1)
+	SetMenuDialogStartIndex(0)
+	SetMenuDialogOptions(Opts)
+	Return
+EndFunction
+
+Function OnOptionMenuOpen_SliderBellySelect(Int Item, String SliderKey)
+
+	Int SliderCount = Main.Config.GetCount(SliderKey)
+	String[] Opts = Utility.CreateStringArray(SliderCount)
+	Int Iter = 0
+
+	Iter = 0
+	While(Iter < SliderCount)
+		Opts[Iter] = Main.Body.SliderNameByOffset(SliderKey,Iter)
 		Iter += 1
 	EndWhile
 
@@ -595,6 +628,9 @@ Event OnOptionMenuAccept(Int Item, Int Selected)
 	ElseIf(Item == ItemSliderDel)
 		self.OnOptionMenuAccept_SliderDelete(Item,ItemSliderType,Selected)
 		Return
+	ElseIf(Item == ItemSliderBelly)
+		self.OnOptionMenuAccept_SliderBellySelect(Item,ItemSliderType,Selected)
+		Return
 	EndIf
 
 	SetMenuOptionValue(Item,Val)
@@ -605,6 +641,15 @@ Function OnOptionMenuAccept_SliderDelete(Int Item, String SliderKey, Int SliderO
 
 	Main.Util.PrintDebug("SliderDelete " + SliderKey + " = " + SliderOffset)
 	Main.Body.SliderDeleteByOffset(SliderKey,SliderOffset)
+	self.ForcePageReset()
+
+	Return
+EndFunction
+
+Function OnOptionMenuAccept_SliderBellySelect(Int Item, String SliderKey, Int SliderOffset)
+
+	Main.Util.PrintDebug("SliderBelly " + SliderKey + " = " + SliderOffset)
+	Main.Config.SetString(Main.Body.KeySliderBelly,Main.Body.SliderNameByOffset(SliderKey,SliderOffset))
 	self.ForcePageReset()
 
 	Return
@@ -691,6 +736,8 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_DatabankLoadedOnly"
 	ElseIf(Item == ItemActorUpdateName)
 		Txt = "$SGO4_MenuTip_ActorUpdateName"
+	ElseIf(Item == ItemActorWeightDays)
+		Txt = "$SGO4_MenuTip_ActorWeightDays"
 	EndIf
 
 	self.SetInfoText(Txt)
@@ -718,6 +765,7 @@ Int ItemUpdateAfterWait
 Int ItemDatabankShowAll
 Int ItemDatabankLoadedOnly
 Int ItemActorUpdateName
+Int ItemActorWeightDays
 
 Function ShowPageGeneral()
 
@@ -867,7 +915,7 @@ Function ShowPageGameplay()
 	ItemActorGemsMax = AddSliderOption("$SGO4_MenuOpt_ActorGemsMax",Main.Config.GetInt(".ActorGemsMax"),"{0}")
 	ItemActorMilkMax = AddSliderOption("$SGO4_MenuOpt_ActorMilkMax",Main.Config.GetInt(".ActorMilkMax"),"{0}")
 	ItemActorSemenMax = AddSliderOption("$SGO4_MenuOpt_ActorSemenMax",Main.Config.GetInt(".ActorSemenMax"),"{0}")
-	AddEmptyOption()
+	ItemActorWeightDays = AddSliderOption("$SGO4_MenuOpt_ActorWeightDays",Main.Config.GetFloat(".ActorWeightDays"),"{2}")
 	AddEmptyOption()
 	AddEmptyOption()
 
@@ -889,6 +937,7 @@ String ItemSliderType
 Int ItemSliderAdd
 Int ItemSliderDel
 Int[] ItemSliderVal
+Int ItemSliderBelly
 
 Function ShowPageSliders(String PageTitle, String SliderConfig)
 
@@ -923,6 +972,10 @@ Function ShowPageSliders(String PageTitle, String SliderConfig)
 	;;ItemSliderDel = AddToggleOption("$SGO4_MenuOpt_BodySliderDel",FALSE)
 	ItemSliderDel = AddMenuOption("$SGO4_MenuOpt_BodySliderDel","")
 	AddEmptyOption()
+
+	If(SliderConfig == Main.Body.KeySlidersGems)
+		ItemSliderBelly = AddMenuOption("$SGO4_MenuOpt_BellySliderName",Main.Config.GetString(".Sliders.Belly"))
+	EndIf
 
 	Return
 EndFunction
