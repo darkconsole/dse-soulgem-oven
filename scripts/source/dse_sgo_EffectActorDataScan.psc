@@ -80,7 +80,7 @@ EndEvent
 
 Event OnUpdateLoop()
 
-	Main.Util.PrintDebug("Bars Update Event For " + self.Target.GetDisplayName())
+	;;Main.Util.PrintDebug("Bars Update Event For " + self.Target.GetDisplayName())
 	self.ActorScan()
 	Return
 EndEvent
@@ -91,14 +91,14 @@ Event OnActorUpdate(Form What)
 		Return
 	EndIf
 
-	Main.Util.PrintDebug("Bars Update Event For " + self.Target.GetDisplayName())
+	;;Main.Util.PrintDebug("Bars Update Event For " + self.Target.GetDisplayName())
 	self.ActorScan()	
 	Return
 EndEvent
 
 Event OnForceUpdate()
 
-	Main.Util.PrintDebug("Bars Force Update Event For " + self.Target.GetDisplayName())
+	;;Main.Util.PrintDebug("Bars Force Update Event For " + self.Target.GetDisplayName())
 	self.ActorScan()	
 	Return
 EndEvent

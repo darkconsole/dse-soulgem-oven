@@ -65,7 +65,7 @@ Event OnUpdate()
 	;;ModEvent.Send(Ev)
 
 	If(self.IsRunning())
-		Main.Util.PrintDebug("Update Loop Renewed")
+		;;Main.Util.PrintDebug("Update Loop Renewed")
 		self.RegisterForSingleUpdate(Main.Config.GetFloat(".UpdateLoopFreq"))
 	Else
 		Main.Util.PrintDebug("Update Loop Terminated")
