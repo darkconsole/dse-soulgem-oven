@@ -40,13 +40,15 @@
 	"Sliders": {
 		"Belly": "PregnancyBelly",
 		"Gems": [
-			{ "Name": "PregnancyBelly", "Max": 0.65 },
-			{ "Name": "ChubbyArms", "Max": 0.7 },
-			{ "Name": "ChubbyButt", "Max": 0.5 },
-			{ "Name": "ChubbyLegs", "Max": 0.6 },
-			{ "Name": "ChubbyWaist", "Max": 0.6 },
-			{ "Name": "Breasts", "Max": 0.25 },
-			{ "Name": "BreastsGravity2", "Max": 0.25 }
+			{ "Max": 0.75, "Name": "ChubbyWaist" },
+			{ "Max": 1.25, "Name": "ChubbyLegs" },
+			{ "Max": 1.25, "Name": "ChubbyButt" },
+			{ "Max": 1.25, "Name": "ChubbyArms" },
+			{ "Max": 0.65, "Name": "PregnancyBelly" },
+			{ "Max": 1.2, "Name": "BackArch" },
+			{ "Max": 1.0, "Name": "Belly" },
+			{ "Max": -0.55, "Name": "TummyTuck" },
+			{ "Max": 0.6, "Name": "BigTorso" }
 		],
 		"Milk": [
 			{ "Name": "Breasts", "Max": 1.5 },
