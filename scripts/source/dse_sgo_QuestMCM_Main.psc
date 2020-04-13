@@ -1062,7 +1062,8 @@ Function ShowPageDebug()
 	EndWhile
 
 	AddTextOption("$SGO4_Word_Milk",(Main.Data.ActorMilkAmount(Who) as String))
-	AddTextOption("$SGO4_Word_Semen",(Main.Data.ActorMilkAmount(Who) as String))
+	AddTextOption("$SGO4_Word_Semen",(Main.Data.ActorSemenAmount(Who) as String))
+	AddTextOption("$SGO4_Word_Weight",(Main.Data.ActorWeightGet(Who) as String))
 
 
 	Return
