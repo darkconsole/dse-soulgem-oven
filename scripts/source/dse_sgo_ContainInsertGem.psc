@@ -111,7 +111,13 @@ Event OnActivate(ObjectReference What)
 	;; trick to lock up this processing until we close the menu.
 
 	Main.Util.PrintDebug(self.InsertInto.GetDisplayName() + " can insert " + self.MaxCount + " gem(s).")
-	Utility.Wait(0.25)
+
+	;; normally i would Utility.Wait flatly but mods that make time continue while the menus
+	;; are open require spinlocking.
+
+	While(Utility.IsInMenuMode())
+		Utility.Wait(0.1)
+	EndWhile
 
 	;; process the contents.
 
