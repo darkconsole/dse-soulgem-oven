@@ -243,7 +243,7 @@ Bool Function CheckForDeps(Bool Popup)
 
 	;; non serious things that should not break the game.
 
-	self.CheckForDeps_RaceMenuMorphs(Popup)
+	;;self.CheckForDeps_RaceMenuMorphs(Popup)
 
 	;;;;;;;;
 
@@ -327,12 +327,12 @@ Bool Function CheckForDeps_RaceMenu(Bool Popup)
 
 	;; hard fail if no racemenu.
 
-	If(!Game.IsPluginInstalled("RaceMenu.esp"))
-		If(Popup)
-			self.Util.PopupError("RaceMenu SE 0.2.4 or newer must be installed.")
-		EndIf
-		Output = FALSE
-	EndIf
+	;;If(!Game.IsPluginInstalled("RaceMenu.esp"))
+	;;	If(Popup)
+	;;		self.Util.PopupError("RaceMenu SE 0.2.4 or newer must be installed.")
+	;;	EndIf
+	;;	Output = FALSE
+	;;EndIf
 
 	If(NiOverride.GetScriptVersion() < 6)
 		If(Popup)
@@ -352,10 +352,11 @@ Bool Function CheckForDeps_RaceMenuMorphs(Bool Popup)
 
 	;;;;;;;;
 
-	String[] Plugins = new String[3]
+	String[] Plugins = new String[4]
 	Plugins[0] = "RaceMenuMorphsCBBE.esp"
 	Plugins[1] = "RaceMenuMorphsTBD.esp"
 	Plugins[2] = "RaceMenuMorphsUUNP.esp"
+	Plugins[3] = "RaceMenuMorphsBHUNP.esp"
 
 	;;;;;;;;
 
@@ -720,6 +721,8 @@ Function MenuMainOpen(Actor Who=None)
 		;; stats
 		self.MenuActorStatsOpen(Who)
 	EndIf
+
+	self.Player.SetVoiceRecoveryTime(0.1)
 
 	Return
 EndFunction
