@@ -19,6 +19,7 @@ Int[] Property RaceMap Auto Hidden
 Int Property ExtractMode Auto Hidden
 Bool Property Animate Auto Hidden
 Float Property DropDistance Auto Hidden
+String Property Animation Auto Hidden
 
 ;; resource enums.
 
@@ -90,8 +91,8 @@ Event OnEffectFinish(Actor Who, Actor From)
 EndEvent
 
 Event OnUpdate()
+{state template.}
 
-	self.StartExtracting()
 	Return
 EndEvent
 
@@ -124,9 +125,10 @@ EndFunction
 Function StartExtractingAnimated()
 {handle animated extractions.}
 
-	Package Ani = self.GetAnimationPackage()
+	;;Package Ani = self.GetAnimationPackage()
+	self.Animation = self.GetAnimation()
 
-	If(Ani == None)
+	If(self.Animation == "")
 		Main.Util.PrintDebug("[EffectExtractResource.StartExtractingAnimated] No animation found, falling back to static.")
 		self.StartExtractingStatic()
 		Return
@@ -139,7 +141,9 @@ Function StartExtractingAnimated()
 
 	Main.Util.ActorArmourRemove(self.Source)
 	Main.Body.ActorLockdown(self.Source)
-	Main.Body.ActorLockdown(self.Source,Ani)
+
+	self.GotoState("Animating")
+	self.OnUpdate()
 
 	;; now we sit and wait for animation events.
 
@@ -163,7 +167,8 @@ Event OnAnimatedSpawnItem(Form Who)
 
 	If(self.ResourceCount <= 0)
 		Main.Util.PrintDebug("[EffectExtractResource:OnAnimatedSpawnItem] " + self.Source.GetDisplayName() + " resources depleted.")
-		Debug.SendAnimationEvent(self.Source,self.GetAnimationExit())
+		;;Debug.SendAnimationEvent(self.Source,self.GetAnimationExit())
+		self.OnAnimatedDone(Who)
 	EndIf
 
 	Return
@@ -176,7 +181,7 @@ Event OnAnimatedDone(Form Who)
 		Return
 	EndIf
 
-	Main.Body.ActorLockdown(self.Source)
+	;;Main.Body.ActorLockdown(self.Source)
 	Main.Body.ActorRelease(self.Source)
 	Main.Util.ActorArmourReplace(self.Source)
 	StorageUtil.UnsetStringValue(self.Source,"SGO4.Package.AnimationEnd")
@@ -216,6 +221,22 @@ Package Function GetAnimationPackage()
 		Output = Main.ListPackageMilking.GetAt(0) As Package
 	ElseIf(self.ResourceType == self.ResourceSemen)
 		Output = Main.ListPackageWanking.GetAt(0) As Package
+	EndIf
+
+	Return Output
+EndFunction
+
+String Function GetAnimation()
+{determine which animation to use.}
+
+	String Output = ""
+
+	If(self.ResourceType == self.ResourceGem)
+		Output = "dse-sgo-birth01-02"
+	ElseIf(self.ResourceType == self.ResourceMilk)
+		Output = "dse-sgo-milking01-02"
+	ElseIf(self.ResourceType == self.ResourceSemen)
+		Output = "dse-sgo-wanking01-02"
 	EndIf
 
 	Return Output
@@ -299,3 +320,23 @@ Function DropResource(Form ItemForm)
 
 	Return
 EndFunction
+
+Auto State Initial
+	Event OnUpdate()
+		self.StartExtracting()
+		Return
+	EndEvent
+EndState
+
+State Animating
+	Event OnUpdate()
+
+		;; the thing here is that constantly triggering an animation already
+		;; playing does not cause it to restart. so we can just keep forcing
+		;; the event over and over and over in case it got interupted.
+
+		Main.Body.ActorAnimateSolo(self.Source,self.Animation)
+		self.RegisterForSingleUpdate(5.0)
+		Return
+	EndEvent
+EndState
