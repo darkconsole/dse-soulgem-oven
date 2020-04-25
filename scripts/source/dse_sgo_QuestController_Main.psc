@@ -323,25 +323,23 @@ EndFunction
 Bool Function CheckForDeps_RaceMenu(Bool Popup)
 {make sure we have racemenu installed and up to date.}
 
-	Bool Output = TRUE
+	;; hard fail if no skee
 
-	;; hard fail if no racemenu.
-
-	;;If(!Game.IsPluginInstalled("RaceMenu.esp"))
-	;;	If(Popup)
-	;;		self.Util.PopupError("RaceMenu SE 0.2.4 or newer must be installed.")
-	;;	EndIf
-	;;	Output = FALSE
-	;;EndIf
+	If(SKSE.GetPluginVersion("skee") < 0)
+		If(Popup)
+			self.Util.PopupError("You need to install RaceMenu or the standalone NiOverride.")
+		EndIf
+		Return FALSE
+	EndIf
 
 	If(NiOverride.GetScriptVersion() < 6)
 		If(Popup)
 			self.Util.PopupError("NiOverride is out of date. Install Racemenu SE 0.2.4 newer and make sure nothing has overwritten it with older versions.")
 		EndIf
-		Output = FALSE
+		Return FALSE
 	EndIf
 
-	Return Output
+	Return TRUE
 EndFunction
 
 Bool Function CheckForDeps_RaceMenuMorphs(Bool Popup)
