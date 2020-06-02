@@ -770,6 +770,8 @@ Float Function ActorGemRemoveLargest(Actor Who)
 
 	StorageUtil.FloatListRemoveAt(Who,self.KeyActorGemData,(Len - 1))
 
+	Main.Util.ActorLevelEnchanting(Who,Out)
+
 	Main.Body.ActorUpdate(Who)
 	Return Out
 EndFunction
@@ -922,6 +924,8 @@ Function ActorMilkInc(Actor Who, Float Value)
 		Milk = 0.0
 		StorageUtil.SetFloatValue(Who,self.KeyActorMilkData,Milk)
 	EndIf
+
+	Main.Util.ActorLevelAlchemy(Who,Value)
 
 	;;Main.Util.PrintDebug(Who.GetDisplayName() + " now has " + Milk + " milk.")
 
@@ -1125,6 +1129,8 @@ Function ActorSemenInc(Actor Who, Float Value)
 		Semen = 0.0
 		StorageUtil.SetFloatValue(Who,self.KeyActorSemenData,Semen)
 	EndIf
+
+	Main.Util.ActorLevelAlchemy(Who,Value)
 
 	;;Main.Util.PrintDebug(Who.GetDisplayName() + " now has " + Semen + " semen.")
 
