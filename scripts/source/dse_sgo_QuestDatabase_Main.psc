@@ -479,6 +479,9 @@ Function ActorUpdateNameStatus(Actor Who)
 
 	String Original = StorageUtil.GetStringValue(Who,self.KeyActorOriginalName,"")
 	String Updated = ""
+	String Addition = ""
+	Float TmpFlt
+	Int TmpInt
 
 	;; no real point updating the player.
 
@@ -493,18 +496,31 @@ Function ActorUpdateNameStatus(Actor Who)
 		StorageUtil.SetStringValue(Who,self.KeyActorOriginalName,Original)
 	EndIf
 
-	Updated = Original + " "
+	Updated = Original
 
 	If(Who.IsInFaction(Main.FactionProduceGems))
-		Updated += "[G=" + Main.Util.FloatToString((Main.Data.ActorGemTotalPercent(Who,TRUE) * 100),0) + "%]"
+		TmpFlt = Main.Data.ActorGemTotalPercent(Who,TRUE)
+		If(TmpFlt > 0.0)
+			Addition += "[G=" + Main.Util.FloatToString((TmpFlt * 100),0) + "%]"
+		EndIf
 	EndIf
 
 	If(Who.IsInFaction(Main.FactionProduceMilk))
-		Updated += "[M=" + Main.Data.ActorMilkCount(Who) + "]"
+		TmpInt = Main.Data.ActorMilkCount(Who)
+		If(TmpInt > 0)
+			Addition += "[M=" + TmpInt + "]"
+		EndIf
 	EndIf
 
 	If(Who.IsInFaction(Main.FactionProduceSemen))
-		Updated += "[S=" + Main.Data.ActorSemenCount(Who) + "]"
+		TmpInt = Main.Data.ActorSemenCount(Who)
+		If(TmpInt > 0)
+			Addition += "[S=" + TmpInt + "]"
+		EndIf
+	EndIf
+
+	If(Addition != "")
+		Updated += " " + Addition
 	EndIf
 
 	Who.SetDisplayName(Updated)
