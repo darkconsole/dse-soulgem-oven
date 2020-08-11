@@ -1058,7 +1058,7 @@ actor is physically not capable of producing this item.}
 			Main.Util.PrintDebug("Milk Passive Loss " + Who.GetDisplayName() + " " + Inc)
 			self.ActorMilkInc(Who,Inc)
 
-			If((MilkCur + Inc) <= 0.0)
+			If((MilkCur + Inc) > 0.0)
 				;; is this loss?
 				Return TRUE
 			EndIf
