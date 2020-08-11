@@ -16,6 +16,7 @@ Event OnGameReload()
 {things to do when the game is loaded from disk.}
 
 	parent.OnGameReload()
+	self.OnGameReload_CacheSettings()
 
 	Main.Config.LoadFiles()
 
@@ -34,6 +35,17 @@ Event OnGameReload()
 
 	Return
 EndEvent
+
+Function OnGameReload_CacheSettings()
+{there are a few settings for a few libraries that i want to cache as local
+properties as a way to optimise their read time because they are used very
+very very frequently. seeeding them on gameload because i elect to support
+people editing their json by hand and reloading the game.}
+
+	
+
+	Return
+EndFunction
 
 Function OnGameReload_CopySliderData()
 {copy the default slider data into the custom user config if they have not yet
@@ -266,6 +278,10 @@ Event OnOptionSelect(Int Item)
 	ElseIf(Item == ItemDatabankLoadedOnly)
 		Val = !Main.Config.GetBool(".DatabankLoadedOnly")
 		Main.Config.SetBool(".DatabankLoadedOnly",Val)
+
+	ElseIf(Item == ItemFertilitySync)
+		Val = !Main.Config.GetBool(".FertilitySync")
+		Main.Config.SetBool(".FertilitySync",Val)
 
 	ElseIf(Item == ItemActorUpdateName)
 		Val = !Main.Config.GetBool(".ActorUpdateName")
@@ -738,6 +754,8 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_ActorUpdateName"
 	ElseIf(Item == ItemActorWeightDays)
 		Txt = "$SGO4_MenuTip_ActorWeightDays"
+	ElseIf(Item == ItemFertilitySync)
+		Txt = "$SGO4_MenuTip_FertilitySync"
 	EndIf
 
 	self.SetInfoText(Txt)
@@ -890,6 +908,7 @@ Int ItemMilksPerDay
 Int ItemMilksPregPercent
 Int ItemMilkerProduce
 Int ItemMilkerRate
+Int ItemFertilitySync
 
 Function ShowPageGameplay()
 
@@ -916,6 +935,7 @@ Function ShowPageGameplay()
 	ItemActorMilkMax = AddSliderOption("$SGO4_MenuOpt_ActorMilkMax",Main.Config.GetInt(".ActorMilkMax"),"{0}")
 	ItemActorSemenMax = AddSliderOption("$SGO4_MenuOpt_ActorSemenMax",Main.Config.GetInt(".ActorSemenMax"),"{0}")
 	ItemActorWeightDays = AddSliderOption("$SGO4_MenuOpt_ActorWeightDays",Main.Config.GetFloat(".ActorWeightDays"),"{2}")
+	ItemFertilitySync = AddToggleOption("$SGO4_MenuOpt_FertilitySync",Main.Config.GetBool(".FertilitySync"))
 	AddEmptyOption()
 	AddEmptyOption()
 

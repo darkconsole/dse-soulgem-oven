@@ -57,6 +57,7 @@ SexLabFramework Property SexLab Auto Hidden
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Actor Property Player Auto
+Faction Property FactionCurrentFollower Auto
 
 Container Property ContainInsertGems Auto
 Container Property ContainInsertSemens Auto

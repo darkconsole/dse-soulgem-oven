@@ -422,6 +422,7 @@ Function ActorUpdate(Actor Who)
 {update the progression of actor's bio data.}
 
 	Float TimeSince = self.ActorGetHoursSinceUpdate(Who)
+	;;Bool FertilitySyncFollowerOnly = Main.Config.GetBool(".UpdateFertilitySyncFollowerOnly")
 	Bool Gems
 	Bool Milk
 	Bool Semen
@@ -1312,27 +1313,23 @@ the actor is not biologically able to produce gems.}
 	;; for starters we will try just making followers run hotter until they
 	;; are synced up.
 
-	If(FertilitySync && Who != Main.Player)
-		;; todo follower faction check not distance check.
-		If(Main.Player.GetDistance(Who) <= 750)
-			SyncDist = self.ActorFertilityFactor(Who) - self.ActorFertilityFactor(Main.Player)
-			Main.Util.PrintDebug(Who.GetDisplayName() + " fertility out of sync by " + SyncDist)
+	If(FertilitySync && Who != Main.Player && Who.IsInFaction(Main.FactionCurrentFollower))
+		SyncDist = self.ActorFertilityFactor(Who) - self.ActorFertilityFactor(Main.Player)
+		Main.Util.PrintDebug(Who.GetDisplayName() + " fertility out of sync by " + SyncDist)
 
-			;; trying to bring followers to be in sync within 1.5 days of eachother.
-			;; i think if someone was almost sycned, and then you fast wait multiple
-			;; days, it might be possible they overshoot and then have to compinsate
-			;; again. i am leaning towards that actually intentionally being a game
-			;; mecahnic as punishment for cheating. while actually playing they will
-			;; eventually sync.
+		;; trying to bring followers to be in sync within 1.5 days of eachother.
+		;; i think if someone was almost sycned, and then you fast wait multiple
+		;; days, it might be possible they overshoot and then have to compinsate
+		;; again. i am leaning towards that actually intentionally being a game
+		;; mecahnic as punishment for cheating. while actually playing they will
+		;; eventually sync.
 
-			If( Math.Abs(SyncDist) > (FertilityWindow * (1.5 / FertilityDays)) )
-				If(SyncDist > 0.0)
-					Nval += ((TimeSince / 24.0) * 3.0)
-				Else
-					Nval -= ((TimeSince / 24.0) * 4.0)
-				EndIf
+		If( Math.Abs(SyncDist) > (FertilityWindow * (1.5 / FertilityDays)) )
+			If(SyncDist > 0.0)
+				Nval += ((TimeSince / 24.0) * 3.0)
+			Else
+				Nval -= ((TimeSince / 24.0) * 4.0)
 			EndIf
-
 		EndIf
 	EndIf
 
