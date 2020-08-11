@@ -29,10 +29,10 @@ Event OnGameReload()
 
 	If(ErrorConfig != "" || ErrorCustom != "")
 		If(ErrorConfig != "")
-			Main.Util.PrintDebug("ERROR FileConfig: " + JsonUtil.GetErrors(Main.Config.FileConfig))
+			Main.Util.PrintDebug("ERROR FileConfig: " + ErrorConfig)
 		EndIf
 		If(ErrorCustom != "")
-			Main.Util.PrintDebug("Error FileCustom: " + JsonUtil.GetErrors(Main.Config.FileCustom))
+			Main.Util.PrintDebug("ERROR FileCustom: " + ErrorCustom)
 		EndIf
 	EndIf
 
@@ -399,6 +399,11 @@ Event OnOptionSliderOpen(Int Item)
 		Min = 1.0
 		Max = 100.0
 		Interval = 1.0
+	ElseIf(Item == ItemMilksPassiveLoss)
+		Val = (Main.Config.GetFloat(".MilksPassiveLoss") * 100)
+		Min = 0.0
+		Max = 100.0
+		Interval = 1.0
 	ElseIf(Item == ItemMilkerRate)
 		Val = (Main.Config.GetFloat(".MilkerRate") * 100)
 		Min = 0.0
@@ -494,6 +499,9 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 	ElseIf(Item == ItemMilksPregPercent)
 		Fmt = "{0}%"
 		Main.Config.SetFloat(".MilksPregPercent",Val)
+	ElseIf(Item == ItemMilksPassiveLoss)
+		Fmt = "{0}%"
+		Main.Config.SetFloat(".MilksPassiveLoss",(Val / 100.0))
 	ElseIf(Item == ItemMilkerRate)
 		Fmt = "{0}%"
 		Main.Config.SetFloat(".MilkerRate",(Val / 100.0))
@@ -738,6 +746,8 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_GemsPerDay"
 	ElseIf(Item == ItemMilksPerDay)
 		Txt = "$SGO4_MenuTip_MilksPerDay"
+	ElseIf(Item == ItemMilksPassiveLoss)
+		Txt = "$SGO4_MenuTip_MilksPassiveLoss"
 	ElseIf(Item == ItemUpdateLoopFreq)
 		Txt = "$SGO4_MenuTip_UpdateLoopFreq"
 	ElseIf(Item == ItemUpdateLoopDelay)
@@ -746,6 +756,8 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_UpdateGameHours"
 	ElseIf(Item == ItemMilksPregPercent)
 		Txt = "$SGO4_MenuTip_MilksPregPercent"
+	ElseIf(Item == ItemMilksPassiveLoss)
+		Txt = "$SGO4_MenuTip_MilksPassiveLoss"
 	ElseIf(Item == ItemMilkerProduce)
 		Txt = "$SGO4_MenuTip_MilkerProduce"
 	ElseIf(Item == ItemMilkerRate)
@@ -764,6 +776,8 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_ActorWeightDays"
 	ElseIf(Item == ItemFertilitySync)
 		Txt = "$SGO4_MenuTip_FertilitySync"
+	ElseIf(Item == ItemDebugIsActorTracked)
+		Txt = "$SGO4_MenuOpt_DebugIsActorTracked"
 	EndIf
 
 	self.SetInfoText(Txt)
@@ -914,6 +928,7 @@ Int ItemInfluenceGemsMagicka
 Int ItemGemsPerDay
 Int ItemMilksPerDay
 Int ItemMilksPregPercent
+Int ItemMilksPassiveLoss
 Int ItemMilkerProduce
 Int ItemMilkerRate
 Int ItemFertilitySync
@@ -930,8 +945,8 @@ Function ShowPageGameplay()
 	ItemGemsPerDay = AddSliderOption("$SGO4_MenuOpt_GemsPerDay",Main.Config.GetFloat(".GemsPerDay"),"{2}")
 	ItemMilksPregPercent = AddSliderOption("$SGO4_MenuOpt_MilksPregPercent",Main.Config.GetFloat(".MilksPregPercent"),"{0}%")
 	ItemMilksPerDay = AddSliderOption("$SGO4_MenuOpt_MilksPerDay",Main.Config.GetFloat(".MilksPerDay"),"{2}")
+	ItemMilksPassiveLoss = AddSliderOption("$SGO4_MenuOpt_MilksPassiveLoss",(Main.Config.GetFloat(".MilksPassiveLoss") * 100),"{0}%")
 	ItemMilkerProduce = AddToggleOption("$SGO4_MenuOpt_MilkerProduce",Main.Config.GetBool(".MilkerProduce"))
-	AddEmptyOption()
 	ItemMilkerRate = AddSliderOption("$SGO4_MenuOpt_MilkerRate",(Main.Config.GetFloat(".MilkerRate") * 100),"{0}%")
 	AddEmptyOption()
 	AddEmptyOption()
@@ -944,6 +959,7 @@ Function ShowPageGameplay()
 	ItemActorSemenMax = AddSliderOption("$SGO4_MenuOpt_ActorSemenMax",Main.Config.GetInt(".ActorSemenMax"),"{0}")
 	ItemActorWeightDays = AddSliderOption("$SGO4_MenuOpt_ActorWeightDays",Main.Config.GetFloat(".ActorWeightDays"),"{2}")
 	ItemFertilitySync = AddToggleOption("$SGO4_MenuOpt_FertilitySync",Main.Config.GetBool(".FertilitySync"))
+	AddEmptyOption()
 	AddEmptyOption()
 	AddEmptyOption()
 
@@ -1048,6 +1064,7 @@ Int ItemDebugPlayerMilkMax
 Int ItemDebugPlayerSemenEmpty
 Int ItemDebugPlayerSemenHalf
 Int ItemDebugPlayerSemenMax
+Int ItemDebugIsActorTracked
 
 Function ShowPageDebug()
 
@@ -1093,6 +1110,11 @@ Function ShowPageDebug()
 	AddTextOption("$SGO4_Word_Semen",(Main.Data.ActorSemenAmount(Who) as String))
 	AddTextOption("$SGO4_Word_Weight",(Main.Data.ActorWeightGet(Who) as String))
 
+	If(Main.Data.IsActorTracked(Who))
+		ItemDebugIsActorTracked = AddTextOption("$SGO4_MenuOpt_DebugIsActorTracked","$SGO4_Word_Yes")
+	Else
+		ItemDebugIsActorTracked = AddTextOption("$SGO4_MenuOpt_DebugIsActorTracked","$SGO4_Word_No")
+	EndIf
 
 	Return
 EndFunction

@@ -1028,9 +1028,11 @@ actor is physically not capable of producing this item.}
 	Float PerDay
 	Float Inc
 	Float ModRate
+	Float PassiveLoss
 	Int MilkMax
 	Int MilkOld
 	Int MilkNew
+	Float MilkCur
 
 	;;;;;;;;
 
@@ -1044,9 +1046,24 @@ actor is physically not capable of producing this item.}
 	PregPercent = self.ActorGemTotalPercent(Who)
 	PregNeeded = Main.Config.GetFloat(".MilksPregPercent") / 100.0
 	ModForceProduce = (self.ActorModGetTotal(Who,self.KeyActorModMilkProduce) > 0.0)
+	MilkCur = self.ActorMilkAmount(Who)
 
 	If(!ModForceProduce && PregPercent < PregNeeded && WeightPercent < PregNeeded)
-		;;Main.Util.PrintDebug(Who.GetDisplayName() + " is not producing milk yet.")
+		PassiveLoss = Main.Config.GetFloat(".MilksPassiveLoss")
+
+		If(PassiveLoss > 0.0 && MilkCur > 0.0)
+			PerDay = Main.Config.GetFloat(".MilksPerDay")
+			Inc = (((TimeSince * PerDay) / 24) * PassiveLoss) * -1
+			
+			Main.Util.PrintDebug("Milk Passive Loss " + Who.GetDisplayName() + " " + Inc)
+			self.ActorMilkInc(Who,Inc)
+
+			If((MilkCur + Inc) <= 0.0)
+				;; is this loss?
+				Return TRUE
+			EndIf
+		EndIf
+
 		Return FALSE
 	EndIf
 
@@ -1070,7 +1087,7 @@ actor is physically not capable of producing this item.}
 
 	;;;;;;;;
 
-	MilkOld = Math.Floor(self.ActorMilkAmount(Who))
+	MilkOld = Math.Floor(MilkCur)
 	self.ActorMilkInc(Who,Inc)
 	MilkNew = Math.Floor(self.ActorMilkAmount(Who))
 
