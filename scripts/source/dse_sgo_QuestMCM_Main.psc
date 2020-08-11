@@ -15,6 +15,9 @@ EndFunction
 Event OnGameReload()
 {things to do when the game is loaded from disk.}
 
+	String ErrorConfig = JsonUtil.GetErrors(Main.Config.FileConfig)
+	String ErrorCustom = JsonUtil.GetErrors(Main.Config.FileCustom)
+
 	parent.OnGameReload()
 	self.OnGameReload_CacheSettings()
 
@@ -24,9 +27,14 @@ Event OnGameReload()
 	;; do a dependency check every launch.
 	;;Main.ResetMod_Prepare()
 
-	Main.Util.PrintDebug("JSON ERRORS (blank is good):")
-	Main.Util.PrintDebug("FileConfig: " + JsonUtil.GetErrors(Main.Config.FileConfig))
-	Main.Util.PrintDebug("FileCustom: " + JsonUtil.GetErrors(Main.Config.FileCustom))
+	If(ErrorConfig != "" || ErrorCustom != "")
+		If(ErrorConfig != "")
+			Main.Util.PrintDebug("ERROR FileConfig: " + JsonUtil.GetErrors(Main.Config.FileConfig))
+		EndIf
+		If(ErrorCustom != "")
+			Main.Util.PrintDebug("Error FileCustom: " + JsonUtil.GetErrors(Main.Config.FileCustom))
+		EndIf
+	EndIf
 
 	Main.UnregisterForMenu("Sleep/Wait Menu")
 	Main.RegisterForMenu("Sleep/Wait Menu")
