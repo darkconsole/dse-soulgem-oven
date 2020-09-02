@@ -859,15 +859,7 @@ Function MenuXferGems()
 	Actor[] ActorList
 	Int ActorIter = 0
 
-	;; ActorList = MiscUtil.ScanCellNPCs(self.Player,512)
-	;; the MiscUtil version does exactly what it says to the letter. as in it
-	;; is bound to the cell. you could be 10 ft away from someone on the other
-	;; side of a cell border and it wont find them.
-
-	self.SpellFindActors.Cast(self.Player,self.Player)
-	Utility.Wait(1.0)
-	ActorList = Util.GetFindActorList()
-
+	ActorList = Util.FindNearbyActors()
 	Util.SortByDisplayName(ActorList)
 	Util.PrintDebug("[MenuXferGems] Found " + ActorList.Length)
 

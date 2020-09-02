@@ -93,6 +93,26 @@ Function SortByDisplayName(Actor[] ItemList)
 	Return
 EndFunction
 
+Actor[] Function FindNearbyActors(Float Delay=0.75)
+{runs an aoe spell, waits, and returns the results.}
+
+	;; MiscUtil.ScanCellNPCs
+	;; the problem with that function from PapyrusUtil is that it does
+	;; exactly what it says to the letter. it finds all the actors that
+	;; are in the current cell. and -only- in that current cell. you can
+	;; be standing on the border of two cells and it wont find someone who
+	;; is literally 3ft away from you because they are on the other side
+	;; of the cell boundary. like the city of solitude how it is split in
+	;; half by the archway, that is also a cell boundary and it wont find
+	;; actors on the other side of that arch. outdoors people will likely
+	;; run into this a *lot* so we are going to not use it.
+
+	Main.SpellFindActors.Cast(Main.Player,Main.Player)
+	Utility.Wait(Delay)
+
+	Return self.GetFindActorList()
+EndFunction
+
 Actor[] Function GetFindActorList()
 {fetch the data that was populated by the find actors spell.}
 
