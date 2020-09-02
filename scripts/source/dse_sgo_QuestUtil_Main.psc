@@ -66,7 +66,6 @@ Form Function GetMarkerForm()
 	Return self.GetFormFrom("Skyrim.esm",0x3B)
 EndFunction
 
-
 Function SortByDisplayName(Actor[] ItemList)
 {sort a list of actors by their name.}
 
@@ -92,6 +91,20 @@ Function SortByDisplayName(Actor[] ItemList)
 	EndWhile
 
 	Return
+EndFunction
+
+Actor[] Function GetFindActorList()
+{fetch the data that was populated by the find actors spell.}
+
+	Form[] Dataset = StorageUtil.FormListToArray(NONE,Main.Data.KeyFindActorList)
+	Actor[] Output = PapyrusUtil.ActorArray(Dataset.Length)
+	Int Iter = 0
+
+	While(Iter < Output.Length)
+		Output[Iter] = Dataset[Iter] AS Actor
+	EndWhile
+
+	Return Output
 EndFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

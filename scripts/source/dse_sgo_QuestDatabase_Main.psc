@@ -104,6 +104,9 @@ String Property KeyActorModInfluenceMilkSpeechExposed  = "SGO4.ActorMod.Influenc
 String Property KeyActorModInfluenceMilkSpeechExposedMult = "SGO4.ActorMod.InfluenceMilkSpeechExposedMult" AutoReadOnly Hidden
 {multiplier for adjusting speech gained by bigger breasts while nude.}
 
+String Property KeyFindActorList = "SGO4.FindActors.List" AutoReadOnly Hidden
+{used by the find nearby players spell.}
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

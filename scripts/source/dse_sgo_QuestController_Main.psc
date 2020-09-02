@@ -69,6 +69,8 @@ Faction Property FactionProduceSemen Auto
 Faction Property FactionNoBodyScale Auto
 Spell Property SpellActorDataScan Auto
 Spell Property SpellActorDataScanToggle Auto
+Spell Property SpellFindActors Auto
+Spell Property SpellFindActorsAOE Auto
 Spell Property SpellInsertGems Auto
 Spell Property SpellInsertSemens Auto
 Spell Property SpellInfluenceGems Auto
@@ -699,7 +701,7 @@ Function MenuMainOpen(Actor Who=None)
 		self.SpellInsertGems.Cast(Who,Who)
 	ElseIf(Result == 1)
 		;; xfer gems
-		self.SpellTransferGemsAction.Cast(self.Player,Who)
+		self.MenuXferGems()
 	ElseIf(Result == 2)
 		;; inseminate
 		self.SpellInsertSemens.Cast(Who,Who)
@@ -849,5 +851,32 @@ Function MenuActorStatsOpen(Actor Who=None)
 	Menu.AddEntryItem(" ",NoParent)
 
 	UIExtensions.OpenMenu("UIListMenu",Who)
+	Return
+EndFunction
+
+Function MenuXferGems()
+
+	Actor[] ActorList
+	Int ActorIter = 0
+
+	;; ActorList = MiscUtil.ScanCellNPCs(self.Player,512)
+	;; the MiscUtil version does exactly what it says to the letter. as in it
+	;; is bound to the cell. you could be 10 ft away from someone on the other
+	;; side of a cell border and it wont find them.
+
+	self.SpellFindActors.Cast(self.Player,self.Player)
+	Utility.Wait(1.0)
+	ActorList = Util.GetFindActorList()
+
+	Util.SortByDisplayName(ActorList)
+	Util.PrintDebug("[MenuXferGems] Found " + ActorList.Length)
+
+	While(ActorIter < ActorList.Length)
+		Util.PrintDebug("[MenuXferGems] Actor " + ActorList[ActorIter].GetDisplayName())
+		ActorIter += 1
+	EndWhile
+
+	;;self.SpellTransferGemsAction.Cast(self.Player,Who)
+
 	Return
 EndFunction
