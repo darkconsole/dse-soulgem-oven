@@ -122,6 +122,7 @@ Actor[] Function GetFindActorList()
 
 	While(Iter < Output.Length)
 		Output[Iter] = Dataset[Iter] AS Actor
+		Iter += 1
 	EndWhile
 
 	Return Output
