@@ -76,6 +76,7 @@ Spell Property SpellInfluenceMilk Auto
 Spell Property SpellMenuMainOpen Auto
 Spell Property SpellBirthingAction Auto
 Spell Property SpellMilkingAction Auto
+Spell Property SpellTransferGemsAction Auto
 Spell Property SpellWankingAction Auto
 Package Property PackageDoNothing Auto
 
@@ -693,14 +694,12 @@ Function MenuMainOpen(Actor Who=None)
 		Return
 	EndIf
 
-	self.Util.PrintDebug("Selected " + Result + ": " + ItemText[Result])
-
 	If(Result == 0)
 		;; insert gems
 		self.SpellInsertGems.Cast(Who,Who)
 	ElseIf(Result == 1)
 		;; xfer gems
-		self.MenuTransferGemsOpen(Who)
+		self.SpellTransferGemsAction.Cast(self.Player,Who)
 	ElseIf(Result == 2)
 		;; inseminate
 		self.SpellInsertSemens.Cast(Who,Who)
@@ -800,14 +799,6 @@ Function MenuActorOptionsOpen(Actor Who=None)
 		self.Util.ActorToggleFaction(Who,self.FactionNoBodyScale)
 		self.Body.ActorUpdate(Who,TRUE)
 	EndIf
-
-	Return
-EndFunction
-
-Function MenuTransferGemsOpen(Actor Who=None)
-{open the gem transfer menu.}
-
-	Debug.MessageBox("Cumming Soon (tm)")
 
 	Return
 EndFunction

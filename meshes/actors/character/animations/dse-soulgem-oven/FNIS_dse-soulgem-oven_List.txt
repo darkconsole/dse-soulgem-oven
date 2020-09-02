@@ -88,3 +88,13 @@ b -AVbHumanoidFootIKDisable,a dse-sgo-milking01-03 milking01-03.hkx
 b -AVbHumanoidFootIKDisable,a,Tn dse-sgo-wanking01-01 wanking01-01.hkx
 b -AVbHumanoidFootIKDisable dse-sgo-wanking01-02 wanking01-02.hkx
 b -AVbHumanoidFootIKDisable,a dse-sgo-wanking01-03 wanking01-03.hkx
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'' TRANSFER '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+'' source actor
+b -AVbHumanoidFootIKDisable dse-sgo-transfergem01a-01 transfergem01a-01.hkx
+
+'' dest actor
+b -AVbHumanoidFootIKDisable dse-sgo-transfergem01b-01 transfergem01b-01.hkx

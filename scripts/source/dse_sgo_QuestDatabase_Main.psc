@@ -661,6 +661,29 @@ Bool Function ActorGemAdd(Actor Who, Float Val=0.0)
 	Return TRUE
 EndFunction
 
+Bool Function ActorGemAddForm(Actor Who, Form What)
+{insert a new gem into the dataset given a form that might be insertable. returns if successful or not.}
+
+	Form[] Dataset = self.GemStageGetList(Who)
+	Int Datalen = Dataset.Length
+	Int Found = 0
+
+	While(Datalen > 0)
+		Datalen -= 1
+
+		If(Dataset[Datalen] == What)
+			Found = Datalen + 1
+			Datalen = 0
+		EndIf
+	EndWhile
+
+	If(Found <= 0)
+		Return FALSE
+	EndIf
+
+	Return self.ActorGemAdd(Who,(Found AS Float))
+EndFunction
+
 Function ActorGemClear(Actor Who)
 {drop all gem data for this actor.}
 

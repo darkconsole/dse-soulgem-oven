@@ -61,6 +61,11 @@ Form Function GetFormFrom(String ModName, Int FormID)
 	Return Game.GetFormFromFile(FormID,ModName)
 EndFunction
 
+Form Function GetMarkerForm()
+
+	Return self.GetFormFrom("Skyrim.esm",0x3B)
+EndFunction
+
 
 Function SortByDisplayName(Actor[] ItemList)
 {sort a list of actors by their name.}
