@@ -445,6 +445,8 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 	;;;;;;;;
 
 	;; determine if we do.
+	
+	int BaseSemen = Config.GetInt(".SemenBase")
 
 	If(!Who.IsInFaction(FactionProduceSemen))
 		;; bail if the cummer is not producing semen.
@@ -453,7 +455,7 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 	ElseIf(Data.ActorSemenAmount(Who,FALSE) < 1.0)
 		;; if they are low on semen give them a scaling chance.
 		SemenAmount = Data.ActorSemenAmount(Who,FALSE)
-		If(Utility.RandomInt(0,99) >= (20 + (SemenAmount * (100 - 20)))) ;;Added base success chance (20) should probably have that as a configurable value, but that is beyond my knowledge.
+		If(Utility.RandomInt(0,99) >= (BaseSemen + (SemenAmount * (100 - BaseSemen)))) ;;Added base success chance (BaseSemen)
 			Data.ActorSemenSet(Who,0.0)
 			Util.PrintDebug("Preg Abort: " + Who.GetDisplayName() + " failed low semen chance.")
 			Return
@@ -519,6 +521,15 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 				Util.PrintLookupRandom("FlavourActorGemGain",Oven.GetDisplayName())
 			EndIf
 			Util.PrintDebug(Oven.GetDisplayName() + " is now incubating another gem.")
+			
+		ElseIf(Config.GetBool(".SexGrowsGems") == True)
+			Int Count = Data.ActorGemCount(Oven)
+			Int Iter = 0
+			While(Iter < Count)
+				Data.ActorGemInc(Oven,Iter,(Config.GetFloat(".SexGrowthAmount")))
+				Iter += 1
+			EndWhile
+		
 		Else
 			Util.PrintLookup("CannotFitMoreGems",Oven.GetDisplayName())
 			Util.PrintDebug(Oven.GetDisplayName() + " cannot fit any more gems.")
