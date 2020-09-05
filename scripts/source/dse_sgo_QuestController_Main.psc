@@ -164,7 +164,12 @@ Event OnInit()
 
 	self.UnregisterForModEvent("SexLabOrgasm")
 	self.RegisterForModEvent("SexLabOrgasm","OnModEvent_SexLabOrgasm")
-
+	
+	;; handle SLSO events.
+	
+	self.UnregisterForModEvent("SexLabOrgasmSeparate")
+	self.RegisterForModEvent("SexLabOrgasmSeparate","OnModEvent_SexLabOrgasm")
+	
 	;; give the player the menu systems.
 
 	self.Player.AddSpell(self.SpellMenuMainOpen)
@@ -448,7 +453,7 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 	ElseIf(Data.ActorSemenAmount(Who,FALSE) < 1.0)
 		;; if they are low on semen give them a scaling chance.
 		SemenAmount = Data.ActorSemenAmount(Who,FALSE)
-		If(Utility.RandomInt(0,99) >= (SemenAmount * 100))
+		If(Utility.RandomInt(0,99) >= (20 + (SemenAmount * (100 - 20)))) ;;Added base success chance (20) should probably have that as a configurable value, but that is beyond my knowledge.
 			Data.ActorSemenSet(Who,0.0)
 			Util.PrintDebug("Preg Abort: " + Who.GetDisplayName() + " failed low semen chance.")
 			Return
@@ -466,6 +471,13 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 		;; bail if it was a solo mission.
 		;; todo - drop semen bottle.
 		Util.PrintDebug("Preg Abort: " + Who.GetDisplayName() + " is fapping.")
+		Return
+	EndIf
+	
+	;; Bail if receiver. Needed if both actors can produce Semen and Gems. Might not work in every animation, but it is better than nothing.
+	
+	If(ActorList[0] == Who)
+		;; bail if the cummer is receiving.
 		Return
 	EndIf
 
