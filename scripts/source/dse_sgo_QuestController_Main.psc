@@ -527,9 +527,9 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 				Util.PrintLookupRandom("FlavourActorGemGain",Oven.GetDisplayName())
 			EndIf
 			Util.PrintDebug(Oven.GetDisplayName() + " is now incubating another gem.")
-		Else
-			Util.PrintLookup("CannotFitMoreGems",Oven.GetDisplayName())
-			Util.PrintDebug(Oven.GetDisplayName() + " cannot fit any more gems.")
+;;		Else
+;;			Util.PrintLookup("CannotFitMoreGems",Oven.GetDisplayName())
+;;			Util.PrintDebug(Oven.GetDisplayName() + " cannot fit any more gems.")
 		EndIf
 	ElseIf(Config.GetBool(".SexGrowsGems") == True)
 		Int Count = Data.ActorGemCount(Oven)
