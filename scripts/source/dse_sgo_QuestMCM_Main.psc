@@ -259,9 +259,33 @@ Event OnOptionSelect(Int Item)
 
 	;;;;;;;;
 
-	ElseIf(Item == ItemSexLabStrip)
-		Val = !Main.Config.GetBool(".SexLabStrip")
-		Main.Config.SetBool(".SexLabStrip",Val)
+	ElseIf(Item == ItemStripSexLabNormal)
+		Val = TRUE
+		self.SetToggleOptionValue(ItemStripSexLabForeplay,FALSE)
+		self.SetToggleOptionValue(ItemStripBodyOnly,FALSE)
+		self.SetToggleOptionValue(ItemStripNone,FALSE)
+		Main.Config.SetBool(".ActorStripMode",Main.Config.StripModeSexLabNormal)
+
+	ElseIf(Item == ItemStripSexLabForeplay)
+		Val = TRUE
+		self.SetToggleOptionValue(ItemStripSexLabNormal,FALSE)
+		self.SetToggleOptionValue(ItemStripBodyOnly,FALSE)
+		self.SetToggleOptionValue(ItemStripNone,FALSE)
+		Main.Config.SetBool(".ActorStripMode",Main.Config.StripModeSexLabForeplay)
+
+	ElseIf(Item == ItemStripBodyOnly)
+		Val = TRUE
+		self.SetToggleOptionValue(ItemStripSexLabForeplay,FALSE)
+		self.SetToggleOptionValue(ItemStripSexLabNormal,FALSE)
+		self.SetToggleOptionValue(ItemStripNone,FALSE)
+		Main.Config.SetBool(".ActorStripMode",Main.Config.StripModeBodyOnly)
+
+	ElseIf(Item == ItemStripNone)
+		Val = TRUE
+		self.SetToggleOptionValue(ItemStripSexLabForeplay,FALSE)
+		self.SetToggleOptionValue(ItemStripSexLabNormal,FALSE)
+		self.SetToggleOptionValue(ItemStripBodyOnly,FALSE)
+		Main.Config.SetBool(".ActorStripMode",Main.Config.StripModeNone)
 
 	;;;;;;;;
 
@@ -740,8 +764,14 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_InfluenceGemsHealth"
 	ElseIf(Item == ItemInfluenceGemsMagicka)
 		Txt = "$SGO4_MenuTip_InfluenceGemsMagicka"
-	ElseIf(Item == ItemSexLabStrip)
-		Txt = "$SGO4_MenuTip_SexLabStrip"
+	ElseIf(Item == ItemStripSexLabNormal)
+		Txt = "$SGO4_MenuTip_StripMode"
+	ElseIf(Item == ItemStripSexLabForeplay)
+		Txt = "$SGO4_MenuTip_StripMode"
+	ElseIf(Item == ItemStripBodyOnly)
+		Txt = "$SGO4_MenuTip_StripMode"
+	ElseIf(Item == ItemStripNone)
+		Txt = "$SGO4_MenuTip_StripMode"
 	ElseIf(Item == ItemGemsPerDay)
 		Txt = "$SGO4_MenuTip_GemsPerDay"
 	ElseIf(Item == ItemMilksPerDay)
@@ -797,7 +827,10 @@ EndFunction
 *****************************************************************************/;
 
 Int ItemModStatus
-Int ItemSexLabStrip
+Int ItemStripSexLabNormal
+Int ItemStripSexLabForeplay
+Int ItemStripBodyOnly
+Int ItemStripNone
 Int ItemUpdateLoopFreq
 Int ItemUpdateLoopDelay
 Int ItemUpdateGameHours
@@ -808,6 +841,8 @@ Int ItemActorUpdateName
 Int ItemActorWeightDays
 
 Function ShowPageGeneral()
+
+	Int ActorStripMode = Main.Config.GetInt(".ActorStripMode")
 
 	self.SetTitleText("$SGO4_MenuTitle_General")
 	self.SetCursorFillMode(LEFT_TO_RIGHT)
@@ -832,11 +867,15 @@ Function ShowPageGeneral()
 	ItemDatabankLoadedOnly = AddToggleOption("$SGO4_MenuOpt_DatabankLoadedOnly",Main.Config.GetBool(".DatabankLoadedOnly"))
 	AddEmptyOption()
 	AddEmptyOption()
+	AddEmptyOption()
 
-	AddHeaderOption("$SGO4_MenuOpt_Misc")
+	AddHeaderOption("$SGO4_MenuOpt_StripMode")
 	AddHeaderOption("")
 
-	ItemSexLabStrip = AddToggleOption("$SGO4_MenuOpt_SexLabStrip",Main.Config.GetBool(".SexLabStrip"))
+	ItemStripSexLabNormal = AddToggleOption("$SGO4_MenuOpt_StripSexLabNormal",(ActorStripMode == 1))
+	ItemStripSexLabForeplay = AddToggleOption("$SGO4_MenuOpt_StripSexLabForeplay",(ActorStripMode == 2))
+	ItemStripBodyOnly = AddToggleOption("$SGO4_MenuOpt_StripBodyOnly",(ActorStripMode == 3))
+	ItemStripNone = AddToggleOption("$SGO4_MenuOpt_StripNone",(ActorStripMode == 0))
 
 	Return
 EndFunction

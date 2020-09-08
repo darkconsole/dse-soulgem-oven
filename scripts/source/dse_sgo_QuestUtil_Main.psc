@@ -376,12 +376,20 @@ Function ActorArmourRemove(Actor Who)
 {remove an actor's chestpiece.}
 
 	Form[] Items
+	Int StripMode = Main.Config.GetInt(".ActorStripMode")
 
-	If(Main.Config.GetBool(".SexLabStrip"))
-		Items = Main.SexLab.StripActor(Who,None,FALSE,FALSE) as Form[]
-		Main.Util.PrintDebug("Stripping " + Who.GetDisplayName() + " via SexLab (" + Items.Length + ")")
-	Else
-		Main.Util.PrintDebug("Stripping " + Who.GetDisplayName() + " manually.")
+	If(StripMode == Main.Config.StripModeNone)
+		Return
+	EndIf
+
+	If(StripMode == Main.Config.StripModeSexLabNormal)
+		Items = Main.SexLab.StripActor(Who,None,FALSE,FALSE)
+		Main.Util.PrintDebug("Stripping " + Who.GetDisplayName() + " via SexLab Normal (" + Items.Length + ")")
+	ElseIf(StripMode == Main.Config.StripModeSexLabForeplay)
+		Items = Main.SexLab.StripActor(Who,None,FALSE,TRUE)
+		Main.Util.PrintDebug("Stripping " + Who.GetDisplayName() + " via SexLab Foreplay (" + Items.Length + ")")
+	ElseIf(StripMode == Main.Config.StripModeBodyOnly)
+		Main.Util.PrintDebug("Stripping " + Who.GetDisplayName() + " manually")
 		If(Who.GetWornForm(0x00000004) != None)
 			Items = new Form[1]
 			Items[0] = Who.GetWornForm(0x00000004)
@@ -401,21 +409,15 @@ Function ActorArmourReplace(Actor Who)
 {replace an actor's chestpiece.}
 
 	Form[] Items
+	Int StripMode = Main.Config.GetInt(".ActorStripMode")
 
 	If(StorageUtil.FormListCount(Who,"SGO4.Actor.Armor") > 0)
-		Items = StorageUtil.FormListToArray(Who,"SGO4.Actor.Armor") as Form[]
+		Items = StorageUtil.FormListToArray(Who,"SGO4.Actor.Armor")
 	EndIf
 
-	;;If(Main.Config.GetBool(".SexLabStrip"))
 	If(Items.Length > 0)
 		Main.SexLab.UnstripActor(Who,Items,FALSE)
 	EndIf
-	;;Else
-	;;	If(StorageUtil.GetFormValue(Who,"SGO.Actor.Armor.Chest"))
-	;;		Who.EquipItem(Storageutil.GetFormValue(Who,"SGO.Actor.Armor.Chest"),FALSE,TRUE)
-	;;		StorageUtil.SetFormValue(who,"SGO.Actor.Armor.Chest",None)
-	;;	EndIf
-	;;EndIf
 
 	StorageUtil.FormListClear(Who,"SGO4.Actor.Armor")
 	Return

@@ -13,6 +13,14 @@ Bool Property DebugMode = TRUE Auto Hidden
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+Int Property StripModeNone = 0 AutoReadOnly Hidden
+Int Property StripModeSexLabNormal = 1 AutoReadOnly Hidden
+Int Property StripModeSexLabForeplay = 2 AutoReadOnly Hidden
+Int Property StripModeBodyOnly = 3 AutoReadOnly Hidden
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 String Property FileConfig = "../../../configs/dse-soulgem-oven/settings/Default.json" AutoReadOnly Hidden
 String Property FileCustom = "../../../configs/dse-soulgem-oven/settings/Custom.json" AutoReadOnly Hidden
 Int[] Property FileID Auto Hidden
