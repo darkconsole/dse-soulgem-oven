@@ -1,7 +1,7 @@
 {
 	"Races": [
-		{	"Name": "Default Race 0",
-			"Race": "",
+		{	"Name": "Soulgem Oven Fallback Race",
+			"Race": "0x341D4|dse-soulgem-oven.esp",
 			"Milk": "15841|dse-soulgem-oven.esp",
 			"Semen": "15842|dse-soulgem-oven.esp"
 		},

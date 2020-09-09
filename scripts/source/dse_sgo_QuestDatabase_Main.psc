@@ -1473,9 +1473,14 @@ in and the second number is which array item was the race.}
 		Offset[0] = Offset[0] + 1
 	EndWhile
 
-	Main.Util.PrintDebug("Race Find Fail Hard: " + What.GetFormID() + " " + What.GetName())
-	Offset[0] = 0
-	Offset[1] = 0
+	If(What != Main.RaceSoulgemOvenFallback)
+		return self.RaceFind(Main.RaceSoulgemOvenFallback)
+	Else
+		Main.Util.PrintDebug("Race Find Fail Hard: " + What.GetFormID() + " " + What.GetName())
+		Offset[0] = 0
+		Offset[1] = 0
+	EndIf
+
 	Return Offset
 EndFunction
 

@@ -84,6 +84,7 @@ Spell Property SpellMilkingAction Auto
 Spell Property SpellTransferGemsAction Auto
 Spell Property SpellWankingAction Auto
 Package Property PackageDoNothing Auto
+Race Property RaceSoulgemOvenFallback Auto
 
 FormList Property ListPackageBirth Auto
 FormList Property ListPackageMilking Auto
