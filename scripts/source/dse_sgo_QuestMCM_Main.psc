@@ -41,6 +41,9 @@ Event OnGameReload()
 
 	self.OnGameReload_CopySliderData()
 
+	;; add books to vendors.
+	Main.InstallVendorItems()
+
 	Return
 EndEvent
 

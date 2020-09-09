@@ -59,10 +59,13 @@ SexLabFramework Property SexLab Auto Hidden
 Actor Property Player Auto
 Faction Property FactionCurrentFollower Auto
 
+Book Property Book01 Auto
+Book Property Book02 Auto
 Container Property ContainInsertGems Auto
 Container Property ContainInsertSemens Auto
 FormList Property ListGemFilter Auto
 FormList property ListSemenFilter Auto
+FormList Property ListBookVendors Auto
 Faction Property FactionProduceGems Auto
 Faction Property FactionProduceMilk Auto
 Faction Property FactionProduceSemen Auto
@@ -540,6 +543,53 @@ Event OnMenuClose(String Name)
 
 	Return
 EndEvent
+
+Function InstallVendorItems()
+
+	Int Iter
+	FormList CurrentList
+	LeveledItem CurrentLvld
+	Int CountAdds = 0
+
+	;;;;;;;;
+
+	Iter = self.ListBookVendors.GetSize()
+	While(Iter > 0)
+		Iter -= 1
+
+		CurrentLvld = self.ListBookVendors.GetAt(Iter) As LeveledItem
+		If(CurrentLvld != None)
+			If(!Util.LeveledListHas(CurrentLvld,self.Book01))
+				CurrentLvld.AddForm(self.Book01,1,1)
+				CountAdds += 1
+			EndIf
+			If(!Util.LeveledListHas(CurrentLvld,self.Book02))
+				CurrentLvld.AddForm(self.Book02,1,1)
+				CountAdds += 1
+			EndIf
+		EndIf
+
+		CurrentList = self.ListBookVendors.GetAt(Iter) As FormList
+		If(CurrentList != None)
+			If(!CurrentList.HasForm(self.Book01))
+				CurrentList.AddForm(self.Book01)
+				CountAdds += 1
+			EndIf
+			If(!CurrentList.HasForm(self.Book02))
+				CurrentList.AddForm(self.Book02)
+				CountAdds += 1
+			EndIf
+		EndIf
+	EndWhile
+
+	;;;;;;;;
+
+	;;If(CountAdds > 0)
+		Util.PrintDebug("InstallVendorItems: " + CountAdds + " items added to lists.")
+	;;EndIf
+
+	Return
+EndFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -93,6 +93,22 @@ Function SortByDisplayName(Actor[] ItemList)
 	Return
 EndFunction
 
+Bool Function LeveledListHas(LeveledItem List, Form SomeShit)
+{because nobody thought a HasForm for LeveledItem was worth adding appartently.}
+
+	Int Len = List.GetNumForms()
+
+	While(Len > 0)
+		Len -= 1
+
+		If(List.GetNthForm(Len) == SomeShit)
+			Return TRUE
+		EndIf
+	EndWhile
+
+	Return FALSE
+EndFunction
+
 Actor[] Function FindNearbyActors(Float Delay=0.75)
 {runs an aoe spell, waits, and returns the results.}
 
