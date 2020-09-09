@@ -924,9 +924,10 @@ actor is physically not capable of producing this item.}
 
 	GemPregPercentDone = self.ActorGemTotalPercent(Who,TRUE)
 
-	If(GemPregPercentDone > WeightCur)
+	If(GemPregPercentDone >= (Main.Config.GetFloat(".WeightGainPregPercent") / 100.0) && WeightCur != 1 )
 		;; don't instantly get thicc, slowly add it every update.
-		self.ActorWeightSet(Who,(WeightCur + ((GemPregPercentDone * 0.1) * TimeSince)))
+		;; Modified to gain weight based on weightdrain value multiplied with pregnancypercent+1.
+		self.ActorWeightSet(Who,(WeightCur + (WeightDrain * (GemPregPercentDone + 1))))
 	EndIf
 
 	;;;;;;;;

@@ -446,7 +446,13 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 	
 	;; Orgasm Grows Milk
 	
-	If(Who.IsInFaction(FactionProduceMilk) && (Config.GetBool(".SexGrowsMilk") == True) && (Data.ActorGemTotalPercent(Who) >= (Config.GetFloat(".MilksPregPercent") / 100.0)) )
+	Float WeightPercent = Data.ActorWeightGet(Who)
+	Float PregPercent = Data.ActorGemTotalPercent(Who)
+	If(WeightPercent > PregPercent)
+		PregPercent = WeightPercent
+	EndIf
+	
+	If(Who.IsInFaction(FactionProduceMilk) && (Config.GetBool(".SexGrowsMilk") == True) && (PregPercent >= (Config.GetFloat(".MilksPregPercent") / 100.0)) )
 		Data.ActorMilkInc(Who,(Config.GetFloat(".SexGrowsMilkAmount")))
 	EndIf
 	
@@ -527,11 +533,14 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 				Util.PrintLookupRandom("FlavourActorGemGain",Oven.GetDisplayName())
 			EndIf
 			Util.PrintDebug(Oven.GetDisplayName() + " is now incubating another gem.")
+			Return
 ;;		Else
 ;;			Util.PrintLookup("CannotFitMoreGems",Oven.GetDisplayName())
 ;;			Util.PrintDebug(Oven.GetDisplayName() + " cannot fit any more gems.")
 		EndIf
-	ElseIf(Config.GetBool(".SexGrowsGems") == True)
+	EndIf	
+	
+	If(Config.GetBool(".SexGrowsGems") == True)
 		Int Count = Data.ActorGemCount(Oven)
 		Int Iter = 0
 		While(Iter < Count)

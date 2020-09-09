@@ -34,6 +34,7 @@
 	"SexGrowsMilk": false,
 	"SexGrowsMilkAmount": 0.2,			
 	"SemenBase": 30,	
+	"WeightGainPregPercent": 30,		
 	"WidgetOffsetX": 0.0,
 	"WidgetOffsetY": 0.0,
 	"WidgetAnchorH": "left",
