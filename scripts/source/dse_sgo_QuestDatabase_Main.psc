@@ -935,7 +935,7 @@ actor is physically not capable of producing this item.}
 		If(Who == Main.Player)
 			Main.Util.PrintLookupRandom("FlavourPlayerGemGrowth")
 		EndIf
-	ElseIf(GemCurTotal >= GemCurMax)
+	ElseIf(GemCurTotal >= (GemCurMax * GemStages))
 		If(Who == Main.Player)
 			Main.Util.PrintLookupRandom("FlavourPlayerGemFull")
 		EndIf
