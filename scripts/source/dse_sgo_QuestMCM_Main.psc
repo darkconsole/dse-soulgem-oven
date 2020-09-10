@@ -318,6 +318,14 @@ Event OnOptionSelect(Int Item)
 		Val = !Main.Config.GetBool(".FertilitySync")
 		Main.Config.SetBool(".FertilitySync",Val)
 
+	ElseIf(Item == ItemMessagesPlayer)
+		Val = !Main.Config.GetBool(".MessagesPlayer")
+		Main.Config.SetBool(".MessagesPlayer",Val)
+
+	ElseIf(Item == ItemMessagesNPC)
+		Val = !Main.Config.GetBool(".MessagesNPC")
+		Main.Config.SetBool(".MessagesNPC",Val)
+
 	ElseIf(Item == ItemActorUpdateName)
 		Val = !Main.Config.GetBool(".ActorUpdateName")
 		Main.Config.SetBool(".ActorUpdateName",Val)
@@ -811,6 +819,10 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_FertilitySync"
 	ElseIf(Item == ItemDebugIsActorTracked)
 		Txt = "$SGO4_MenuOpt_DebugIsActorTracked"
+	ElseIf(Item == ItemMessagesPlayer)
+		Txt = "$SGO4_MenuTip_MessagesPlayer"
+	ElseIf(Item == ItemMessagesNPC)
+		Txt = "$SGO4_MenuTip_MessagesNPC"
 	EndIf
 
 	self.SetInfoText(Txt)
@@ -974,6 +986,8 @@ Int ItemMilksPassiveLoss
 Int ItemMilkerProduce
 Int ItemMilkerRate
 Int ItemFertilitySync
+Int ItemMessagesPlayer
+Int ItemMessagesNPC
 
 Function ShowPageGameplay()
 
@@ -990,6 +1004,8 @@ Function ShowPageGameplay()
 	ItemMilksPassiveLoss = AddSliderOption("$SGO4_MenuOpt_MilksPassiveLoss",(Main.Config.GetFloat(".MilksPassiveLoss") * 100),"{0}%")
 	ItemMilkerProduce = AddToggleOption("$SGO4_MenuOpt_MilkerProduce",Main.Config.GetBool(".MilkerProduce"))
 	ItemMilkerRate = AddSliderOption("$SGO4_MenuOpt_MilkerRate",(Main.Config.GetFloat(".MilkerRate") * 100),"{0}%")
+	ItemMessagesPlayer = AddToggleOption("$SGO4_MenuOpt_MessagesPlayer",Main.Config.GetBool(".MessagesPlayer"))
+	ItemMessagesNPC = AddToggleOption("$SGO4_MenuOpt_MessagesNPC",Main.Config.GetBool(".MessagesNPC"))
 	AddEmptyOption()
 	AddEmptyOption()
 

@@ -3,6 +3,8 @@
 	"UpdateLoopDelay": 0.25,
 	"UpdateGameHours": 1.0,
 	"UpdateAfterWait": true,
+	"MessagesPlayer": true,
+	"MessagesNPC": true,
 	"BirthGemsFilled": 1,
 	"ActorGemsMax": 2,
 	"ActorMilkMax": 2,

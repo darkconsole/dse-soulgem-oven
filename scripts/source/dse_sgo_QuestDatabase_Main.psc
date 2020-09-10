@@ -932,11 +932,11 @@ actor is physically not capable of producing this item.}
 	;;;;;;;;
 
 	If(Growth)
-		If(Who == Main.Player)
+		If(Who == Main.Player && Main.Config.GetBool(".MessagesPlayer"))
 			Main.Util.PrintLookupRandom("FlavourPlayerGemGrowth")
 		EndIf
 	ElseIf(GemCurTotal >= (GemCurMax * GemStages))
-		If(Who == Main.Player)
+		If(Who == Main.Player && Main.Config.GetBool(".MessagesPlayer"))
 			Main.Util.PrintLookupRandom("FlavourPlayerGemFull")
 		EndIf
 	EndIf
