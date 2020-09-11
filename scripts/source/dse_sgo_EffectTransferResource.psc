@@ -145,11 +145,13 @@ Function StartExtractingAnimated()
 
 	;; lock the source
 	Main.Util.ActorArmourRemove(self.Source)
-	Main.Body.ActorLockdown(self.Source)
-
-	;; lock and move the dest.
 	Main.Util.ActorArmourRemove(self.Dest)
+	Utility.Wait(0.1)
+
+	Main.Body.ActorLockdown(self.Source)
 	Main.Body.ActorLockdown(self.Dest)
+	Utility.Wait(0.1)
+
 	self.Dest.MoveTo(self.Source,0,0,0,TRUE)
 
 	self.GotoState("Animating")
@@ -337,8 +339,9 @@ State Animating
 		;; playing does not cause it to restart. so we can just keep forcing
 		;; the event over and over and over in case it got interupted.
 
-		Main.Body.ActorAnimateSolo(self.Source,self.Animation1)
-		Main.Body.ActorAnimateSolo(self.Dest,self.Animation2)
+		;;Main.Body.ActorAnimateSolo(self.Source,self.Animation1)
+		;;Main.Body.ActorAnimateSolo(self.Dest,self.Animation2)
+		Main.Body.ActorAnimateDuo(self.Source,self.Animation1,self.Dest,self.Animation2)
 		self.RegisterForSingleUpdate(5.0)
 		Return
 	EndEvent

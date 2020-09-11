@@ -907,19 +907,40 @@ EndFunction
 
 Function MenuXferGems()
 
+	Actor Who
 	Actor[] ActorList
 	Int ActorIter = 0
+	UIListMenu Menu = UIExtensions.GetMenu("UIListMenu",TRUE) as UIListMenu
+	Int NoParent = -1
+	Int Result = -1
 
+	Util.Print("Searching for Nearby Characters...")
 	ActorList = Util.FindNearbyActors()
+	ActorList = PapyrusUtil.PushActor(ActorList,self.Player)
 	Util.SortByDisplayName(ActorList)
 	Util.PrintDebug("[MenuXferGems] Found " + ActorList.Length)
 
+	Who = self.MenuTargetGet(Who)
+	self.Data.ActorDetermineFeatures(Who)
+
+	Menu.AddEntryItem("[Cancel]",NoParent)
 	While(ActorIter < ActorList.Length)
-		Util.PrintDebug("[MenuXferGems] Actor " + ActorList[ActorIter].GetDisplayName())
+		Menu.AddEntryItem(ActorList[ActorIter].GetDisplayName(),NoParent)
 		ActorIter += 1
 	EndWhile
 
-	;;self.SpellTransferGemsAction.Cast(self.Player,Who)
+	Menu.OpenMenu(Who)
+	Result = Menu.GetResultInt()
+
+	If(Result <= 0)
+		Util.PrintDebug("[MenuXferGems] Invalid Selection / Canceled: " + Result)
+		Return
+	EndIf
+
+	ActorIter = Result - 1
+	self.SpellTransferGemsAction.Cast(ActorList[ActorIter],Who)
+
+	;;;;;;;;
 
 	Return
 EndFunction
