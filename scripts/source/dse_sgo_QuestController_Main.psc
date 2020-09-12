@@ -455,14 +455,13 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 	
 	;; determine if we do.
 	
-	int BaseSemen = Config.GetInt(".SemenBase")
-
 	If(!Who.IsInFaction(FactionProduceSemen))
 		;; bail if the cummer is not producing semen.
 		Util.PrintDebug("Preg Abort: " + Who.GetDisplayName() + " is not a semen producer.")
 		Return
 	ElseIf(Data.ActorSemenAmount(Who,FALSE) < 1.0)
 		;; if they are low on semen give them a scaling chance.
+		int BaseSemen = Config.GetInt(".SemenBase")	
 		SemenAmount = Data.ActorSemenAmount(Who,FALSE)
 		If(Utility.RandomInt(0,99) >= (BaseSemen + (SemenAmount * (100 - BaseSemen)))) ;;Added base success chance (BaseSemen)
 			Data.ActorSemenSet(Who,0.0)
