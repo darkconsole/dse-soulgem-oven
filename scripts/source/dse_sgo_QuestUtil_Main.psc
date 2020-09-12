@@ -357,14 +357,16 @@ EndFunction
 
 Function PrintLookup(String KeyName, String InputList="")
 {print a notification string from the translation file.}
-
-	self.Print(self.StringLookup(KeyName,InputList))
+	If(Main.Config.Notifications)
+		self.Print(self.StringLookup(KeyName,InputList))
+	EndIf	
 EndFunction
 
 Function PrintLookupRandom(String KeyName, String InputList="")
 {print a random string from the translation file.}
-
-	self.Print(self.StringLookupRandom(KeyName,InputList))
+	If(Main.Config.Notifications)
+		self.Print(self.StringLookupRandom(KeyName,InputList))
+	EndIf	
 EndFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
