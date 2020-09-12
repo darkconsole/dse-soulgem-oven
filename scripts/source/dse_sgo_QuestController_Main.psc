@@ -530,9 +530,11 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 			EndIf
 			Util.PrintDebug(Oven.GetDisplayName() + " is now incubating another gem.")
 			Return
-;;		Else
-;;			Util.PrintLookup("CannotFitMoreGems",Oven.GetDisplayName())
-;;			Util.PrintDebug(Oven.GetDisplayName() + " cannot fit any more gems.")
+		Else
+			If(Config.GetBool(".SexGrowsGems") == false)
+			Util.PrintLookup("CannotFitMoreGems",Oven.GetDisplayName())
+			Util.PrintDebug(Oven.GetDisplayName() + " cannot fit any more gems.")
+			EndIf
 		EndIf
 	EndIf	
 	
