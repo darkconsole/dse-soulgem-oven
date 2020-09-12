@@ -99,7 +99,7 @@ Function ActorUpdateMilk(Actor Who)
 		self.ActorUpdateMilkInfluence(Who,MilkPercent)
 	EndIf
 	
-	If(MilkPercent >= 0.1)
+	If(MilkPercent >= (Main.Config.GetFloat(".MilkOverlayPercentage")/100.0))
 		;; todo - config option to tell me what body you are using. 
 		Main.Util.ActorOverlayApply(Who,"MilkLeak","textures\\dse-soulgem-oven\\MilkLeakCBBE.dds",1,MilkPercent)
 	Else
@@ -443,12 +443,26 @@ Function ActorLockdown(Actor Who, Package Pkg=NONE)
 		Who.SetDontMove(TRUE)
 		Who.SetRestrained(TRUE)
 	EndIf
+
+	If(Pkg == Main.PackageDoNothing)
+		Who.TranslateTo(              \
+			Who.GetPositionX(),       \
+			Who.GetPositionY(),       \
+			Who.GetPositionZ(),       \
+			Who.GetAngleX(),          \
+			Who.GetAngleY(),          \
+			(Who.GetAngleZ() + 0.01), \
+			10000,0.000001            \
+		)
+	EndIf
 	
 	StorageUtil.SetFormValue(Who,"SGO4.Actor.Lockdown",Pkg)
 	Utility.Wait(0.2)
 
 	If(OldPkg != NONE)
 		ActorUtil.RemovePackageOverride(Who,OldPkg)
+	ElseIf(OldPkg != Main.PackageDoNothing)
+		Who.StopTranslation()
 	EndIf
 
 	ActorUtil.AddPackageOverride(Who,Pkg,100)
@@ -483,6 +497,7 @@ Function ActorRelease(Actor Who)
 
 	Who.SetDontMove(FALSE)
 	Who.SetRestrained(FALSE)
+	Who.StopTranslation()
 
 	Return
 EndFunction
@@ -497,6 +512,28 @@ Function ActorAnimateSolo(Actor Who, String AniName)
 	Debug.SendAnimationEvent(Who,AniName)
 	;;ConsoleUtil.SetSelectedReference(Who)
 	;;ConsoleUtil.ExecuteCommand("sae " + AniName)
+
+	Return
+EndFunction
+
+Function ActorAnimateDuo(Actor Who1, String AniName1, Actor Who2, String AniName2)
+{force an actor to perform some sort of blocking/busy animation.}
+
+	Who1.StopTranslation()
+	Who1.TranslateTo(              \
+		Who2.GetPositionX(),       \
+		Who2.GetPositionY(),       \
+		Who2.GetPositionZ(),       \
+		Who2.GetAngleX(),          \
+		Who2.GetAngleY(),          \
+		(Who2.GetAngleZ() + 0.01), \
+		10000,0.000001            \
+	)
+
+	Who1.MoveTo(Who2)
+
+	Debug.SendAnimationEvent(Who1,AniName1)
+	Debug.SendAnimationEvent(Who2,AniName2)
 
 	Return
 EndFunction
