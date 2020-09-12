@@ -164,12 +164,7 @@ Event OnInit()
 
 	self.UnregisterForModEvent("SexLabOrgasm")
 	self.RegisterForModEvent("SexLabOrgasm","OnModEvent_SexLabOrgasm")
-	
-	;; handle SLSO events.
-	
-	self.UnregisterForModEvent("SexLabOrgasmSeparate")
-	self.RegisterForModEvent("SexLabOrgasmSeparate","OnModEvent_SexLabOrgasm")
-	
+
 	;; give the player the menu systems.
 
 	self.Player.AddSpell(self.SpellMenuMainOpen)
@@ -445,15 +440,17 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 	;;;;;;;;
 	
 	;; Orgasm Grows Milk
-	
-	Float WeightPercent = Data.ActorWeightGet(Who)
-	Float PregPercent = Data.ActorGemTotalPercent(Who)
-	If(WeightPercent > PregPercent)
-		PregPercent = WeightPercent
-	EndIf
-	
-	If(Who.IsInFaction(FactionProduceMilk) && (Config.GetBool(".SexGrowsMilk") == True) && (PregPercent >= (Config.GetFloat(".MilksPregPercent") / 100.0)) )
-		Data.ActorMilkInc(Who,(Config.GetFloat(".SexGrowsMilkAmount")))
+	;;Todo: Apply milk leak texture for a small duration. Boobgasm i guess.
+	If(Config.GetBool(".SexGrowsMilk")) 
+		Float WeightPercent = Data.ActorWeightGet(Who)
+		Float PregPercent = Data.ActorGemTotalPercent(Who)
+		Float SexMilkGain = Config.GetFloat(".SexGrowsMilkAmount")
+		If(WeightPercent > PregPercent)
+			PregPercent = WeightPercent
+		EndIf		
+		If(Who.IsInFaction(FactionProduceMilk) && (PregPercent >= (Config.GetFloat(".MilksPregPercent") / 100.0)))
+			Data.ActorMilkInc(Who,SexMilkGain)
+		EndIf			
 	EndIf
 	
 	;; determine if we do.
@@ -540,13 +537,16 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 		EndIf
 	EndIf	
 	
-	If(Config.GetBool(".SexGrowsGems") == True)
+	;; GrowGems?
+	
+	If(Config.GetBool(".SexGrowsGems"))
 		Int Count = Data.ActorGemCount(Oven)
 		Int Iter = 0
+		Float SexGemGrowth = Config.GetFloat(".SexGrowsGemsAmount")
 		While(Iter < Count)
-			Data.ActorGemInc(Oven,Iter,(Config.GetFloat(".SexGrowsGemsAmount")))
+			Data.ActorGemInc(Oven,Iter,SexGemGrowth)
 			Iter += 1
-		EndWhile
+		EndWhile			
 	EndIf
 
 	;;;;;;;;
