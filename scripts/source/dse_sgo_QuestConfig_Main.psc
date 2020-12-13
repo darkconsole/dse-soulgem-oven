@@ -40,7 +40,7 @@ Int[] Property FileID Auto Hidden
 ;; Int ActorGemsMax
 ;; how many gems can be incubated at one time per actor.
 
-;; Int ActorMilkMax
+;; Float ActorMilkMax
 ;; how many bottes of milk can be carried per actor.
 
 ;; Int ActorSemenMax
