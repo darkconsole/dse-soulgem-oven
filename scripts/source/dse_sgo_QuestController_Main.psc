@@ -445,6 +445,8 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 
 	;; determine if we do.
 
+	;;Adds base success chance (BaseSemen)
+	int BaseSemen = Config.GetInt(".SemenBase")
 	If(!Who.IsInFaction(FactionProduceSemen))
 		;; bail if the cummer is not producing semen.
 		Util.PrintDebug("Preg Abort: " + Who.GetDisplayName() + " is not a semen producer.")
@@ -452,7 +454,7 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 	ElseIf(Data.ActorSemenAmount(Who,FALSE) < 1.0)
 		;; if they are low on semen give them a scaling chance.
 		SemenAmount = Data.ActorSemenAmount(Who,FALSE)
-		If(Utility.RandomInt(0,99) >= (SemenAmount * 100))
+		If(Utility.RandomInt(0,99) >= (BaseSemen + (SemenAmount * (100 - BaseSemen))))
 			Data.ActorSemenSet(Who,0.0)
 			Util.PrintDebug("Preg Abort: " + Who.GetDisplayName() + " failed low semen chance.")
 			Return
@@ -473,6 +475,13 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 		Return
 	EndIf
 
+	;; Bail if receiver. Needed if both actors can produce Semen and Gems. Might not work in every animation, but it is better than nothing.
+	
+	If(ActorList[0] == Who && Config.GetBool(".FixFemaleToMaleImp"))
+		;; bail if the cummer is in a "female"/receiving position.
+		Return
+	EndIf 
+	
 	If(!Animation.IsVaginal && !Animation.IsAnal)
 		;; bail if it was not an insertion animation.
 		Util.PrintDebug("Preg Abort: Animation was not an insertion.")

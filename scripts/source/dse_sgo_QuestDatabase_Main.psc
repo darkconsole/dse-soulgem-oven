@@ -924,9 +924,11 @@ actor is physically not capable of producing this item.}
 
 	GemPregPercentDone = self.ActorGemTotalPercent(Who,TRUE)
 
-	If(GemPregPercentDone > WeightCur)
+	If(GemPregPercentDone >= (Main.Config.GetFloat(".WeightGainPregPercent") / 100.0) && WeightCur != 1 )
 		;; don't instantly get thicc, slowly add it every update.
-		self.ActorWeightSet(Who,(WeightCur + ((GemPregPercentDone * 0.1) * TimeSince)))
+		;; Added config value as to when weight gain should start.
+		;; Modified to gain weight based on weightdrain value multiplied with pregnancypercent+0.5.
+		self.ActorWeightSet(Who,(WeightCur + (WeightDrain * (GemPregPercentDone + 0.5))))
 	EndIf
 
 	;;;;;;;;
@@ -1031,7 +1033,7 @@ Float Function ActorMilkMax(Actor Who)
 	;; apply additive.
 	Val = self.ActorModGetFinal(Who,self.KeyActorModMilkMax,Val,FALSE)
 
-	Return Main.Util.RoundToInt(Val)
+	Return Val
 EndFunction
 
 Float Function ActorMilkTotalPercent(Actor Who)
