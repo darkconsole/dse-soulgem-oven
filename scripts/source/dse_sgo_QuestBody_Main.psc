@@ -94,6 +94,9 @@ Function ActorUpdateMilk(Actor Who)
 {handle body updates based on the state of their milk.}
 
 	Float MilkPercent = Main.Data.ActorMilkTotalPercent(Who)
+	
+	;;Relative milkpercent, compares current actor milk to base actor milk max. allows % values to go over 100%, needed for visual scaling, at least until DC adds Base and max size modifiers.
+	Float MilkPercentRelative = (Main.Data.ActorMilkAmount(Who)/Main.Config.GetInt(".ActorMilkMax"))
 
 	If(Who == Main.Player)
 		self.ActorUpdateMilkInfluence(Who,MilkPercent)
@@ -110,7 +113,7 @@ Function ActorUpdateMilk(Actor Who)
 		MilkPercent = 0.0
 	EndIf
 
-	self.ActorSlidersApply(Who,self.KeySlidersMilk,MilkPercent)
+	self.ActorSlidersApply(Who,self.KeySlidersMilk,MilkPercentRelative)
 
 	Return
 EndFunction
