@@ -93,7 +93,8 @@ EndFunction
 Function ActorUpdateMilk(Actor Who)
 {handle body updates based on the state of their milk.}
 
-	Float MilkPercent = Main.Data.ActorMilkTotalPercent(Who)
+	Float MilkPercent = Main.Data.ActorMilkTotalPercent(Who) 
+	
 	
 	;;Relative milkpercent, compares current actor milk to base actor milk max. allows % values to go over 100%, needed for visual scaling, at least until DC adds Base and max size modifiers.
 	Float MilkPercentRelative = (Main.Data.ActorMilkAmount(Who)/Main.Config.GetInt(".ActorMilkMax"))
@@ -102,12 +103,26 @@ Function ActorUpdateMilk(Actor Who)
 		self.ActorUpdateMilkInfluence(Who,MilkPercent)
 	EndIf
 	
-	If(MilkPercent >= 0.1)
-		;; todo - config option to tell me what body you are using. 
+	Float MilkOverlayPercent = MilkPercent - ((Main.Config.GetFloat(".MilkOverlayPercentage") / 100.0)) * (100 / (100- Main.Config.GetFloat(".MilkOverlayPercentage")))
+	
+	If(MilkPercent >=(Main.Config.GetFloat(".MilkOverlayPercentage")/100))
 		Main.Util.ActorOverlayApply(Who,"MilkLeak","textures\\dse-soulgem-oven\\MilkLeakCBBE.dds",1,MilkPercent)
 	Else
 		Main.Util.ActorOverlayClear(Who,"MilkLeak")
 	EndIf
+	
+	;; Count down the counter.
+	If(StorageUtil.GetIntValue(Who,"MilkLeakStage")>0)
+		StorageUtil.SetIntValue(Who,"MilkLeakStage",(StorageUtil.GetIntValue(Who,"MilkLeakStage")+-1))
+		;; Print countervalue to keep check
+		Main.Util.Print(StorageUtil.GetIntValue(Who,"MilkLeakStage"))
+		Main.Util.Print(Who)		
+	EndIf	
+	
+	;;Remove counter if at or below 0
+	If(StorageUtil.GetIntValue(Who,"MilkLeakStage")<=0)
+		StorageUtil.UnsetIntValue(Who,"MilkLeakStage")
+	Endif
 
 	If(Who.IsInFaction(Main.FactionNoBodyScale))
 		MilkPercent = 0.0
