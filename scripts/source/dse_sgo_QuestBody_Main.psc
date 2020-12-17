@@ -341,13 +341,9 @@ Function OnAnimationEvent_ActorMoan(Actor Who, Int Vol)
 {play an expression on the actor face.}
 
 	sslBaseExpression Face = Main.SexLab.GetExpressionByName("Pained")
-
 	sslBaseVoice Voice = Main.SexLab.PickVoice(Who)
 
-	If(Main.Config.GetBool(".EnableExpressions"))
-		Face.Apply(Who,50,Who.GetLeveledActorBase().GetSex())
-	EndIf	
-	
+	Face.Apply(Who,50,Who.GetLeveledActorBase().GetSex())
 	Voice.GetSound(Vol).Play(Who)
 
 	Return
