@@ -110,19 +110,6 @@ Function ActorUpdateMilk(Actor Who)
 	Else
 		Main.Util.ActorOverlayClear(Who,"MilkLeak")
 	EndIf
-	
-	;; Count down the counter.
-	If(StorageUtil.GetIntValue(Who,"MilkLeakStage")>0)
-		StorageUtil.SetIntValue(Who,"MilkLeakStage",(StorageUtil.GetIntValue(Who,"MilkLeakStage")+-1))
-		;; Print countervalue to keep check
-		Main.Util.Print(StorageUtil.GetIntValue(Who,"MilkLeakStage"))
-		Main.Util.Print(Who)		
-	EndIf	
-	
-	;;Remove counter if at or below 0
-	If(StorageUtil.GetIntValue(Who,"MilkLeakStage")<=0)
-		StorageUtil.UnsetIntValue(Who,"MilkLeakStage")
-	Endif
 
 	If(Who.IsInFaction(Main.FactionNoBodyScale))
 		MilkPercent = 0.0
