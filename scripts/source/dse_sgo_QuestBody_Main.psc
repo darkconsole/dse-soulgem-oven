@@ -103,10 +103,10 @@ Function ActorUpdateMilk(Actor Who)
 		self.ActorUpdateMilkInfluence(Who,MilkPercent)
 	EndIf
 	
-	Float MilkOverlayPercent = MilkPercent - ((Main.Config.GetFloat(".MilkOverlayPercentage") / 100.0)) * (100 / (100- Main.Config.GetFloat(".MilkOverlayPercentage")))
+	Float MilkOverlayPercent = (MilkPercent - (Main.Config.GetFloat(".MilkOverlayPercentage") / 100.0)) * (100 / (100- Main.Config.GetFloat(".MilkOverlayPercentage")))
 	
 	If(MilkPercent >=(Main.Config.GetFloat(".MilkOverlayPercentage")/100))
-		Main.Util.ActorOverlayApply(Who,"MilkLeak","textures\\dse-soulgem-oven\\MilkLeakCBBE.dds",1,MilkPercent)
+		Main.Util.ActorOverlayApply(Who,"MilkLeak","textures\\dse-soulgem-oven\\MilkLeakCBBE.dds",1,MilkOverlayPercent)
 	Else
 		Main.Util.ActorOverlayClear(Who,"MilkLeak")
 	EndIf
