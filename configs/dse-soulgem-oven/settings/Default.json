@@ -55,8 +55,8 @@
 		],
 		"Milk": [
 			{ "Name": "Breasts", "Max": 1.5 },
-			{ "Name": "BreastsGravity2", "Max": 1.0 },
-			{ "Name": "BreastsTopSlope", "Max": 0.5 }
+			{ "Name": "BreastGravity2", "Max": 1.0 },
+			{ "Name": "BreastTopSlope", "Max": 0.5 }
 		]
 	}
 }
