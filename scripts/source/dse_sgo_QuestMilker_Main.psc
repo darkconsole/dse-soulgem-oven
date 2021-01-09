@@ -21,7 +21,7 @@ the milk status and milk any bottles that are over the limit.}
 	Actor Who = What As Actor
 	Form Milk
 	Float Current
-	Int Max
+	Float Max
 
 	;; the ActorMilkInc will cause Body to emit another ActorUpdate
 	;; event. which we will then catch here again over and over until

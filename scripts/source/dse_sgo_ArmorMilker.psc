@@ -21,7 +21,7 @@ Event OnEquipped(Actor Who)
 	;; first crop off excess milks from before we were wearing this
 
 	Float Amount = Main.Data.ActorMilkAmount(Who)
-	Int Max = Main.Data.ActorMilkMax(Who)
+	Float Max = Main.Data.ActorMilkMax(Who)
 	Bool Produce = Main.Config.GetBool(".MilkerProduce")
 	Float Rate = Main.Config.GetFloat(".MilkerRate")
 

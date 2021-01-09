@@ -120,7 +120,7 @@ Function ActorScan()
 
 	Float MilkPercent
 	Float MilkCount
-	Int MilkMax
+	Float MilkMax
 	String MilkString
 	Float MilkOffset
 
