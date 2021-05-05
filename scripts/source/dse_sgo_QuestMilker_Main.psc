@@ -44,6 +44,40 @@ the milk status and milk any bottles that are over the limit.}
 		Milk = Main.Data.ActorGetMilk(Who)
 		Main.Data.ActorMilkInc(Who,-1.0)
 		Who.AddItem(Milk,1)
+		Main.Stats.IncInt(Who,Main.Stats.KeyMilksMilked,1,TRUE)
+		
+		If(Main.Config.GetBool(".MilkLeveling"))
+			Int MilkedCount = Main.Stats.GetInt(Who,Main.Stats.KeyMilksMilked)
+
+			Float MilkLevelingCapacityMult = Main.Config.GetFloat(".MilkLevelingCapacityMult")*MilkedCount
+			Float MilkLevelingCapacityMultCap = Main.Config.GetFloat(".MilkLevelingCapacityMultCap")
+			If MilkLevelingCapacityMult > MilkLevelingCapacityMultCap
+				MilkLevelingCapacityMult = MilkLevelingCapacityMultCap
+			EndIf
+
+			Float MilkLevelingGainMult = Main.Config.GetFloat(".MilkLevelingGainMult")*MilkedCount
+			Float MilkLevelingGainMultCap = Main.Config.GetFloat(".MilkLevelingGainMultCap")
+			If MilkLevelingGainMult > MilkLevelingGainMultCap
+				MilkLevelingGainMult = MilkLevelingGainMultCap
+			EndIf
+			
+			Float MilkLevelingSpeechMult = Main.Config.GetFloat(".MilkLevelingSpeechMult")*MilkedCount
+			Float MilkLevelingSpeechMultCap = Main.Config.GetFloat(".MilkLevelingSpeechMultCap")
+			If MilkLevelingSpeechMult > MilkLevelingSpeechMultCap
+				MilkLevelingSpeechMult = MilkLevelingSpeechMultCap
+			EndIf
+			
+			Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModMilkMaxMult,".MilkLevelCapacityMult",MilkLevelingCapacityMult)
+			Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModMilkRateMult,".MilkLevelRateMult",MilkLevelingGainMult)
+			Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModInfluenceMilkSpeechMult,".MilkLevelSpeechMult",MilkLevelingSpeechMult)
+			Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModInfluenceMilkSpeechExposedMult,".MilkLevelSpeechExposedMult",MilkLevelingSpeechMult)			
+		Else
+			Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModMilkMaxMult,".MilkLevelCapacityMult")
+			Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModMilkRateMult,".MilkLevelRateMult")
+			Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModInfluenceMilkSpeechMult,".MilkLevelSpeechMult")
+			Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModInfluenceMilkSpeechExposedMult,".MilkLevelSpeechExposedMult")	
+		EndIf			
+		
 	EndIf
 
 	Return
