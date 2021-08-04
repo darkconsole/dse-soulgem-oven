@@ -1,9 +1,9 @@
-Scriptname dse_sgo_QuestGemBar_Main extends SKI_WidgetBase
-
+Scriptname dse_sgo_QuestWidgetBase_Main extends Quest
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 dse_sgo_QuestController_Main Property Main Auto
+iWant_Widgets Property iWidgets Auto
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -46,21 +46,20 @@ Float Property SetH = 0.0 Auto Hidden
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Event OnWidgetInit()
-{override: when a widget is turned on.}
+Event OnInit()
 
-	;;self.WidgetBaseReset()
+	Main.Debug.PrintDebug("WidgetBase.OnInit")
+	RegisterForModEvent("iWantWidgetsReset", "OniWantWidgetsReset")
+	Return
+EndEvent
 
-	self.SetAlpha(0.0)
-	self.SetAnchor(self.PosH,self.PosV,FALSE)
-	self.SetScale(self.Scale)
-	self.SetPosition(self.PosX,self.PosY)
-	self.SetColour(self.ColourLeft,self.ColourRight,self.ColourFlash)
-	self.SetDirection(self.Direction)
-	self.SetTitle(self.Title)
-	self.SetText(self.Text)
+Event OniWantWidgetsReset(String EventName, String ArgStr, Float ArgNum, Form From)
 
-	self.WidgetReady("SGO4.GemBar.Ready")
+	If(EventName != "iWantWidgetsReset")
+		Return
+	EndIf
+
+	this.iWidgets = From As iWant_Widgets
 	Return
 EndEvent
 

@@ -742,6 +742,67 @@ Function ActorOverlayClear(Actor Who, String OverlayName)
 	Return
 EndFunction
 
+Function ActorCleanAll(Bool Force=FALSE)
+{loop through all tracked actors and remove all the data we've made for them.}
+
+	Int ActorCount = 0
+	Int ActorIter = 0
+	Int ActorDone = 0
+	Actor Who = NONE
+
+	;; first consider if it is currently background processing actors.
+	;; its best to let that finish first.
+
+	If(!Main.Loop.WaitForUnlock() && !Force)
+		Debug.MessageBox("SGO4: The background loop is somehow still busy, this attempt to clean had to bail.")
+		Return
+	EndIf
+
+	ActorCount = Main.Data.ActorTrackingCount()
+	
+	While(ActorIter < ActorCount)
+		Who = Main.Data.ActorTrackingGet(ActorIter)
+
+		If(Who != NONE)
+			self.PrintDebug("Cleanup " + Who.GetDisplayName())
+			self.ActorClean(Who)
+			ActorDone += 1
+		EndIf
+
+		ActorIter += 1
+	EndWhile
+
+	Main.Data.ActorTrackingCull()
+	Debug.MessageBox("SGO4: All mod data has been purged from NPCs.")
+	self.PrintDebug("Total Cleanup: " + ActorDone + " NPCs")
+	Return
+EndFunction
+
+Function ActorClean(Actor Who)
+{remove the data for a specific actor.}
+
+	;; pull them out of the tracking system.
+
+	Main.Data.ActorTrackingRemove(Who)
+
+	;; tell storage util to flush all the things.
+
+	StorageUtil.ClearAllObjPrefix(Who,"SGO4.")
+
+	;; remove from our factions
+
+	Who.RemoveFromFaction(Main.FactionProduceGems)
+	Who.RemoveFromFaction(Main.FactionProduceMilk)
+	Who.RemoveFromFaction(Main.FactionProduceSemen)
+
+	;; tell nio to reset their bodies.
+
+	Main.Body.ActorSlidersClear(Who,Main.Body.KeySlidersGems)
+	Main.Body.ActorSlidersClear(Who,Main.Body.KeySlidersMilk)
+
+	Return
+EndFunction
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

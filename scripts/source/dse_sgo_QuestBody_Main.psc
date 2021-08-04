@@ -239,9 +239,9 @@ Function ActorSlidersClear(Actor Who, String Prefix)
 	String MorphKey = ""
 
 	If(Prefix == self.KeySlidersGems)
-		MorphKey = self.KeyMorphGems;
+		MorphKey = self.KeyMorphGems
 	ElseIf(Prefix == self.KeySlidersMilk)
-		MorphKey = self.KeyMorphMilk;
+		MorphKey = self.KeyMorphMilk
 	EndIf
 
 	If(StringUtil.GetLength(MorphKey) == 0)

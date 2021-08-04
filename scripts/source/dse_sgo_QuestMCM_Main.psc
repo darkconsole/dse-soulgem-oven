@@ -338,6 +338,14 @@ Event OnOptionSelect(Int Item)
 
 	;;;;;;;;
 
+	ElseIf(Item == ItemDebugCleanAll)
+		Debug.MessageBox(Main.Util.StringLookup("SoulgemOvenStartCloseMenu"))
+		Utility.Wait(0.1)
+
+		Main.Util.ActorCleanAll()
+
+		Return
+
 	ElseIf(Item == ItemModStatus)
 		Debug.MessageBox(Main.Util.StringLookup("SoulgemOvenStartCloseMenu"))
 		Utility.Wait(0.1)
@@ -807,6 +815,8 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_UpdateAfterWait"
 	ElseIf(Item == ItemDebug)
 		Txt = "$SGO4_MenuTip_Debug"
+	ElseIf(Item == ItemDebugCleanAll)
+		Txt = "$SGO4_MenuTip_DebugCleanAll"
 	ElseIf(Item == ItemDatabankShowAll)
 		Txt = "$SGO4_MenuTip_DatabankShowAll"
 	ElseIf(Item == ItemDatabankShowAll)
@@ -1123,6 +1133,7 @@ Int ItemDebugPlayerSemenEmpty
 Int ItemDebugPlayerSemenHalf
 Int ItemDebugPlayerSemenMax
 Int ItemDebugIsActorTracked
+Int ItemDebugCleanAll
 
 Function ShowPageDebug()
 
@@ -1173,6 +1184,11 @@ Function ShowPageDebug()
 	Else
 		ItemDebugIsActorTracked = AddTextOption("$SGO4_MenuOpt_DebugIsActorTracked","$SGO4_Word_No")
 	EndIf
+
+	AddEmptyOption()
+
+	AddHeaderOption("")
+	ItemDebugCleanAll = AddToggleOption("$SGO4_MenuOpt_DebugCleanAll",FALSE)
 
 	Return
 EndFunction

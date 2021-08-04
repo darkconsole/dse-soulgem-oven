@@ -352,8 +352,7 @@ added to this list.}
 EndFunction
 
 Function ActorTrackingRemove(Actor Who)
-{it does not matter why we want to track the actor. for any reason they get
-added to this list.}
+{stop tracking this actor.}
 
 	StorageUtil.FormListRemove(None,KeyActorTracking,Who,TRUE)
 

@@ -1,6 +1,7 @@
 ScriptName dse_sgo_QuestUpdateLoop_Main extends Quest
 
 dse_sgo_QuestController_Main Property Main Auto
+Bool Property Lock = FALSE Auto Hidden
 
 Event OnInit()
 {kick off the processor loop. this will handle the passive progression of
@@ -35,6 +36,7 @@ Event OnUpdate()
 	ActorCull = FALSE
 
 	While(ActorIter < ActorCount)
+		self.Lock = TRUE
 		Who = Main.Data.ActorTrackingGet(ActorIter)
 
 		If(Who != None)
@@ -54,6 +56,8 @@ Event OnUpdate()
 		Main.Util.PrintDebug("Update detected lost references, cleaning tracking list.")
 		Main.Data.ActorTrackingCull()
 	EndIf
+
+	self.Lock = FALSE
 
 	;;;;;;;;
 	;;;;;;;;
@@ -76,3 +80,25 @@ EndEvent
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Bool Function WaitForUnlock(Int AttemptMax=20, Float AttemptDelay=2.0)
+{provide a way to spinlock while this is busy. returns true if unlocked, false
+if still locked. the return value means is it safe to do what you wanted to do.}
+
+	Int Attempt = 0
+
+	If(!self.Lock)
+		Return TRUE
+	EndIf
+
+	While(Attempt < AttemptMax)
+		Attempt += 1
+		Utility.WaitMenuMode(AttemptDelay)
+
+		If(!self.Lock)
+			Attempt = AttemptMax
+		EndIf
+	EndWhile
+
+	Return !self.Lock
+EndFunction
