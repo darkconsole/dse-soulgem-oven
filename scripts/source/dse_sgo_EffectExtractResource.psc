@@ -159,9 +159,11 @@ Event OnAnimatedSpawnItem(Form Who)
 	If(Who != self.Source)
 		Return
 	EndIf
-
-	self.DropResource(self.ExtractResource())
-
+	
+	;; Check to prevent all resources being spawned near instantly
+	If(self.ResourceCount > 0)
+		self.DropResource(self.ExtractResource())
+	EndIf
 	;; if we are out of resources then kick the animation into its final
 	;; stage so we can exit.
 
@@ -258,15 +260,85 @@ Form Function ExtractResource()
 	EndIf
 
 	If(self.ResourceType == self.ResourceGem)
-		Output = Main.Data.GemStageGet(Math.Floor(Main.Data.ActorGemRemoveLargest(self.Source)))
-		Main.Stats.IncInt(self.Source,Main.Stats.KeyGemsBirthed,1,TRUE)
-	EndIf
+		If(Main.Config.GetBool(".GemLeveling"))
+		
+			StorageUtil.FloatListSort(self.Source,Main.Data.KeyActorGemData)
+			If(StorageUtil.FloatListGet(self.Source,Main.Data.KeyActorGemData,0)<6)
+				Main.Util.PrintDebug("The gems are not done yet.")
+				Main.Util.Print("The gems refuse to budge.")
+				self.ResourceCount = 0
+				Return Output
+			EndIf		
+			
+			Int GemCount = Main.Stats.GetInt(self.Source,Main.Stats.KeyGemsBirthed)
+			Float GemLevel = ((GemCount/Main.Config.GetFloat(".GemLevelingThreshold"))+1)
+			If GemLevel > 6
+				GemLevel = 6
+			EndIf
+			Output = Main.Data.GemStageGet(Math.Floor(GemLevel))
+			Main.Data.ActorGemRemoveLargest(self.Source)
+			Main.Stats.IncInt(self.Source,Main.Stats.KeyGemsBirthed,1,TRUE)
+			
+			
+			GemCount = Main.Stats.GetInt(self.Source,Main.Stats.KeyGemsBirthed)
+			GemLevel = ((GemCount/Main.Config.GetFloat(".GemLevelingThreshold"))+1)
+			Float GemLevelingStatsMult = Main.Config.GetFloat(".GemLevelingStatsMult")*GemCount
+			Float GemLevelingStatsMultCap = Main.Config.GetFloat(".GemLevelingStatsMultCap")
+			If GemLevelingStatsMult > GemLevelingStatsMultCap
+				GemLevelingStatsMult = GemLevelingStatsMultCap
+			EndIf
+			Main.Data.ActorModSetValue(self.Source,Main.Data.KeyActorModGemsRateMult,".GemLevelingRatePenalty",Math.Pow(Main.Config.GetFloat(".GemLevelingRatePenalty"),(Math.Floor(GemLevel))))			
+			Main.Data.ActorModSetValue(self.Source,Main.Data.KeyActorModInfluenceGemsHealthMult,".GemLevelingHealthMult",GemLevelingStatsMult)
+			Main.Data.ActorModSetValue(self.Source,Main.Data.KeyActorModInfluenceGemsMagickaMult,".GemLevelingMagickaMult",GemLevelingStatsMult)
+
+		Else
+			Output = Main.Data.GemStageGet(Math.Floor(Main.Data.ActorGemRemoveLargest(self.Source)))
+			Main.Stats.IncInt(self.Source,Main.Stats.KeyGemsBirthed,1,TRUE)
+			
+			Main.Data.ActorModUnsetValue(self.Source,Main.Data.KeyActorModGemsRateMult,".GemLevelingRatePenalty")
+			Main.Data.ActorModUnsetValue(self.Source,Main.Data.KeyActorModInfluenceGemsMagickaMult,".GemLevelingMagickaMult")
+			Main.Data.ActorModUnsetValue(self.Source,Main.Data.KeyActorModInfluenceGemsHealthMult,".GemLevelingHealthMult")
+			
+			
+		EndIf
+	EndIf	
 
 	If(self.ResourceType == self.ResourceMilk)
 		Output = Main.Data.RaceGetMilk(self.RaceMap[0],self.RaceMap[1])
 		Main.Data.ActorMilkLimit(self.Source)
 		Main.Data.ActorMilkInc(self.Source,-1.0)
 		Main.Stats.IncInt(self.Source,Main.Stats.KeyMilksMilked,1,TRUE)
+		If(Main.Config.GetBool(".MilkLeveling"))
+			Int MilkedCount = Main.Stats.GetInt(self.Source,Main.Stats.KeyMilksMilked)
+
+			Float MilkLevelingCapacityMult = Main.Config.GetFloat(".MilkLevelingCapacityMult")*MilkedCount
+			Float MilkLevelingCapacityMultCap = Main.Config.GetFloat(".MilkLevelingCapacityMultCap")
+			If MilkLevelingCapacityMult > MilkLevelingCapacityMultCap
+				MilkLevelingCapacityMult = MilkLevelingCapacityMultCap
+			EndIf
+
+			Float MilkLevelingGainMult = Main.Config.GetFloat(".MilkLevelingGainMult")*MilkedCount
+			Float MilkLevelingGainMultCap = Main.Config.GetFloat(".MilkLevelingGainMultCap")
+			If MilkLevelingGainMult > MilkLevelingGainMultCap
+				MilkLevelingGainMult = MilkLevelingGainMultCap
+			EndIf
+			
+			Float MilkLevelingSpeechMult = Main.Config.GetFloat(".MilkLevelingSpeechMult")*MilkedCount
+			Float MilkLevelingSpeechMultCap = Main.Config.GetFloat(".MilkLevelingSpeechMultCap")
+			If MilkLevelingSpeechMult > MilkLevelingSpeechMultCap
+				MilkLevelingSpeechMult = MilkLevelingSpeechMultCap
+			EndIf
+			
+			Main.Data.ActorModSetValue(self.Source,Main.Data.KeyActorModMilkMaxMult,".MilkLevelCapacityMult",MilkLevelingCapacityMult)
+			Main.Data.ActorModSetValue(self.Source,Main.Data.KeyActorModMilkRateMult,".MilkLevelRateMult",MilkLevelingGainMult)
+			Main.Data.ActorModSetValue(self.Source,Main.Data.KeyActorModInfluenceMilkSpeechMult,".MilkLevelSpeechMult",MilkLevelingSpeechMult)
+			Main.Data.ActorModSetValue(self.Source,Main.Data.KeyActorModInfluenceMilkSpeechExposedMult,".MilkLevelSpeechExposedMult",MilkLevelingSpeechMult)			
+		Else
+			Main.Data.ActorModSetValue(self.Source,Main.Data.KeyActorModMilkMaxMult,".MilkLevelCapacityMult")
+			Main.Data.ActorModSetValue(self.Source,Main.Data.KeyActorModMilkRateMult,".MilkLevelRateMult")
+			Main.Data.ActorModSetValue(self.Source,Main.Data.KeyActorModInfluenceMilkSpeechMult,".MilkLevelSpeechMult")
+			Main.Data.ActorModSetValue(self.Source,Main.Data.KeyActorModInfluenceMilkSpeechExposedMult,".MilkLevelSpeechExposedMult")	
+		EndIf			
 	EndIf
 
 	If(self.ResourceType == self.ResourceSemen)

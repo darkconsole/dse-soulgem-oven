@@ -93,15 +93,20 @@ EndFunction
 Function ActorUpdateMilk(Actor Who)
 {handle body updates based on the state of their milk.}
 
-	Float MilkPercent = Main.Data.ActorMilkTotalPercent(Who)
+	Float MilkPercent = Main.Data.ActorMilkTotalPercent(Who) 
+	
+	
+	;;Relative milkpercent, compares current actor milk to base actor milk max. allows % values to go over 100%, needed for visual scaling, at least until DC adds Base and max size modifiers.
+	Float MilkPercentRelative = (Main.Data.ActorMilkAmount(Who)/Main.Config.GetInt(".ActorMilkMax"))
 
 	If(Who == Main.Player)
 		self.ActorUpdateMilkInfluence(Who,MilkPercent)
 	EndIf
 	
-	If(MilkPercent >= 0.1)
-		;; todo - config option to tell me what body you are using. 
-		Main.Util.ActorOverlayApply(Who,"MilkLeak","textures\\dse-soulgem-oven\\MilkLeakCBBE.dds",1,MilkPercent)
+	Float MilkOverlayPercent = (MilkPercent - (Main.Config.GetFloat(".MilkOverlayPercentage") / 100.0)) * (100 / (100- Main.Config.GetFloat(".MilkOverlayPercentage")))
+	
+	If(MilkPercent >=(Main.Config.GetFloat(".MilkOverlayPercentage")/100))
+		Main.Util.ActorOverlayApply(Who,"MilkLeak","textures\\dse-soulgem-oven\\MilkLeakCBBE.dds",1,MilkOverlayPercent)
 	Else
 		Main.Util.ActorOverlayClear(Who,"MilkLeak")
 	EndIf
@@ -110,7 +115,7 @@ Function ActorUpdateMilk(Actor Who)
 		MilkPercent = 0.0
 	EndIf
 
-	self.ActorSlidersApply(Who,self.KeySlidersMilk,MilkPercent)
+	self.ActorSlidersApply(Who,self.KeySlidersMilk,MilkPercentRelative)
 
 	Return
 EndFunction
@@ -323,9 +328,13 @@ Function OnAnimationEvent_ActorMoan(Actor Who, Int Vol)
 {play an expression on the actor face.}
 
 	sslBaseExpression Face = Main.SexLab.GetExpressionByName("Pained")
+
 	sslBaseVoice Voice = Main.SexLab.PickVoice(Who)
 
-	Face.Apply(Who,50,Who.GetLeveledActorBase().GetSex())
+	If(Main.Config.GetBool(".EnableExpressions"))
+		Face.Apply(Who,50,Who.GetLeveledActorBase().GetSex())
+	EndIf	
+	
 	Voice.GetSound(Vol).Play(Who)
 
 	Return
