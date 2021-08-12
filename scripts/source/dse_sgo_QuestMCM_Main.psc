@@ -325,6 +325,11 @@ Event OnOptionSelect(Int Item)
 	ElseIf(Item == ItemMessagesNPC)
 		Val = !Main.Config.GetBool(".MessagesNPC")
 		Main.Config.SetBool(".MessagesNPC",Val)
+		
+	ElseIf(Item == ItemBirthGemsFilled)
+		Val = !Main.Config.GetBool(".BirthGemsFilled")
+		Main.Config.SetBool(".BirthGemsFilled",Val)
+		Main.Data.GemStagePopulate()
 
 	ElseIf(Item == ItemActorUpdateName)
 		Val = !Main.Config.GetBool(".ActorUpdateName")
@@ -464,6 +469,51 @@ Event OnOptionSliderOpen(Int Item)
 		Min = 0.0
 		Max = 10.0
 		Interval = 0.05
+	ElseIf(Item == ItemInfluenceGemsWhen)
+		Val = Main.Config.GetFloat(".InfluenceGemsWhen")
+		Min = 0.01
+		Max = 1.0
+		Interval = 0.01
+	ElseIf(Item == ItemInfluenceMilkWhen)
+		Val = Main.Config.GetFloat(".InfluenceMilkWhen")
+		Min = 0.01
+		Max = 1.0
+		Interval = 0.01
+	ElseIf(Item == ItemFertilityChance)
+		Val = Main.Config.GetFloat(".FertilityChance")
+		Min = 0.0
+		Max = 100.0
+		Interval = 1.0
+	ElseIf(Item == ItemFertilityDays)
+		Val = Main.Config.GetFloat(".FertilityDays")
+		Min = 1.0
+		Max = 30.0
+		Interval = 1.0
+	ElseIf(Item == ItemFertilityWindow)
+		Val = Main.Config.GetFloat(".FertilityWindow")
+		Min = 1.0
+		Max = 3.0
+		Interval = 0.1
+	ElseIf(Item == ItemLevelAlchFactor)
+		Val = Main.Config.GetFloat(".LevelAlchFactor")
+		Min = 0.0
+		Max = 2.0
+		Interval = 0.1
+	ElseIf(Item == ItemLevelEnchFactor)
+		Val = Main.Config.GetFloat(".LevelEnchFactor")
+		Min = 0.0
+		Max = 2.0
+		Interval = 0.1
+	ElseIf(Item == ItemLevelValueBase)
+		Val = Main.Config.GetFloat(".LevelValueBase")
+		Min = 0.0
+		Max = 200.0
+		Interval = 1.0
+	ElseIf(Item == ItemSemensPerDay)
+		Val = Main.Config.GetFloat(".SemensPerDay")
+		Min = 0.0
+		Max = 10.0
+		Interval = 1.0					
 	ElseIf(PageCurrentKey == "$SGO4_Menu_GemSliders" || PageCurrentKey == "$SGO4_Menu_MilkSliders")
 
 		Int ItemCount = ItemSliderVal.Length
@@ -552,6 +602,34 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 	ElseIf(Item == ItemActorWeightDays)
 		Fmt = "{2}"
 		Main.Config.SetFloat(".ActorWeightDays",Val)
+
+	ElseIf(Item == ItemInfluenceGemsWhen)
+		Fmt = "{0}"
+		Main.Config.SetFloat(".InfluenceGemsWhen",Val)
+	ElseIf(Item == ItemInfluenceMilkWhen)
+		Fmt = "{0}"
+		Main.Config.SetFloat(".InfluenceMilkWhen",Val)
+	ElseIf(Item == ItemFertilityChance)
+		Fmt = "{0}"
+		Main.Config.SetFloat(".FertilityChance",Val)
+	ElseIf(Item == ItemFertilityDays)
+		Fmt = "{0}"
+		Main.Config.SetFloat(".FertilityDays",Val)
+	ElseIf(Item == ItemFertilityWindow)
+		Fmt = "{0}"
+		Main.Config.SetFloat(".FertilityWindow",Val)
+	ElseIf(Item == ItemLevelAlchFactor)
+		Fmt = "{0}"
+		Main.Config.SetFloat(".LevelAlchFactor",Val)
+	ElseIf(Item == ItemLevelEnchFactor)
+		Fmt = "{0}"
+		Main.Config.SetFloat(".LevelEnchFactor",Val)
+	ElseIf(Item == ItemLevelValueBase)
+		Fmt = "{0}"
+		Main.Config.SetFloat(".LevelValueBase",Val)
+	ElseIf(Item == ItemSemensPerDay)
+		Fmt = "{0}"
+		Main.Config.SetFloat(".SemensPerDay",Val)		
 
 	ElseIf(PageCurrentKey == "$SGO4_Menu_GemSliders" || PageCurrentKey == "$SGO4_Menu_MilkSliders")
 
@@ -823,6 +901,30 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_MessagesPlayer"
 	ElseIf(Item == ItemMessagesNPC)
 		Txt = "$SGO4_MenuTip_MessagesNPC"
+
+	ElseIf(Item == ItemBirthGemsFilled)
+		Txt = "$SGO4_MenuTip_ItemBirthGemsFilled"
+	ElseIf(Item == ItemInfluenceGemsWhen)
+		Txt = "$SGO4_MenuTip_ItemInfluenceGemsWhen"
+	ElseIf(Item == ItemInfluenceMilkWhen)
+		Txt = "$SGO4_MenuTip_ItemInfluenceMilkWhen"
+	ElseIf(Item == ItemFertilityChance)
+		Txt = "$SGO4_MenuTip_ItemFertilityChance"
+	ElseIf(Item == ItemFertilityDays)
+		Txt = "$SGO4_MenuTip_ItemFertilityDays"
+	ElseIf(Item == ItemFertilityWindow)
+		Txt = "$SGO4_MenuTip_ItemFertilityWindow"
+	ElseIf(Item == ItemLevelAlchFactor)
+		Txt = "$SGO4_MenuTip_ItemLevelAlchFactor"
+	ElseIf(Item == ItemLevelEnchFactor)
+		Txt = "$SGO4_MenuTip_ItemLevelEnchFactor"
+	ElseIf(Item == ItemLevelValueBase)
+		Txt = "$SGO4_MenuTip_ItemLevelValueBase"
+	ElseIf(Item == ItemMilksPregPercent)
+		Txt = "$SGO4_MenuTip_ItemMilksPregPercent"
+	ElseIf(Item == ItemSemensPerDay)
+		Txt = "$SGO4_MenuTip_ItemSemensPerDay"
+		
 	EndIf
 
 	self.SetInfoText(Txt)
@@ -989,6 +1091,20 @@ Int ItemFertilitySync
 Int ItemMessagesPlayer
 Int ItemMessagesNPC
 
+Int ItemBirthGemsFilled
+Int ItemSemensPerDay
+
+Int ItemFertilityChance
+Int ItemFertilityDays
+Int ItemFertilityWindow
+Int ItemLevelAlchFactor
+Int ItemLevelEnchFactor
+Int ItemLevelValueBase
+
+Int ItemInfluenceGemsWhen
+Int ItemInfluenceMilkWhen
+
+
 Function ShowPageGameplay()
 
 	self.SetTitleText("$SGO4_MenuTitle_Gameplay")
@@ -999,11 +1115,13 @@ Function ShowPageGameplay()
 	AddHeaderOption("")
 
 	ItemGemsPerDay = AddSliderOption("$SGO4_MenuOpt_GemsPerDay",Main.Config.GetFloat(".GemsPerDay"),"{2}")
+	ItemBirthGemsFilled = AddToggleOption("$SGO4_MenuOpt_BirthGemsFilled",Main.Config.GetBool("BirthGemsFilled"))
 	ItemMilksPregPercent = AddSliderOption("$SGO4_MenuOpt_MilksPregPercent",Main.Config.GetFloat(".MilksPregPercent"),"{0}%")
 	ItemMilksPerDay = AddSliderOption("$SGO4_MenuOpt_MilksPerDay",Main.Config.GetFloat(".MilksPerDay"),"{2}")
 	ItemMilksPassiveLoss = AddSliderOption("$SGO4_MenuOpt_MilksPassiveLoss",(Main.Config.GetFloat(".MilksPassiveLoss") * 100),"{0}%")
 	ItemMilkerProduce = AddToggleOption("$SGO4_MenuOpt_MilkerProduce",Main.Config.GetBool(".MilkerProduce"))
 	ItemMilkerRate = AddSliderOption("$SGO4_MenuOpt_MilkerRate",(Main.Config.GetFloat(".MilkerRate") * 100),"{0}%")
+	ItemSemensPerDay = AddSliderOption("$SGO4_MenuOpt_SemensPerDay",Main.Config.GetFloat(".SemensPerDay"))
 	ItemMessagesPlayer = AddToggleOption("$SGO4_MenuOpt_MessagesPlayer",Main.Config.GetBool(".MessagesPlayer"))
 	ItemMessagesNPC = AddToggleOption("$SGO4_MenuOpt_MessagesNPC",Main.Config.GetBool(".MessagesNPC"))
 	AddEmptyOption()
@@ -1012,11 +1130,17 @@ Function ShowPageGameplay()
 	AddHeaderOption("$SGO4_MenuOpt_ActorOptions")
 	AddHeaderOption("")
 
-	ItemActorGemsMax = AddSliderOption("$SGO4_MenuOpt_ActorGemsMax",Main.Config.GetInt(".ActorGemsMax"),"{0}")
-	ItemActorMilkMax = AddSliderOption("$SGO4_MenuOpt_ActorMilkMax",Main.Config.GetInt(".ActorMilkMax"),"{0}")
-	ItemActorSemenMax = AddSliderOption("$SGO4_MenuOpt_ActorSemenMax",Main.Config.GetInt(".ActorSemenMax"),"{0}")
-	ItemActorWeightDays = AddSliderOption("$SGO4_MenuOpt_ActorWeightDays",Main.Config.GetFloat(".ActorWeightDays"),"{2}")
+	ItemActorGemsMax = AddSliderOption("$SGO4_MenuOpt_ActorGemsMax",Main.Config.GetInt(".ActorGemsMax"))
+	ItemActorMilkMax = AddSliderOption("$SGO4_MenuOpt_ActorMilkMax",Main.Config.GetInt(".ActorMilkMax"))
+	ItemActorSemenMax = AddSliderOption("$SGO4_MenuOpt_ActorSemenMax",Main.Config.GetInt(".ActorSemenMax"))
+	ItemActorWeightDays = AddSliderOption("$SGO4_MenuOpt_ActorWeightDays",Main.Config.GetFloat(".ActorWeightDays"))
 	ItemFertilitySync = AddToggleOption("$SGO4_MenuOpt_FertilitySync",Main.Config.GetBool(".FertilitySync"))
+	ItemFertilityChance = AddSliderOption("$SGO4_MenuOpt_FertilityChance",Main.Config.GetFloat(".FertilityChance"),"{0}%")
+	ItemFertilityDays = AddSliderOption("$SGO4_MenuOpt_FertilityDays",Main.Config.GetFloat(".FertilityDays"))
+	ItemFertilityWindow = AddSliderOption("$SGO4_MenuOpt_FertilityWindow",Main.Config.GetFloat(".FertilityWindow"),"{1}")
+	ItemLevelAlchFactor = AddSliderOption("$SGO4_MenuOpt_LevelAlchFactor",Main.Config.GetFloat(".LevelAlchFactor"),"{2}")
+	ItemLevelEnchFactor = AddSliderOption("$SGO4_MenuOpt_LevelEnchFactor",Main.Config.GetFloat(".LevelEnchFactor"),"{2}")
+	ItemLevelValueBase	 = AddSliderOption("$SGO4_MenuOpt_LevelValueBase",Main.Config.GetFloat(".LevelValueBase"))	
 	AddEmptyOption()
 	AddEmptyOption()
 	AddEmptyOption()
@@ -1028,6 +1152,8 @@ Function ShowPageGameplay()
 	ItemInfluenceMilkSpeech = AddSliderOption("$SGO4_MenuOpt_InfluenceMilkSpeech",Main.Config.GetFloat(".InfluenceMilkSpeech"),"{0}")
 	ItemInfluenceGemsMagicka = AddSliderOption("$SGO4_MenuOpt_InfluenceGemsMagicka",Main.Config.GetFloat(".InfluenceGemsMagicka"),"{0}")
 	ItemInfluenceMilkSpeechExposed = AddSliderOption("$SGO4_MenuOpt_InfluenceMilkSpeechExposed",Main.Config.GetFloat(".InfluenceMilkSpeechExposed"),"{0}")
+	ItemInfluenceGemsWhen = AddSliderOption("$SGO4_MenuOpt_InfluenceGemsWhen",Main.Config.GetFloat(".InfluenceGemsWhen"),"{2}")
+	ItemInfluenceMilkWhen = AddSliderOption("$SGO4_MenuOpt_InfluenceMilkWhen",Main.Config.GetFloat(".InfluenceMilkWhen"),"{2}")	
 
 	Return
 EndFunction
