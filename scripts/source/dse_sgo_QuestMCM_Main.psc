@@ -93,7 +93,7 @@ String PageCurrentKey
 Event OnConfigInit()
 {things to do when the menu initalises (is opening)}
 
-	self.Pages = new String[8]
+	self.Pages = new String[9]
 
 	self.Pages[0] = "$SGO4_Menu_Databank"
 	;; sgo actor tracking data.
@@ -104,19 +104,22 @@ Event OnConfigInit()
 	self.Pages[2] = "$SGO4_Menu_Gameplay"
 	;; gameplay settings
 
-	self.Pages[3] = "$SGO4_Menu_GemSliders"
+	self.Pages[3] = "$SGO4_Menu_Integration"
+	;; Integration settings	
+
+	self.Pages[4] = "$SGO4_Menu_GemSliders"
 	;; pregnancy sliders
 
-	self.Pages[4] = "$SGO4_Menu_MilkSliders"
+	self.Pages[5] = "$SGO4_Menu_MilkSliders"
 	;; milking sliders
 
-	self.Pages[5] = "$SGO4_Menu_Widgets"
+	self.Pages[6] = "$SGO4_Menu_Widgets"
 	;; widget settings utilities
 
-	self.Pages[6] = "$SGO4_Menu_Debug"
+	self.Pages[7] = "$SGO4_Menu_Debug"
 	;; testing utilities
 
-	self.Pages[7] = "$SGO4_Menu_Splash"
+	self.Pages[8] = "$SGO4_Menu_Splash"
 	;; splash screen
 
 	Return
@@ -153,6 +156,8 @@ Event OnPageReset(String Page)
 		self.ShowPageDatabank()
 	ElseIf(Page == "$SGO4_Menu_Gameplay")
 		self.ShowPageGameplay()
+	ElseIf(Page == "$SGO4_Menu_Integration")
+		self.ShowPageIntegration()		
 	ElseIf(Page == "$SGO4_Menu_Widgets")
 		self.ShowPageWidgets()
 	ElseIf(Page == "$SGO4_Menu_GemSliders")
@@ -331,6 +336,64 @@ Event OnOptionSelect(Int Item)
 		Main.Config.SetBool(".BirthGemsFilled",Val)
 		Main.Data.GemStagePopulate()
 
+
+	ElseIf(Item == ItemSoloMissionGivesSemen)
+		Val = !Main.Config.GetBool(".SoloMissionGivesSemen")
+		Main.Config.SetBool(".SoloMissionGivesSemen",Val)
+
+	ElseIf(Item == ItemEnableExpressions)
+		Val = !Main.Config.GetBool(".EnableExpressions")
+		Main.Config.SetBool(".EnableExpressions",Val)
+
+	ElseIf(Item == ItemMessagesInsemination)
+		Val = !Main.Config.GetBool(".MessagesInsemination")
+		Main.Config.SetBool(".MessagesInsemination",Val)
+
+	ElseIf(Item == ItemFixFemaleToMaleImp)
+		Val = !Main.Config.GetBool(".FixFemaleToMaleImp")
+		Main.Config.SetBool(".FixFemaleToMaleImp",Val)
+
+	ElseIf(Item == ItemMilkLeveling)
+		Val = !Main.Config.GetBool(".MilkLeveling")
+		Main.Config.SetBool(".MilkLeveling",Val)
+
+	ElseIf(Item == ItemGemLeveling)
+		Val = !Main.Config.GetBool(".GemLeveling")
+		Main.Config.SetBool(".GemLeveling",Val)
+
+	ElseIf(Item == ItemWeightIncreasesFertility)
+		Val = !Main.Config.GetBool(".WeightIncreasesFertility")
+		Main.Config.SetBool(".WeightIncreasesFertility",Val)
+
+	ElseIf(Item == ItemOrgasmGrowsMilk)
+		Val = !Main.Config.GetBool(".OrgasmGrowsMilk")
+		Main.Config.SetBool(".OrgasmGrowsMilk",Val)
+
+	ElseIf(Item == ItemOrgasmGrowsGems)
+		Val = !Main.Config.GetBool(".OrgasmGrowsGems")
+		Main.Config.SetBool(".OrgasmGrowsGems",Val)
+
+	ElseIf(Item == ItemOrgasmIncreasesWeight)
+		Val = !Main.Config.GetBool(".OrgasmIncreasesWeight")
+		Main.Config.SetBool(".OrgasmIncreasesWeight",Val)
+
+	ElseIf(Item == ItemEjaculationIncreasesWeight)
+		Val = !Main.Config.GetBool(".EjaculationIncreasesWeight")
+		Main.Config.SetBool(".EjaculationIncreasesWeight",Val)
+
+	ElseIf(Item == ItemEjaculationGrowsGems)
+		Val = !Main.Config.GetBool(".EjaculationGrowsGems")
+		Main.Config.SetBool(".EjaculationGrowsGems",Val)
+
+	ElseIf(Item == ItemOrgasmMilksMilk)
+		Val = !Main.Config.GetBool(".OrgasmMilksMilk")
+		Main.Config.SetBool(".OrgasmMilksMilk",Val)
+
+	ElseIf(Item == ItemOrgasmMilksGivesMilk)
+		Val = !Main.Config.GetBool(".OrgasmMilksGivesMilk")
+		Main.Config.SetBool(".OrgasmMilksGivesMilk",Val)
+		
+
 	ElseIf(Item == ItemActorUpdateName)
 		Val = !Main.Config.GetBool(".ActorUpdateName")
 		Main.Config.SetBool(".ActorUpdateName",Val)
@@ -406,22 +469,22 @@ Event OnOptionSliderOpen(Int Item)
 		Interval = 1.0
 	ElseIf(Item == ItemInfluenceMilkSpeech)
 		Val = Main.Config.GetFloat(".InfluenceMilkSpeech")
-		Min = 0.0
+		Min = -50.0
 		Max = 50.0
 		Interval = 1.0
 	ElseIf(Item == ItemInfluenceMilkSpeechExposed)
 		Val = Main.Config.GetFloat(".InfluenceMilkSpeechExposed")
-		Min = 0.0
+		Min = -20.0
 		Max = 20.0
 		Interval = 1.0
 	ElseIf(Item == ItemInfluenceGemsHealth)
 		Val = Main.Config.GetFloat(".InfluenceGemsHealth")
-		Min = 0.0
+		Min = -150.0
 		Max = 150.0
 		Interval = 1.0
 	ElseIf(Item == ItemInfluenceGemsMagicka)
 		Val = Main.Config.GetFloat(".InfluenceGemsMagicka")
-		Min = 0.0
+		Min = -150.0
 		Max = 150.0
 		Interval = 1.0
 	ElseIf(Item == ItemGemsPerDay)
@@ -464,8 +527,8 @@ Event OnOptionSliderOpen(Int Item)
 		Min = 0.5
 		Max = 2.0
 		Interval = 0.1
-	ElseIf(Item == ItemActorWeightDays)
-		Val = Main.Config.GetFloat(".ActorWeightDays")
+	ElseIf(Item == ItemActorWeightDaysDrain)
+		Val = Main.Config.GetFloat(".ActorWeightDaysDrain")
 		Min = 0.0
 		Max = 10.0
 		Interval = 0.05
@@ -481,7 +544,7 @@ Event OnOptionSliderOpen(Int Item)
 		Interval = 0.01
 	ElseIf(Item == ItemFertilityChance)
 		Val = Main.Config.GetFloat(".FertilityChance")
-		Min = 0.0
+		Min = -100.0
 		Max = 100.0
 		Interval = 1.0
 	ElseIf(Item == ItemFertilityDays)
@@ -513,7 +576,109 @@ Event OnOptionSliderOpen(Int Item)
 		Val = Main.Config.GetFloat(".SemensPerDay")
 		Min = 0.0
 		Max = 10.0
-		Interval = 1.0					
+		Interval = 1.0		
+	ElseIf(Item == ItemActorWeightDaysGain)
+		Val = Main.Config.GetFloat(".ActorWeightDaysGain")
+		Min = 1
+		Max = 30
+		Interval = 1
+	ElseIf(Item == ItemWeightGainPregPercent)
+		Val = Main.Config.GetFloat(".WeightGainPregPercent")
+		Min = 1
+		Max = 100
+		Interval = 1
+	ElseIf(Item == ItemSemenBase)
+		Val = Main.Config.GetFloat(".SemenBase")
+		Min = 0
+		Max = 100
+		Interval = 1
+	ElseIf(Item == ItemMilkOverlayPercentage)
+		Val = Main.Config.GetFloat(".MilkOverlayPercentage")
+		Min = 1
+		Max = 100
+		Interval = 1
+	ElseIf(Item == ItemMilkLevelingCapacityMult)
+		Val = Main.Config.GetFloat(".MilkLevelingCapacityMult")
+		Min = 0.0
+		Max = 1.0
+		Interval = 0.001
+	ElseIf(Item == ItemMilkLevelingCapacityMultCap)
+		Val = Main.Config.GetFloat(".MilkLevelingCapacityMultCap")
+		Min = 0
+		Max = 10.0
+		Interval = 0.01
+	ElseIf(Item == ItemMilkLevelingGainMult)
+		Val = Main.Config.GetFloat(".MilkLevelingGainMult")
+		Min = 0
+		Max = 1.0
+		Interval = 0.001
+	ElseIf(Item == ItemMilkLevelingGainMultCap)
+		Val = Main.Config.GetFloat(".MilkLevelingGainMultCap")
+		Min = 0
+		Max = 10.0
+		Interval = 0.01
+	ElseIf(Item == ItemGemLevelingCap)
+		Val = Main.Config.GetFloat(".GemLevelingCap")
+		Min = 1
+		Max = 6
+		Interval = 1
+	ElseIf(Item == ItemGemLevelingThreshold)
+		Val = Main.Config.GetFloat(".GemLevelingThreshold")
+		Min = 1
+		Max = 50
+		Interval = 1
+	ElseIf(Item == ItemGemLevelingRatePenalty)
+		Val = Main.Config.GetFloat(".GemLevelingRatePenalty")
+		Min = 0.5
+		Max = 1.0
+		Interval = 0.01
+	ElseIf(Item == ItemGemLevelingStatsMult)
+		Val = Main.Config.GetFloat(".GemLevelingStatsMult")
+		Min = 0.0
+		Max = 1.0
+		Interval = 0.01
+	ElseIf(Item == ItemGemLevelingWeightMult)
+		Val = Main.Config.GetFloat(".GemLevelingWeightMult")
+		Min = 0.0
+		Max = 1.0
+		Interval = 0.01
+	ElseIf(Item == ItemWeightFertilityBonus)
+		Val = Main.Config.GetFloat(".WeightFertilityBonus")
+		Min = 0
+		Max = 100
+		Interval = 1
+	ElseIf(Item == ItemOrgasmGrowsMilkAmount)
+		Val = Main.Config.GetFloat(".OrgasmGrowsMilkAmount")
+		Min = 0.0
+		Max = 1.0
+		Interval = 0.1
+	ElseIf(Item == ItemOrgasmGrowsGemsAmount)
+		Val = Main.Config.GetFloat(".OrgasmGrowsGemsAmount")
+		Min = 0.0
+		Max = 1.0
+		Interval = 0.01
+	ElseIf(Item == ItemOrgasmIncreasesWeightAmount)
+		Val = Main.Config.GetFloat(".OrgasmIncreasesWeightAmount")
+		Min = 0.0
+		Max = 1.0
+		Interval = 0.01
+	ElseIf(Item == ItemEjaculationIncreasesWeightAmount)
+		Val = Main.Config.GetFloat(".EjaculationIncreasesWeightAmount")
+		Min = 0.0
+		Max = 1.0
+		Interval = 0.01
+	ElseIf(Item == ItemEjaculationGrowsGemsAmount)
+		Val = Main.Config.GetFloat(".EjaculationGrowsGemsAmount")
+		Min = 0.0
+		Max = 1.0
+		Interval = 0.01
+	ElseIf(Item == ItemOrgasmMilksThreshold)
+		Val = Main.Config.GetFloat(".OrgasmMilksThreshold")
+		Min = 1
+		Max = 100.0
+		Interval = 1
+
+		
 	ElseIf(PageCurrentKey == "$SGO4_Menu_GemSliders" || PageCurrentKey == "$SGO4_Menu_MilkSliders")
 
 		Int ItemCount = ItemSliderVal.Length
@@ -599,9 +764,9 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 	ElseIf(Item == ItemUpdateGameHours)
 		Fmt = "{1} hr"
 		Main.Config.SetFloat(".UpdateGameHours",Val)
-	ElseIf(Item == ItemActorWeightDays)
+	ElseIf(Item == ItemActorWeightDaysDrain)
 		Fmt = "{2}"
-		Main.Config.SetFloat(".ActorWeightDays",Val)
+		Main.Config.SetFloat(".ActorWeightDaysDrain",Val)
 
 	ElseIf(Item == ItemInfluenceGemsWhen)
 		Fmt = "{0}"
@@ -630,6 +795,65 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 	ElseIf(Item == ItemSemensPerDay)
 		Fmt = "{0}"
 		Main.Config.SetFloat(".SemensPerDay",Val)		
+
+	ElseIf(Item == ItemActorWeightDaysGain)
+		Fmt = "{2}"
+		Main.Config.SetFloat(".ActorWeightDaysGain",Val)
+	ElseIf(Item == ItemWeightGainPregPercent)
+		Fmt = "{0}"
+		Main.Config.SetFloat(".WeightGainPregPercent",Val)
+	ElseIf(Item == ItemSemenBase)
+		Fmt = "{0}%"
+		Main.Config.SetFloat(".SemenBase",Val)
+	ElseIf(Item == ItemMilkOverlayPercentage)
+		Fmt = "{0}%"
+		Main.Config.SetFloat(".MilkOverlayPercentage",Val)
+	ElseIf(Item == ItemMilkLevelingCapacityMult)
+		Fmt = "{3}"
+		Main.Config.SetFloat(".MilkLevelingCapacityMult",Val)
+	ElseIf(Item == ItemMilkLevelingCapacityMultCap)
+		Fmt = "{2}"
+		Main.Config.SetFloat(".MilkLevelingCapacityMultCap",Val)
+	ElseIf(Item == ItemMilkLevelingGainMult)
+		Fmt = "{3}"
+		Main.Config.SetFloat(".MilkLevelingGainMult",Val)
+	ElseIf(Item == ItemMilkLevelingGainMultCap)
+		Fmt = "{2}"
+		Main.Config.SetFloat(".MilkLevelingGainMultCap",Val)
+	ElseIf(Item == ItemGemLevelingCap)
+		Fmt = "{0}"
+		Main.Config.SetFloat(".GemLevelingThreshold",Val)
+	ElseIf(Item == ItemGemLevelingRatePenalty)
+		Fmt = "{2}"
+		Main.Config.SetFloat(".GemLevelingRatePenalty",Val)
+	ElseIf(Item == ItemGemLevelingStatsMult)
+		Fmt = "{2}"
+		Main.Config.SetFloat(".GemLevelingStatsMult",Val)
+	ElseIf(Item == ItemGemLevelingWeightMult)
+		Fmt = "{2}"
+		Main.Config.SetFloat(".GemLevelingWeightMult",Val)
+	ElseIf(Item == ItemWeightFertilityBonus)
+		Fmt = "{2}"
+		Main.Config.SetFloat(".WeightFertilityBonus",Val)
+	ElseIf(Item == ItemOrgasmGrowsMilkAmount)
+		Fmt = "{2}"
+		Main.Config.SetFloat(".OrgasmGrowsMilkAmount",Val)
+	ElseIf(Item == ItemOrgasmGrowsGemsAmount)
+		Fmt = "{2}"
+		Main.Config.SetFloat(".OrgasmGrowsGemsAmount",Val)
+	ElseIf(Item == ItemOrgasmIncreasesWeightAmount)
+		Fmt = "{2}"
+		Main.Config.SetFloat(".OrgasmIncreasesWeightAmount",Val)
+	ElseIf(Item == ItemEjaculationIncreasesWeightAmount)
+		Fmt = "{2}"
+		Main.Config.SetFloat(".EjaculationIncreasesWeightAmount",Val)
+	ElseIf(Item == ItemEjaculationGrowsGemsAmount)
+		Fmt = "{2}"
+		Main.Config.SetFloat(".EjaculationGrowsGemsAmount",Val)
+	ElseIf(Item == ItemOrgasmMilksThreshold)
+		Fmt = "{0}"
+		Main.Config.SetFloat(".OrgasmMilksThreshold",Val)
+
 
 	ElseIf(PageCurrentKey == "$SGO4_Menu_GemSliders" || PageCurrentKey == "$SGO4_Menu_MilkSliders")
 
@@ -891,8 +1115,8 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_DatabankLoadedOnly"
 	ElseIf(Item == ItemActorUpdateName)
 		Txt = "$SGO4_MenuTip_ActorUpdateName"
-	ElseIf(Item == ItemActorWeightDays)
-		Txt = "$SGO4_MenuTip_ActorWeightDays"
+	ElseIf(Item == ItemActorWeightDaysDrain)
+		Txt = "$SGO4_MenuTip_ActorWeightDaysDrain"
 	ElseIf(Item == ItemFertilitySync)
 		Txt = "$SGO4_MenuTip_FertilitySync"
 	ElseIf(Item == ItemDebugIsActorTracked)
@@ -924,6 +1148,76 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_ItemMilksPregPercent"
 	ElseIf(Item == ItemSemensPerDay)
 		Txt = "$SGO4_MenuTip_ItemSemensPerDay"
+
+	ElseIf(Item == ItemActorWeightDaysGain)
+		Txt = "$SGO4_MenuTip_ItemActorWeightDaysGain"
+	ElseIf(Item == ItemMessagesInsemination)
+		Txt = "$SGO4_MenuTip_ItemMessagesInsemination"
+	ElseIf(Item == ItemWeightGainPregPercent)
+		Txt = "$SGO4_MenuTip_ItemWeightGainPregPercent"
+	ElseIf(Item == ItemSemenBase)
+		Txt = "$SGO4_MenuTip_ItemSemenBase"
+	ElseIf(Item == ItemFixFemaleToMaleImp)
+		Txt = "$SGO4_MenuTip_ItemFixFemaleToMaleImp"
+	ElseIf(Item == ItemMilkOverlayPercentage)
+		Txt = "$SGO4_MenuTip_ItemMilkOverlayPercentage"
+	ElseIf(Item == ItemMilkLeveling)
+		Txt = "$SGO4_MenuTip_ItemMilkLeveling"
+	ElseIf(Item == ItemMilkLevelingCapacityMult)
+		Txt = "$SGO4_MenuTip_ItemMilkLevelingCapacityMult"
+	ElseIf(Item == ItemMilkLevelingCapacityMultCap)
+		Txt = "$SGO4_MenuTip_ItemMilkLevelingCapacityMultCap"
+	ElseIf(Item == ItemMilkLevelingGainMult)
+		Txt = "$SGO4_MenuTip_ItemMilkLevelingGainMult"
+	ElseIf(Item == ItemMilkLevelingGainMultCap)
+		Txt = "$SGO4_MenuTip_ItemMilkLevelingGainMultCap"
+	ElseIf(Item == ItemGemLeveling)
+		Txt = "$SGO4_MenuTip_ItemGemLeveling"
+	ElseIf(Item == ItemGemLevelingCap)
+		Txt = "$SGO4_MenuTip_ItemGemLevelingCap"
+	ElseIf(Item == ItemGemLevelingThreshold)
+		Txt = "$SGO4_MenuTip_ItemGemLevelingThreshold"
+	ElseIf(Item == ItemGemLevelingRatePenalty)
+		Txt = "$SGO4_MenuTip_ItemGemLevelingRatePenalty"
+	ElseIf(Item == ItemGemLevelingStatsMult)
+		Txt = "$SGO4_MenuTip_ItemGemLevelingStatsMult"
+	ElseIf(Item == ItemGemLevelingWeightMult)
+		Txt = "$SGO4_MenuTip_ItemGemLevelingWeightMult"
+	ElseIf(Item == ItemWeightIncreasesFertility)
+		Txt = "$SGO4_MenuTip_ItemWeightIncreasesFertility"
+	ElseIf(Item == ItemWeightFertilityBonus)
+		Txt = "$SGO4_MenuTip_ItemWeightFertilityBonus"
+	ElseIf(Item == ItemOrgasmGrowsMilk)
+		Txt = "$SGO4_MenuTip_ItemOrgasmGrowsMilk"
+	ElseIf(Item == ItemOrgasmGrowsMilkAmount)
+		Txt = "$SGO4_MenuTip_ItemOrgasmGrowsMilkAmount"
+	ElseIf(Item == ItemOrgasmGrowsGems)
+		Txt = "$SGO4_MenuTip_ItemOrgasmGrowsGems"
+	ElseIf(Item == ItemOrgasmGrowsGemsAmount)
+		Txt = "$SGO4_MenuTip_ItemOrgasmGrowsGemsAmount"
+	ElseIf(Item == ItemOrgasmIncreasesWeight)
+		Txt = "$SGO4_MenuTip_ItemOrgasmIncreasesWeight"
+	ElseIf(Item == ItemOrgasmIncreasesWeightAmount)
+		Txt = "$SGO4_MenuTip_ItemOrgasmIncreasesWeightAmount"
+	ElseIf(Item == ItemEjaculationIncreasesWeight)
+		Txt = "$SGO4_MenuTip_ItemEjaculationIncreasesWeight"	
+	ElseIf(Item == ItemEjaculationIncreasesWeightAmount)
+		Txt = "$SGO4_MenuTip_ItemEjaculationIncreasesWeightAmount"
+	ElseIf(Item == ItemEjaculationGrowsGems)
+		Txt = "$SGO4_MenuTip_ItemEjaculationGrowsGems"
+	ElseIf(Item == ItemEjaculationGrowsGemsAmount)
+		Txt = "$SGO4_MenuTip_ItemEjaculationGrowsGemsAmount"
+	ElseIf(Item == ItemOrgasmMilksMilk)
+		Txt = "$SGO4_MenuTip_ItemOrgasmMilksMilk"
+	ElseIf(Item == ItemOrgasmMilksThreshold)
+		Txt = "$SGO4_MenuTip_ItemOrgasmMilksThreshold"
+	ElseIf(Item == ItemOrgasmMilksGivesMilk)
+		Txt = "$SGO4_MenuTip_ItemOrgasmMilksGivesMilk"
+	ElseIf(Item == ItemSoloMissionGivesSemen)
+		Txt = "$SGO4_MenuTip_ItemSoloMissionGivesSemen"
+	ElseIf(Item == ItemEnableExpressions)
+		Txt = "$SGO4_MenuTip_ItemEnableExpressions"
+
 		
 	EndIf
 
@@ -955,7 +1249,8 @@ Int ItemUpdateAfterWait
 Int ItemDatabankShowAll
 Int ItemDatabankLoadedOnly
 Int ItemActorUpdateName
-Int ItemActorWeightDays
+Int ItemActorWeightDaysDrain
+Int ItemActorWeightDaysGain
 
 Function ShowPageGeneral()
 
@@ -1084,12 +1379,14 @@ Int ItemInfluenceGemsMagicka
 Int ItemGemsPerDay
 Int ItemMilksPerDay
 Int ItemMilksPregPercent
+Int ItemMilkOverlayPercentage
 Int ItemMilksPassiveLoss
 Int ItemMilkerProduce
 Int ItemMilkerRate
 Int ItemFertilitySync
 Int ItemMessagesPlayer
 Int ItemMessagesNPC
+Int ItemMessagesInsemination
 
 Int ItemBirthGemsFilled
 Int ItemSemensPerDay
@@ -1104,6 +1401,10 @@ Int ItemLevelValueBase
 Int ItemInfluenceGemsWhen
 Int ItemInfluenceMilkWhen
 
+Int ItemWeightGainPregPercent
+Int ItemSemenBase
+Int ItemWeightIncreasesFertility
+Int ItemWeightFertilityBonus
 
 Function ShowPageGameplay()
 
@@ -1117,15 +1418,19 @@ Function ShowPageGameplay()
 	ItemGemsPerDay = AddSliderOption("$SGO4_MenuOpt_GemsPerDay",Main.Config.GetFloat(".GemsPerDay"),"{2}")
 	ItemBirthGemsFilled = AddToggleOption("$SGO4_MenuOpt_BirthGemsFilled",Main.Config.GetBool("BirthGemsFilled"))
 	ItemMilksPregPercent = AddSliderOption("$SGO4_MenuOpt_MilksPregPercent",Main.Config.GetFloat(".MilksPregPercent"),"{0}%")
+	ItemMilkOverlayPercentage = AddSliderOption("$SGO4_MenuOpt_MilkOverlayPercentage",Main.Config.GetFloat(".MilkOverlayPercentage"),"{0}%")	
 	ItemMilksPerDay = AddSliderOption("$SGO4_MenuOpt_MilksPerDay",Main.Config.GetFloat(".MilksPerDay"),"{2}")
 	ItemMilksPassiveLoss = AddSliderOption("$SGO4_MenuOpt_MilksPassiveLoss",(Main.Config.GetFloat(".MilksPassiveLoss") * 100),"{0}%")
 	ItemMilkerProduce = AddToggleOption("$SGO4_MenuOpt_MilkerProduce",Main.Config.GetBool(".MilkerProduce"))
 	ItemMilkerRate = AddSliderOption("$SGO4_MenuOpt_MilkerRate",(Main.Config.GetFloat(".MilkerRate") * 100),"{0}%")
 	ItemSemensPerDay = AddSliderOption("$SGO4_MenuOpt_SemensPerDay",Main.Config.GetFloat(".SemensPerDay"))
+	ItemSemenBase = AddSliderOption("$SGO4_MenuOpt_SemenBase",Main.Config.GetFloat(".SemenBase"),"{0}%")	
 	ItemMessagesPlayer = AddToggleOption("$SGO4_MenuOpt_MessagesPlayer",Main.Config.GetBool(".MessagesPlayer"))
 	ItemMessagesNPC = AddToggleOption("$SGO4_MenuOpt_MessagesNPC",Main.Config.GetBool(".MessagesNPC"))
+	ItemMessagesInsemination = AddToggleOption("$SGO4_MenuOpt_MessagesInsemination",Main.Config.GetBool(".MessagesInsemination"))
 	AddEmptyOption()
-	AddEmptyOption()
+	AddEmptyOption()	
+	AddEmptyOption()	
 
 	AddHeaderOption("$SGO4_MenuOpt_ActorOptions")
 	AddHeaderOption("")
@@ -1133,16 +1438,21 @@ Function ShowPageGameplay()
 	ItemActorGemsMax = AddSliderOption("$SGO4_MenuOpt_ActorGemsMax",Main.Config.GetInt(".ActorGemsMax"))
 	ItemActorMilkMax = AddSliderOption("$SGO4_MenuOpt_ActorMilkMax",Main.Config.GetInt(".ActorMilkMax"))
 	ItemActorSemenMax = AddSliderOption("$SGO4_MenuOpt_ActorSemenMax",Main.Config.GetInt(".ActorSemenMax"))
-	ItemActorWeightDays = AddSliderOption("$SGO4_MenuOpt_ActorWeightDays",Main.Config.GetFloat(".ActorWeightDays"))
+	AddEmptyOption()
+	ItemActorWeightDaysDrain = AddSliderOption("$SGO4_MenuOpt_ActorWeightDaysDrain",Main.Config.GetFloat(".ActorWeightDaysDrain"))
+	ItemActorWeightDaysGain = AddSliderOption("$SGO4_MenuOpt_ActorWeightDaysGain",Main.Config.GetFloat(".ActorWeightDaysGain"))	
+	ItemWeightGainPregPercent = AddSliderOption("$SGO4_MenuOpt_WeightGainPregPercent",Main.Config.GetFloat(".WeightGainPregPercent"),"{0} %")	
 	ItemFertilitySync = AddToggleOption("$SGO4_MenuOpt_FertilitySync",Main.Config.GetBool(".FertilitySync"))
 	ItemFertilityChance = AddSliderOption("$SGO4_MenuOpt_FertilityChance",Main.Config.GetFloat(".FertilityChance"),"{0}%")
 	ItemFertilityDays = AddSliderOption("$SGO4_MenuOpt_FertilityDays",Main.Config.GetFloat(".FertilityDays"))
 	ItemFertilityWindow = AddSliderOption("$SGO4_MenuOpt_FertilityWindow",Main.Config.GetFloat(".FertilityWindow"),"{1}")
+	ItemWeightIncreasesFertility = AddToggleOption("$SGO4_MenuOpt_WeightIncreasesFertility",Main.Config.GetBool(".WeightIncreasesFertility"))	
+	ItemWeightFertilityBonus = AddSliderOption("$SGO4_MenuOpt_WeightFertilityBonus",Main.Config.GetFloat(".WeightFertilityBonus"))
 	ItemLevelAlchFactor = AddSliderOption("$SGO4_MenuOpt_LevelAlchFactor",Main.Config.GetFloat(".LevelAlchFactor"),"{2}")
 	ItemLevelEnchFactor = AddSliderOption("$SGO4_MenuOpt_LevelEnchFactor",Main.Config.GetFloat(".LevelEnchFactor"),"{2}")
 	ItemLevelValueBase	 = AddSliderOption("$SGO4_MenuOpt_LevelValueBase",Main.Config.GetFloat(".LevelValueBase"))	
 	AddEmptyOption()
-	AddEmptyOption()
+	AddEmptyOption()	
 	AddEmptyOption()
 
 	AddHeaderOption("$SGO4_MenuOpt_BioInfluences")
@@ -1154,6 +1464,106 @@ Function ShowPageGameplay()
 	ItemInfluenceMilkSpeechExposed = AddSliderOption("$SGO4_MenuOpt_InfluenceMilkSpeechExposed",Main.Config.GetFloat(".InfluenceMilkSpeechExposed"),"{0}")
 	ItemInfluenceGemsWhen = AddSliderOption("$SGO4_MenuOpt_InfluenceGemsWhen",Main.Config.GetFloat(".InfluenceGemsWhen"),"{2}")
 	ItemInfluenceMilkWhen = AddSliderOption("$SGO4_MenuOpt_InfluenceMilkWhen",Main.Config.GetFloat(".InfluenceMilkWhen"),"{2}")	
+
+	Return
+EndFunction
+
+
+;;Needs int values, for thing, yes.
+
+Int ItemMilkLeveling
+Int ItemMilkLevelingCapacityMult
+Int ItemMilkLevelingCapacityMultCap
+Int ItemMilkLevelingGainMult
+Int ItemMilkLevelingGainMultCap
+
+Int ItemGemLeveling
+Int ItemGemLevelingCap
+Int ItemGemLevelingThreshold
+Int ItemGemLevelingRatePenalty
+Int ItemGemLevelingStatsMult
+Int ItemGemLevelingWeightMult
+
+Int ItemOrgasmGrowsMilk
+Int ItemOrgasmGrowsMilkAmount
+Int ItemOrgasmMilksMilk
+Int ItemOrgasmMilksThreshold
+Int ItemOrgasmMilksGivesMilk
+
+Int ItemOrgasmGrowsGems
+Int ItemOrgasmGrowsGemsAmount
+Int ItemOrgasmIncreasesWeight
+Int ItemOrgasmIncreasesWeightAmount
+
+Int ItemEjaculationIncreasesWeight
+Int ItemEjaculationIncreasesWeightAmount
+Int ItemEjaculationGrowsGems
+Int ItemEjaculationGrowsGemsAmount
+
+Int ItemFixFemaleToMaleImp
+Int ItemEnableExpressions
+
+
+Int ItemSoloMissionGivesSemen
+
+Function ShowPageIntegration()	
+	self.SetTitleText("$SGO4_MenuTitle_Integration")
+	self.SetCursorFillMode(LEFT_TO_RIGHT) ;;Dunforgetthisshit, Lefttoright
+	self.SetCursorPosition(0)
+
+	AddHeaderOption("$SGO4_MenuOpt_MilkLeveling")
+	AddHeaderOption("")	
+	ItemMilkLeveling = AddToggleOption("$SGO4_MenuOpt_MilkLeveling",Main.Config.GetBool(".MilkLeveling"))
+	AddEmptyOption()	
+	ItemMilkLevelingCapacityMult = AddSliderOption("$SGO4_MenuOpt_MilkLevelingCapacityMult",Main.Config.GetFloat(".MilkLevelingCapacityMult"),"{3}")
+	ItemMilkLevelingCapacityMultCap = AddSliderOption("$SGO4_MenuOpt_MilkLevelingCapacityMultCap",Main.Config.GetFloat(".MilkLevelingCapacityMultCap"),"{2}")
+	ItemMilkLevelingGainMult = AddSliderOption("$SGO4_MenuOpt_MilkLevelingGainMult",Main.Config.GetFloat(".MilkLevelingGainMult"),"{3}")
+	ItemMilkLevelingGainMultCap = AddSliderOption("$SGO4_MenuOpt_MilkLevelingGainMultCap",Main.Config.GetFloat(".MilkLevelingGainMultCap"),"{2}")
+	AddEmptyOption()	
+	AddEmptyOption()
+	
+	AddHeaderOption("$SGO4_MenuOpt_GemLeveling")
+	AddHeaderOption("")	
+	ItemGemLeveling = AddToggleOption("$SGO4_MenuOpt_GemLeveling",Main.Config.GetBool(".GemLeveling"))
+	ItemGemLevelingCap = AddSliderOption("$SGO4_MenuOpt_GemLevelingCap",Main.Config.GetFloat(".GemLevelingCap"))
+	ItemGemLevelingThreshold = AddSliderOption("$SGO4_MenuOpt_GemLevelingThreshold",Main.Config.GetFloat(".GemLevelingThreshold"))
+	ItemGemLevelingRatePenalty = AddSliderOption("$SGO4_MenuOpt_GemLevelingRatePenalty",Main.Config.GetFloat(".GemLevelingRatePenalty"),"{2}")
+	ItemGemLevelingStatsMult = AddSliderOption("$SGO4_MenuOpt_GemLevelingStatsMult",Main.Config.GetFloat(".GemLevelingStatsMult"),"{2}")
+	ItemGemLevelingWeightMult = AddSliderOption("$SGO4_MenuOpt_GemLevelingWeightMult",Main.Config.GetFloat(".GemLevelingWeightMult"),"{2}")
+	AddEmptyOption()	
+	AddEmptyOption()		
+	
+	AddHeaderOption("$SGO4_MenuOpt_SceneIntegration")
+	AddHeaderOption("")	
+	ItemOrgasmGrowsMilk = AddToggleOption("$SGO4_MenuOpt_OrgasmGrowsMilk",Main.Config.GetBool(".OrgasmGrowsMilk"))
+	ItemOrgasmGrowsMilkAmount = AddSliderOption("$SGO4_MenuOpt_OrgasmGrowsMilkAmount",Main.Config.GetFloat(".OrgasmGrowsMilkAmount"),"{2}")
+	ItemOrgasmMilksMilk = AddToggleOption("$SGO4_MenuOpt_OrgasmMilksMilk",Main.Config.GetBool(".OrgasmMilksMilk"))
+	ItemOrgasmMilksThreshold = AddSliderOption("$SGO4_MenuOpt_OrgasmMilksThreshold",Main.Config.GetFloat(".OrgasmMilksThreshold"),"{0} %")
+	ItemOrgasmMilksGivesMilk = AddToggleOption("$SGO4_MenuOpt_OrgasmMilksGivesMilk",Main.Config.GetBool(".OrgasmMilksGivesMilk"))
+	AddEmptyOption()	
+	AddEmptyOption()	
+	AddEmptyOption()		
+	ItemOrgasmGrowsGems = AddToggleOption("$SGO4_MenuOpt_OrgasmGrowsGems",Main.Config.GetBool(".OrgasmGrowsGems"))
+	ItemOrgasmGrowsGemsAmount = AddSliderOption("$SGO4_MenuOpt_OrgasmGrowsGemsAmount",Main.Config.GetFloat(".OrgasmGrowsGemsAmount"),"{2}")
+	ItemOrgasmIncreasesWeight = AddToggleOption("$SGO4_MenuOpt_OrgasmIncreasesWeight",Main.Config.GetBool(".OrgasmIncreasesWeight"))
+	ItemOrgasmIncreasesWeightAmount = AddSliderOption("$SGO4_MenuOpt_OrgasmIncreasesWeightAmount",Main.Config.GetFloat(".OrgasmIncreasesWeightAmount"),"{2}")
+	AddEmptyOption()	
+	AddEmptyOption()		
+	ItemEjaculationIncreasesWeight = AddToggleOption("$SGO4_MenuOpt_EjaculationIncreasesWeight",Main.Config.GetBool(".EjaculationIncreasesWeight"))
+	ItemEjaculationIncreasesWeightAmount = AddSliderOption("$SGO4_MenuOpt_EjaculationIncreasesWeightAmount",Main.Config.GetFloat(".EjaculationIncreasesWeightAmount"),"{2}")
+	ItemEjaculationGrowsGems = AddToggleOption("$SGO4_MenuOpt_EjaculationGrowsGems",Main.Config.GetBool(".EjaculationGrowsGems"))
+	ItemEjaculationGrowsGemsAmount = AddSliderOption("$SGO4_MenuOpt_EjaculationGrowsGemsAmount",Main.Config.GetFloat(".EjaculationGrowsGemsAmount"),"{2}")
+	AddEmptyOption()	
+	AddEmptyOption()	
+	
+	AddHeaderOption("$SGO4_MenuOpt_IntegrationExtras")
+	AddHeaderOption("")	
+
+	ItemFixFemaleToMaleImp = AddToggleOption("$SGO4_MenuOpt_FixFemaleToMaleImp",Main.Config.GetBool(".FixFemaleToMaleImp"))	
+	ItemSoloMissionGivesSemen = AddToggleOption("$SGO4_MenuOpt_SoloMissionGivesSemen",Main.Config.GetBool(".SoloMissionGivesSemen"))
+	ItemEnableExpressions = AddToggleOption("$SGO4_MenuOpt_EnableExpressions",Main.Config.GetBool(".EnableExpressions"))	
+
+
 
 	Return
 EndFunction
@@ -1249,6 +1659,7 @@ Int ItemDebugPlayerSemenEmpty
 Int ItemDebugPlayerSemenHalf
 Int ItemDebugPlayerSemenMax
 Int ItemDebugIsActorTracked
+
 
 Function ShowPageDebug()
 

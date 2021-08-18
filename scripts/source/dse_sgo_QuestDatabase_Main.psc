@@ -347,6 +347,9 @@ added to this list.}
 	;;Ev = ModEvent.Create("SGO4.Actor.Inspect")
 	;;ModEvent.PushForm(Ev,Who)
 	;;ModEvent.Send(Ev)
+	
+	;;Timesince cleanup, Just in case, it broke for me before, Shouldn't break things.
+	self.ActorSetTimeUpdated(Who)
 
 	Return TRUE
 EndFunction
@@ -640,13 +643,69 @@ Float Function ActorWeightGet(Actor Who)
 EndFunction
 
 Float Function ActorWeightSet(Actor Who, Float Value)
-{set an actor current weight gain. 0 to 1.}
+{set an actor current weight gain.}
+	
+	If(Main.Config.GetBool(".GemLeveling"))
+		Int GemsBirthed = Main.Stats.GetInt(Who,Main.Stats.KeyGemsBirthed)
+		Float GemLevel = Math.floor((GemsBirthed/Main.Config.GetFloat(".GemLevelingThreshold"))+1)
+		Float GemLevelCap = Main.Config.GetFloat(".GemLevelCap")
+		
+		If GemLevel > GemLevelCap
+			GemLevel = GemLevelCap
+		EndIf	
+		
+		Float IndividualCap = (Main.Config.GetFloat(".GemLevelingWeightMult") * (GemLevel +-1)+1)
+		
+		Value = PapyrusUtil.Clampfloat(Value,0.0,IndividualCap)
+		
+		StorageUtil.SetFloatValue(Who,self.KeyActorWeightGain,Value)
 
-	Value = PapyrusUtil.Clampfloat(Value,0.0,1.0)
-	StorageUtil.SetFloatValue(Who,self.KeyActorWeightGain,Value)
-
-	Main.Util.PrintDebug("[ActorWeightSet] " + self.ActorGetOriginalName(Who) + " " + Value)
+		Main.Util.PrintDebug("[ActorWeightSet] " + self.ActorGetOriginalName(Who) + " " + Value)
+		
+	Else
+		Value = PapyrusUtil.Clampfloat(Value,0.0,1.0)
+		StorageUtil.SetFloatValue(Who,self.KeyActorWeightGain,Value)
+		Main.Util.PrintDebug("[ActorWeightSet] " + self.ActorGetOriginalName(Who) + " " + Value)
+	EndIf
+	
+	self.ActorTrackingAdd(Who)
+	Main.Body.ActorUpdate(Who)
+	
+	
 	Return Value
+EndFunction
+
+Function ActorWeightInc(Actor Who, Float Value)
+{add/sub what weight this actor has.}
+
+	If(Main.Config.GetBool(".GemLeveling"))
+		Int GemsBirthed = Main.Stats.GetInt(Who,Main.Stats.KeyGemsBirthed)
+		Float GemLevel = Math.floor((GemsBirthed/Main.Config.GetFloat(".GemLevelingThreshold"))+1)
+		Float GemLevelCap = Main.Config.GetFloat(".GemLevelCap")
+		
+		If GemLevel > GemLevelCap
+			GemLevel = GemLevelCap
+		EndIf	
+		
+		Float IndividualCap = Main.Config.GetFloat(".GemLevelingWeightMult") * (GemLevel +-1)
+		
+		Value = PapyrusUtil.Clampfloat(Value,0.0,IndividualCap)
+		
+		StorageUtil.AdjustFloatValue(Who,self.KeyActorWeightGain,Value)
+
+	Else
+		Float Weight = StorageUtil.AdjustFloatValue(Who,self.KeyActorWeightGain,Value)
+
+		If(Weight < 0.0)
+			Weight = 0.0
+			StorageUtil.AdjustFloatValue(Who,self.KeyActorWeightGain,Weight)
+		EndIf
+	EndIf
+
+	self.ActorTrackingAdd(Who)
+	Main.Body.ActorUpdate(Who)
+
+	Return
 EndFunction
 
 Bool Function ActorGemAdd(Actor Who, Float Val=0.0)
@@ -850,8 +909,10 @@ actor is physically not capable of producing this item.}
 	Int GemNew
 	Float GemPregPercentDone
 	Float WeightCur
+	Float WeightGain
 	Float WeightDrain
-	Float WeightDays
+	Float WeightDaysGain
+	Float WeightDaysDrain
 	Float ModRate
 	Bool Growth
 
@@ -861,12 +922,12 @@ actor is physically not capable of producing this item.}
 		Return FALSE
 	EndIf
 
-	WeightDays = Main.Config.GetFloat(".ActorWeightDays")
+	WeightDaysDrain = Main.Config.GetFloat(".ActorWeightDaysDrain")
 	WeightCur = self.ActorWeightGet(Who)
 	WeightDrain = WeightCur + 1.0
 
-	If(WeightDays > 0.0)
-		WeightDrain = 1.0 / (Main.Config.GetFloat(".ActorWeightDays") * 24)
+	If(WeightDaysDrain > 0.0)
+		WeightDrain = 1.0 / (Main.Config.GetFloat(".ActorWeightDaysDrain") * 24)
 		WeightDrain *= TimeSince
 	EndIf
 
@@ -921,14 +982,41 @@ actor is physically not capable of producing this item.}
 	;;;;;;;;
 
 	;; update weight gain values.
+	
+	WeightDaysGain = Main.Config.GetFloat(".ActorWeightDaysGain")
+	WeightCur = self.ActorWeightGet(Who)
+	WeightGain = WeightCur + 1.0
+
+	If(WeightDaysGain > 0.0)
+		WeightGain = 1.0 / (Main.Config.GetFloat(".ActorWeightDaysGain") * 24)
+		WeightGain *= TimeSince
+	EndIf	
+	
 
 	GemPregPercentDone = self.ActorGemTotalPercent(Who,TRUE)
-
-	If(GemPregPercentDone >= (Main.Config.GetFloat(".WeightGainPregPercent") / 100.0) && WeightCur != 1 )
+	
+	If(Main.Config.GetBool(".GemLeveling"))
+		Int GemsBirthed = Main.Stats.GetInt(Who,Main.Stats.KeyGemsBirthed)
+		Float GemLevel = Math.floor((GemsBirthed/Main.Config.GetFloat(".GemLevelingThreshold"))+1)
+		Float GemLevelCap = Main.Config.GetFloat(".GemLevelCap")
+		If GemLevel > GemLevelCap
+			GemLevel = GemLevelCap
+		EndIf	
+	
+		Float IndividualCap = Main.Config.GetFloat(".GemLevelingWeightMult") * (GemLevel +-1) +1
+		
+		If(GemPregPercentDone >= (Main.Config.GetFloat(".WeightGainPregPercent") / 100.0) && WeightCur != 1 + IndividualCap)
+			;; don't instantly get thicc, slowly add it every update.
+			;; Added config value as to when weight gain should start.
+			;; Modified to gain weight based on weightdrain value multiplied with pregnancypercent+0.5.
+			self.ActorWeightInc(Who,WeightGain)
+		EndIf	
+	
+	ElseIf(GemPregPercentDone >= (Main.Config.GetFloat(".WeightGainPregPercent") / 100.0) && WeightCur != 1)
 		;; don't instantly get thicc, slowly add it every update.
 		;; Added config value as to when weight gain should start.
 		;; Modified to gain weight based on weightdrain value multiplied with pregnancypercent+0.5.
-		self.ActorWeightSet(Who,(WeightCur + (WeightDrain * (GemPregPercentDone + 0.5))))
+		self.ActorWeightInc(Who,WeightGain)
 	EndIf
 
 	;;;;;;;;
@@ -1196,7 +1284,13 @@ Function ActorSemenInc(Actor Who, Float Value)
 
 	;;Main.Util.PrintDebug(Who.GetDisplayName() + " now has " + Semen + " semen.")
 
+	If(self.IsActorTracked(Who))
+		Main.Body.ActorUpdate(Who)
+		Return
+	EndIf
+	
 	self.ActorTrackingAdd(Who)
+	
 	Main.Body.ActorUpdate(Who)
 	
 	Return
@@ -1278,6 +1372,10 @@ Float Function ActorFertilityValue(Actor Who)
 		Value = Utility.RandomFloat(0.0,Main.Config.GetInt(".FertilityDays"))
 		StorageUtil.SetFloatValue(Who,self.KeyActorFertilityData,Value)
 	EndIf
+	
+	If(Main.Config.GetBool(".WeightIncreasesFertility"))
+		Value += (Main.Config.GetInt(".WeightFertilityBonus") * self.ActorWeightGet(Who))
+	EndIf	
 
 	Return Value
 EndFunction

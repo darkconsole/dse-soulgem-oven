@@ -443,44 +443,47 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 
 	;;;;;;;;
 	
-	;; Orgasm Milks Milk Chance
-	Int Maffffs = Config.GetInt(".OrgasmMilksThreshold")
-	Float MoreMathfs = Data.ActorMilkTotalPercent(Who)*100
+	;; Orgasm Milking
+	
+	Int OrgasmMilksThreshold = Config.GetInt(".OrgasmMilksThreshold")
+	Float MilkTotalPercent = Data.ActorMilkTotalPercent(Who)*100
 
-	;;Check if possible
-	If(Config.GetBool(".OrgasmGrowsMilk") && Config.GetBool(".OrgasmMilksMilk") && Utility.RandomInt(Maffffs,100) <= MoreMathfs && Data.ActorMilkAmount(Who) >= 1-Config.GetFloat(".OrgasmGrowsMilkAmount")) 
-		Data.ActorMilkLimit(Who)
-		Stats.IncInt(Who,Stats.KeyMilksMilked,1,TRUE)
-		Data.ActorMilkInc(Who,(-1.0+Config.GetFloat(".OrgasmGrowsMilkAmount")))
+	Float PregPercent = Data.ActorGemTotalPercent(Who)	
+	Float WeightPercent = Data.ActorWeightGet(Who)
+
+	If(WeightPercent > PregPercent)
+		PregPercent = WeightPercent
+	EndIf	
+
+	If(Config.GetBool(".OrgasmGrowsMilk") && Who.IsInFaction(FactionProduceMilk) && (PregPercent >= (Config.GetFloat(".MilksPregPercent") / 100.0)))
+		Data.ActorMilkInc(Who,(Config.GetFloat(".OrgasmGrowsMilkAmount")))
+		Data.ActorMilkLimit(Who)	
 		
-		;;Spawn milk bottle?
-		If(Config.GetBool(".OrgasmMilksGivesMilk"))
-			ObjectReference Obj
-			Int[] Racemap = Data.RaceFind(Who.GetRace())
-			Form Output = Data.RaceGetMilk(RaceMap[0],RaceMap[1])
-			String NodeName = "NPC Pelvis [Pelv]"
-			Float Distance = Config.GetFloat(".ActorDropDistance")	
-			Float[] Pos = Util.GetNodePositionAtDistance(Who,NodeName,Distance)
-			Obj = Who.PlaceAtMe(Output,1,FALSE,TRUE)
-			Obj.SetPosition(Pos[1],Pos[2],Pos[3])
-			Obj.Enable()
-			Obj.SetActorOwner(Player.GetActorBase())
+		If(Config.GetBool(".OrgasmMilksMilk") && Data.ActorMilkAmount(Who) >= 1)
+			Data.ActorMilkInc(Who,(-1.0))
+			Stats.IncInt(Who,Stats.KeyMilksMilked,1,TRUE)	
 			
-		EndIf	
-		
-	ElseIf(Config.GetBool(".OrgasmMilksMilk") && Utility.RandomInt(Maffffs,100) <= MoreMathfs && Data.ActorMilkAmount(Who) >= 1)
-		If(Config.GetBool(".MilkingAppliesOverlay"))
-			;;Set lingering milk leak
-			StorageUtil.SetIntValue(Who,"MilkLeakStage",5)	
+			;;Spawn milk bottle?
+			If(Config.GetBool(".OrgasmMilksGivesMilk")) && Data.ActorMilkAmount(Who) >= 1
+				ObjectReference Obj 
+				Int[] Racemap = Data.RaceFind(Who.GetRace())
+				Form Output = Data.RaceGetMilk(RaceMap[0],RaceMap[1])
+				String NodeName = "NPC Pelvis [Pelv]"
+				Float Distance = Config.GetFloat(".ActorDropDistance")	
+				Float[] Pos = Util.GetNodePositionAtDistance(Who,NodeName,Distance)
+				Obj = Who.PlaceAtMe(Output,1,FALSE,TRUE)
+				Obj.SetPosition(Pos[1],Pos[2],Pos[3])
+				Obj.Enable()
+				Obj.SetActorOwner(Player.GetActorBase())
+			EndIf	
 		EndIf
 
-		Data.ActorMilkLimit(Who)
-		Stats.IncInt(Who,Stats.KeyMilksMilked,1,TRUE)
-		Data.ActorMilkInc(Who,(-1.0+Config.GetFloat(".OrgasmGrowsMilkAmount")))
-		;;Set lingering milk leak
-		StorageUtil.SetIntValue(Who,"MilkLeakStage",10)
+	ElseIf(Config.GetBool(".OrgasmMilksMilk") && Data.ActorMilkAmount(Who) >= 1)
+		Data.ActorMilkInc(Who,(-1.0))
+		Stats.IncInt(Who,Stats.KeyMilksMilked,1,TRUE)	
+			
 		;;Spawn milk bottle?
-		If(Config.GetBool(".OrgasmMilksGivesMilk"))
+		If(Config.GetBool(".OrgasmMilksGivesMilk")) && Data.ActorMilkAmount(Who) >= 1
 			ObjectReference Obj 
 			Int[] Racemap = Data.RaceFind(Who.GetRace())
 			Form Output = Data.RaceGetMilk(RaceMap[0],RaceMap[1])
@@ -491,24 +494,9 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 			Obj.SetPosition(Pos[1],Pos[2],Pos[3])
 			Obj.Enable()
 			Obj.SetActorOwner(Player.GetActorBase())
-		EndIf
-		
-		If(Config.GetBool(".MilkingAppliesOverlay"))
-			;;Set lingering milk leak
-			StorageUtil.SetIntValue(Who,"MilkLeakStage",5)	
-		EndIf
-		
-	ElseIf(Config.GetBool(".OrgasmGrowsMilk"))
-		Float WeightPercent = Data.ActorWeightGet(Who)
-		Float PregPercent = Data.ActorGemTotalPercent(Who)
-		Float OrgasmMilkGain = Config.GetFloat(".OrgasmGrowsMilkAmount")
-		If(WeightPercent > PregPercent)
-			PregPercent = WeightPercent
-		EndIf
-		If(Who.IsInFaction(FactionProduceMilk) && (PregPercent >= (Config.GetFloat(".MilksPregPercent") / 100.0)))
-			Data.ActorMilkInc(Who,OrgasmMilkGain)
-		EndIf
+		EndIf	
 	EndIf
+
 
 	;; OrgasmGrowGems
 	If(Config.GetBool(".OrgasmGrowsGems"))
@@ -520,6 +508,13 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 			Iter += 1
 		EndWhile			
 	EndIf
+	
+	
+	;; Orgasm Increases Weight
+	If(Config.GetBool(".OrgasmIncreasesWeight"))
+		Self.Data.ActorWeightSet(Who, Self.Data.ActorWeightGet(Who) + (Config.GetFloat(".OrgasmIncreasesWeightAmount")))
+	EndIf
+	
 	
 	;; determine if we do.
 
@@ -538,6 +533,7 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 			Return
 		EndIf
 	EndIf
+	
 
 	;; they blew a load so deduct it.
 
@@ -597,6 +593,12 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 		Util.PrintDebug("Preg Abort: No valid ovens found.")
 		Return
 	EndIf
+	
+	;; Ejaculation Increases Weight
+	If(Config.GetBool(".EjaculationIncreasesWeight"))
+		Self.Data.ActorWeightSet(Who, Self.Data.ActorWeightGet(Who) + (Config.GetFloat(".EjaculationIncreasesWeightAmount")))
+	EndIf	
+	
 
 	;;;;;;;;
 
@@ -605,15 +607,19 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 
 	If(PregRoll >= (100.0 - PregChance))
 		If(Data.ActorGemAdd(Oven,0.0))
-			If(Oven == self.Player)
-				Util.PrintLookupRandom("FlavourPlayerGemGain",Oven.GetDisplayName())
-			Else
-				Util.PrintLookupRandom("FlavourActorGemGain",Oven.GetDisplayName())
-			EndIf
+			If(Config.GetBool(".MessagesInsemination"))
+				If(Oven == self.Player)
+					Util.PrintLookupRandom("FlavourPlayerGemGain",Oven.GetDisplayName())
+				Else
+					Util.PrintLookupRandom("FlavourActorGemGain",Oven.GetDisplayName())
+				EndIf
+			EndIf	
 			Util.PrintDebug(Oven.GetDisplayName() + " is now incubating another gem.")
 		Else
-			Util.PrintLookup("CannotFitMoreGems",Oven.GetDisplayName())
-			Util.PrintDebug(Oven.GetDisplayName() + " cannot fit any more gems.")
+			If(Config.GetBool(".MessagesInsemination"))
+				Util.PrintLookup("CannotFitMoreGems",Oven.GetDisplayName())
+				Util.PrintDebug(Oven.GetDisplayName() + " cannot fit any more gems.")
+			EndIf
 		EndIf
 	EndIf
 
