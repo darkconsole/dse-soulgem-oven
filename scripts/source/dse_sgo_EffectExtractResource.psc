@@ -267,15 +267,21 @@ Form Function ExtractResource()
 				Main.Util.Print("The gems refuse to budge.")
 				self.ResourceCount = 0
 				Return Output
-			EndIf		
-			
+			EndIf
+				
 			Int GemsBirthed = Main.Stats.GetInt(self.Source,Main.Stats.KeyGemsBirthed)
-			Float GemLevel = Math.floor((GemsBirthed/Main.Config.GetFloat(".GemLevelingThreshold"))+1)
-			Float GemLevelCap = Main.Config.GetFloat(".GemLevelCap")
-	
-			If Gemlevel > GemLevelCap
-				Gemlevel = GemLevelCap
+			Int GemLevelingThreshold = Main.Config.GetInt(".GemLevelingThreshold")
+			
+			Int GemLevel = Math.floor(GemsBirthed/GemLevelingThreshold)+1
+			Int GemLevelCap = Main.Config.GetInt(".GemLevelingCap")
+			
+			If(GemLevel > GemLevelCap)
+				GemLevel = GemLevelCap
 			EndIf		
+			Output = Main.Data.GemStageGet(Math.Floor(GemLevel))
+			
+			Main.Data.ActorGemRemoveLargest(self.Source)
+			Main.Stats.IncInt(self.Source,Main.Stats.KeyGemsBirthed,1,TRUE)				
 			
 			Float GemLevelingStatsMult = Main.Config.GetFloat(".GemLevelingStatsMult")*Gemlevel
 			

@@ -618,12 +618,12 @@ Event OnOptionSliderOpen(Int Item)
 		Max = 10.0
 		Interval = 0.01
 	ElseIf(Item == ItemGemLevelingCap)
-		Val = Main.Config.GetFloat(".GemLevelingCap")
+		Val = Main.Config.GetInt(".GemLevelingCap")
 		Min = 1
 		Max = 6
 		Interval = 1
 	ElseIf(Item == ItemGemLevelingThreshold)
-		Val = Main.Config.GetFloat(".GemLevelingThreshold")
+		Val = Main.Config.GetInt(".GemLevelingThreshold")
 		Min = 1
 		Max = 50
 		Interval = 1
@@ -822,7 +822,10 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 		Main.Config.SetFloat(".MilkLevelingGainMultCap",Val)
 	ElseIf(Item == ItemGemLevelingCap)
 		Fmt = "{0}"
-		Main.Config.SetFloat(".GemLevelingThreshold",Val)
+		Main.Config.SetInt(".GemLevelingCap",Val as Int)
+	ElseIf(Item == ItemGemLevelingThreshold)
+		Fmt = "{0}"
+		Main.Config.SetInt(".GemLevelingThreshold",Val as Int)		
 	ElseIf(Item == ItemGemLevelingRatePenalty)
 		Fmt = "{2}"
 		Main.Config.SetFloat(".GemLevelingRatePenalty",Val)
@@ -1453,7 +1456,6 @@ Function ShowPageGameplay()
 	ItemLevelValueBase	 = AddSliderOption("$SGO4_MenuOpt_LevelValueBase",Main.Config.GetFloat(".LevelValueBase"))	
 	AddEmptyOption()
 	AddEmptyOption()	
-	AddEmptyOption()
 
 	AddHeaderOption("$SGO4_MenuOpt_BioInfluences")
 	AddHeaderOption("")
@@ -1525,8 +1527,8 @@ Function ShowPageIntegration()
 	AddHeaderOption("$SGO4_MenuOpt_GemLeveling")
 	AddHeaderOption("")	
 	ItemGemLeveling = AddToggleOption("$SGO4_MenuOpt_GemLeveling",Main.Config.GetBool(".GemLeveling"))
-	ItemGemLevelingCap = AddSliderOption("$SGO4_MenuOpt_GemLevelingCap",Main.Config.GetFloat(".GemLevelingCap"))
-	ItemGemLevelingThreshold = AddSliderOption("$SGO4_MenuOpt_GemLevelingThreshold",Main.Config.GetFloat(".GemLevelingThreshold"))
+	ItemGemLevelingCap = AddSliderOption("$SGO4_MenuOpt_GemLevelingCap",Main.Config.GetInt(".GemLevelingCap"))
+	ItemGemLevelingThreshold = AddSliderOption("$SGO4_MenuOpt_GemLevelingThreshold",Main.Config.GetInt(".GemLevelingThreshold"))
 	ItemGemLevelingRatePenalty = AddSliderOption("$SGO4_MenuOpt_GemLevelingRatePenalty",Main.Config.GetFloat(".GemLevelingRatePenalty"),"{2}")
 	ItemGemLevelingStatsMult = AddSliderOption("$SGO4_MenuOpt_GemLevelingStatsMult",Main.Config.GetFloat(".GemLevelingStatsMult"),"{2}")
 	ItemGemLevelingWeightMult = AddSliderOption("$SGO4_MenuOpt_GemLevelingWeightMult",Main.Config.GetFloat(".GemLevelingWeightMult"),"{2}")
