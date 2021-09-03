@@ -490,7 +490,9 @@ Event OnOptionSliderOpen(Int Item)
 	ElseIf(Item == ItemGemsPerDay)
 		Val = Main.Config.GetFloat(".GemsPerDay")
 		Min = 0.05
-		Max = Main.Data.GemStageCount(None)
+		Max = 12.00
+		;; hardcap at 12, something broke with counting.
+		;; old code: Main.Data.GemStageCount(None)
 		Interval = 0.05
 	ElseIf(Item == ItemMilksPerDay)
 		Val = Main.Config.GetFloat(".MilksPerDay")
@@ -530,7 +532,7 @@ Event OnOptionSliderOpen(Int Item)
 	ElseIf(Item == ItemActorWeightDaysDrain)
 		Val = Main.Config.GetFloat(".ActorWeightDaysDrain")
 		Min = 0.0
-		Max = 10.0
+		Max = 30.0
 		Interval = 0.05
 	ElseIf(Item == ItemInfluenceGemsWhen)
 		Val = Main.Config.GetFloat(".InfluenceGemsWhen")

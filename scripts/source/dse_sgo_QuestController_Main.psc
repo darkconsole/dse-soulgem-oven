@@ -512,7 +512,7 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 	
 	;; Orgasm Increases Weight
 	If(Config.GetBool(".OrgasmIncreasesWeight"))
-		Self.Data.ActorWeightSet(Who, Self.Data.ActorWeightGet(Who) + (Config.GetFloat(".OrgasmIncreasesWeightAmount")))
+		Self.Data.ActorWeightInc(Who,Config.GetFloat(".OrgasmIncreasesWeightAmount"))
 	EndIf
 	
 	
@@ -596,7 +596,7 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 	
 	;; Ejaculation Increases Weight
 	If(Config.GetBool(".EjaculationIncreasesWeight"))
-		Self.Data.ActorWeightSet(Who, Self.Data.ActorWeightGet(Who) + (Config.GetFloat(".EjaculationIncreasesWeightAmount")))
+		Self.Data.ActorWeightInc(Oven, Config.GetFloat(".EjaculationIncreasesWeightAmount"))
 	EndIf	
 	
 
