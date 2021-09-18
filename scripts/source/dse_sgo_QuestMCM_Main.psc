@@ -531,9 +531,9 @@ Event OnOptionSliderOpen(Int Item)
 		Interval = 0.1
 	ElseIf(Item == ItemActorWeightDaysDrain)
 		Val = Main.Config.GetFloat(".ActorWeightDaysDrain")
-		Min = 0.0
-		Max = 30.0
-		Interval = 0.05
+		Min = 0
+		Max = 30
+		Interval = 1
 	ElseIf(Item == ItemInfluenceGemsWhen)
 		Val = Main.Config.GetFloat(".InfluenceGemsWhen")
 		Min = 0.01
@@ -767,7 +767,7 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 		Fmt = "{1} hr"
 		Main.Config.SetFloat(".UpdateGameHours",Val)
 	ElseIf(Item == ItemActorWeightDaysDrain)
-		Fmt = "{2}"
+		Fmt = "{0}"
 		Main.Config.SetFloat(".ActorWeightDaysDrain",Val)
 
 	ElseIf(Item == ItemInfluenceGemsWhen)
@@ -799,7 +799,7 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 		Main.Config.SetFloat(".SemensPerDay",Val)		
 
 	ElseIf(Item == ItemActorWeightDaysGain)
-		Fmt = "{2}"
+		Fmt = "{0}"
 		Main.Config.SetFloat(".ActorWeightDaysGain",Val)
 	ElseIf(Item == ItemWeightGainPregPercent)
 		Fmt = "{0}"

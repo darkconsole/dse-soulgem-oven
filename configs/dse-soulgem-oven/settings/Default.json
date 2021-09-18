@@ -12,7 +12,7 @@
 	"ActorSemenMax": 2,
 	"ActorUpdateName": false,
 	"ActorDropDistance": 35.0,
-	"ActorWeightDaysLoss": 2.0,
+	"ActorWeightDaysDrain": 2.0,
 	"ActorWeightDaysGain": 2.0,	
 	"ActorStripMode": 1,
 	"GemsPerDay": 1.0,
