@@ -496,6 +496,11 @@ Function ActorUpdateNameStatus(Actor Who)
 
 	If(Original == "")
 		Original = Who.GetDisplayName()
+
+		If(Original == "")
+			Original = Who.GetName()
+		EndIf
+
 		StorageUtil.SetStringValue(Who,self.KeyActorOriginalName,Original)
 	EndIf
 
@@ -537,6 +542,10 @@ String Function ActorGetOriginalName(Actor Who, Bool Fallback=FALSE)
 
 	If(Original == "")
 		Original = Who.GetDisplayName()
+	EndIf
+
+	If(Original == "")
+		Original = Who.GetName()
 	EndIf
 
 	Return Original
