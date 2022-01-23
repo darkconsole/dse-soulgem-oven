@@ -271,21 +271,20 @@ Form Function ExtractResource()
 				
 			Int GemsBirthed = Main.Stats.GetInt(self.Source,Main.Stats.KeyGemsBirthed)
 			Int GemLevelingThreshold = Main.Config.GetInt(".GemLevelingThreshold")
+			Int GemCap = Main.Config.GetInt(".GemLevelingCap") * GemLevelingThreshold
 			
-			Int GemLevel = Math.floor(GemsBirthed/GemLevelingThreshold)+1
-			Int GemLevelCap = Main.Config.GetInt(".GemLevelingCap")
+			If(GemsBirthed > GemCap)
+				GemsBirthed = GemCap
+			EndIf
 			
-			If(GemLevel > GemLevelCap)
-				GemLevel = GemLevelCap
-			EndIf		
-			Output = Main.Data.GemStageGet(Math.Floor(GemLevel))
+			Output = Main.Data.GemStageGet(Math.floor(GemsBirthed/GemLevelingThreshold)+1)
 			
 			Main.Data.ActorGemRemoveLargest(self.Source)
 			Main.Stats.IncInt(self.Source,Main.Stats.KeyGemsBirthed,1,TRUE)				
 			
-			Float GemLevelingStatsMult = Main.Config.GetFloat(".GemLevelingStatsMult")*Gemlevel
+			Float GemLevelingStatsMult = Main.Config.GetFloat(".GemLevelingStatsMult") / GemLevelingThreshold * GemsBirthed
 			
-			Main.Data.ActorModSetValue(self.Source,Main.Data.KeyActorModGemsRateMult,".GemLevelingRatePenalty",Math.Pow(Main.Config.GetFloat(".GemLevelingRatePenalty"),GemLevel))			
+			Main.Data.ActorModSetValue(self.Source,Main.Data.KeyActorModGemsRateMult,".GemLevelingRatePenalty",Math.Pow(Main.Config.GetFloat(".GemLevelingRatePenalty"), Math.floor(GemsBirthed/GemLevelingThreshold)+1 ))			
 			Main.Data.ActorModSetValue(self.Source,Main.Data.KeyActorModInfluenceGemsHealthMult,".GemLevelingHealthMult",GemLevelingStatsMult)
 			Main.Data.ActorModSetValue(self.Source,Main.Data.KeyActorModInfluenceGemsMagickaMult,".GemLevelingMagickaMult",GemLevelingStatsMult)
 

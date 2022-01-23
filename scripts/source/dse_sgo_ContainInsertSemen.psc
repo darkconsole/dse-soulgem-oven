@@ -270,7 +270,25 @@ EndFunction
 Function HandleInsertSemen()
 {handle inserting gem data into the actor.}
 
-	Main.Data.ActorGemAdd(self.InsertInto,0.0)
+	If(Main.Config.GetBool(".InseminationUsePregChance"))
+		
+		Float PregChance = Main.Config.GetFloat(".FertilityChance")
+		Float PregRoll = Utility.RandomFloat(0.0,100.0) * Main.Data.ActorFertilityFactor(self.InsertInto)
+
+		If(PregRoll >= (100.0 - PregChance))
+			If(Main.Data.ActorGemAdd(self.InsertInto,0.0))	
+				Main.Util.PrintDebug(self.InsertInto.GetDisplayName() + " is now incubating another gem.")
+			Else
+				If(Main.Config.GetBool(".MessagesInsemination"))
+					Main.Util.PrintLookup("CannotFitMoreGems",self.InsertInto.GetDisplayName())
+					Main.Util.PrintDebug(self.InsertInto.GetDisplayName() + " cannot fit any more gems.")
+				EndIf
+			EndIf
+		EndIf
+	Else
+		Main.Data.ActorGemAdd(self.InsertInto,0.0)
+	EndIf
+	
 	Main.Stats.IncInt(self.InsertInto,Main.Stats.KeySemensInserted,1,TRUE)
 
 	Return

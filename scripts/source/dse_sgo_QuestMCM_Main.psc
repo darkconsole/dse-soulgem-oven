@@ -392,6 +392,14 @@ Event OnOptionSelect(Int Item)
 	ElseIf(Item == ItemOrgasmMilksGivesMilk)
 		Val = !Main.Config.GetBool(".OrgasmMilksGivesMilk")
 		Main.Config.SetBool(".OrgasmMilksGivesMilk",Val)
+
+	ElseIf(Item == ItemExcessMilkCounts)
+		Val = !Main.Config.GetBool(".ExcessMilkCounts")
+		Main.Config.SetBool(".ExcessMilkCounts",Val)	
+
+	ElseIf(Item == ItemInseminationUsePregChance)
+		Val = !Main.Config.GetBool(".InseminationUsePregChance")
+		Main.Config.SetBool(".InseminationUsePregChance",Val)	
 		
 
 	ElseIf(Item == ItemActorUpdateName)
@@ -679,6 +687,16 @@ Event OnOptionSliderOpen(Int Item)
 		Min = 1
 		Max = 100.0
 		Interval = 1
+	ElseIf(Item == ItemLingeringExtraWeightPercentage)
+		Val = Main.Config.GetFloat(".LingeringExtraWeightPercentage")
+		Min = 0.0
+		Max = 200.0
+		Interval = 1
+	ElseIf(Item == ItemLingeringExtraBreastPercentage)
+		Val = Main.Config.GetFloat(".LingeringExtraBreastPercentage")
+		Min = 0.0
+		Max = 200.0
+		Interval = 1		
 
 		
 	ElseIf(PageCurrentKey == "$SGO4_Menu_GemSliders" || PageCurrentKey == "$SGO4_Menu_MilkSliders")
@@ -858,7 +876,13 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 	ElseIf(Item == ItemOrgasmMilksThreshold)
 		Fmt = "{0}"
 		Main.Config.SetFloat(".OrgasmMilksThreshold",Val)
-
+	ElseIf(Item == ItemLingeringExtraWeightPercentage)
+		Fmt = "{0}"
+		Main.Config.SetFloat(".LingeringExtraWeightPercentage",Val)	
+	ElseIf(Item == ItemLingeringExtraBreastPercentage)
+		Fmt = "{0}"
+		Main.Config.SetFloat(".LingeringExtraBreastPercentage",Val)	
+		
 
 	ElseIf(PageCurrentKey == "$SGO4_Menu_GemSliders" || PageCurrentKey == "$SGO4_Menu_MilkSliders")
 
@@ -1130,7 +1154,15 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_MessagesPlayer"
 	ElseIf(Item == ItemMessagesNPC)
 		Txt = "$SGO4_MenuTip_MessagesNPC"
-
+	ElseIf(Item == ItemLingeringExtraWeightPercentage)
+		Txt = "$SGO4_MenuTip_LingeringExtraWeightPercentage"	
+	ElseIf(Item == ItemLingeringExtraBreastPercentage)
+		Txt = "$SGO4_MenuTip_LingeringExtraBreastPercentage"			
+	ElseIf(Item == ItemInseminationUsePregChance)
+		Txt = "$SGO4_MenuTip_InseminationUsePregChance"	
+	ElseIf(Item == ItemExcessMilkCounts)
+		Txt = "$SGO4_MenuTip_ExcessMilkCounts"	
+		
 	ElseIf(Item == ItemBirthGemsFilled)
 		Txt = "$SGO4_MenuTip_ItemBirthGemsFilled"
 	ElseIf(Item == ItemInfluenceGemsWhen)
@@ -1507,6 +1539,10 @@ Int ItemEjaculationGrowsGemsAmount
 Int ItemFixFemaleToMaleImp
 Int ItemEnableExpressions
 
+Int ItemLingeringExtraWeightPercentage
+Int ItemLingeringExtraBreastPercentage
+Int ItemInseminationUsePregChance	
+Int ItemExcessMilkCounts
 
 Int ItemSoloMissionGivesSemen
 
@@ -1544,15 +1580,17 @@ Function ShowPageIntegration()
 	ItemOrgasmMilksMilk = AddToggleOption("$SGO4_MenuOpt_OrgasmMilksMilk",Main.Config.GetBool(".OrgasmMilksMilk"))
 	ItemOrgasmMilksThreshold = AddSliderOption("$SGO4_MenuOpt_OrgasmMilksThreshold",Main.Config.GetFloat(".OrgasmMilksThreshold"),"{0} %")
 	ItemOrgasmMilksGivesMilk = AddToggleOption("$SGO4_MenuOpt_OrgasmMilksGivesMilk",Main.Config.GetBool(".OrgasmMilksGivesMilk"))
-	AddEmptyOption()	
+	ItemLingeringExtraBreastPercentage = AddSliderOption("$SGO4_MenuOpt_LingeringExtraBreastPercentage",Main.Config.GetInt(".LingeringExtraBreastPercentage"))
 	AddEmptyOption()	
 	AddEmptyOption()		
 	ItemOrgasmGrowsGems = AddToggleOption("$SGO4_MenuOpt_OrgasmGrowsGems",Main.Config.GetBool(".OrgasmGrowsGems"))
 	ItemOrgasmGrowsGemsAmount = AddSliderOption("$SGO4_MenuOpt_OrgasmGrowsGemsAmount",Main.Config.GetFloat(".OrgasmGrowsGemsAmount"),"{2}")
 	ItemOrgasmIncreasesWeight = AddToggleOption("$SGO4_MenuOpt_OrgasmIncreasesWeight",Main.Config.GetBool(".OrgasmIncreasesWeight"))
 	ItemOrgasmIncreasesWeightAmount = AddSliderOption("$SGO4_MenuOpt_OrgasmIncreasesWeightAmount",Main.Config.GetFloat(".OrgasmIncreasesWeightAmount"),"{2}")
-	AddEmptyOption()	
+	ItemLingeringExtraWeightPercentage = AddSliderOption("$SGO4_MenuOpt_LingeringExtraWeightPercentage",Main.Config.GetInt(".LingeringExtraWeightPercentage"))
 	AddEmptyOption()		
+	AddEmptyOption()	
+	AddEmptyOption()	
 	ItemEjaculationIncreasesWeight = AddToggleOption("$SGO4_MenuOpt_EjaculationIncreasesWeight",Main.Config.GetBool(".EjaculationIncreasesWeight"))
 	ItemEjaculationIncreasesWeightAmount = AddSliderOption("$SGO4_MenuOpt_EjaculationIncreasesWeightAmount",Main.Config.GetFloat(".EjaculationIncreasesWeightAmount"),"{2}")
 	ItemEjaculationGrowsGems = AddToggleOption("$SGO4_MenuOpt_EjaculationGrowsGems",Main.Config.GetBool(".EjaculationGrowsGems"))
@@ -1566,6 +1604,8 @@ Function ShowPageIntegration()
 	ItemFixFemaleToMaleImp = AddToggleOption("$SGO4_MenuOpt_FixFemaleToMaleImp",Main.Config.GetBool(".FixFemaleToMaleImp"))	
 	ItemSoloMissionGivesSemen = AddToggleOption("$SGO4_MenuOpt_SoloMissionGivesSemen",Main.Config.GetBool(".SoloMissionGivesSemen"))
 	ItemEnableExpressions = AddToggleOption("$SGO4_MenuOpt_EnableExpressions",Main.Config.GetBool(".EnableExpressions"))	
+	ItemExcessMilkCounts = AddToggleOption("$SGO4_MenuOpt_ExcessMilkCounts",Main.Config.GetBool(".ExcessMilkCounts"))		
+	ItemInseminationUsePregChance = AddToggleOption("$SGO4_MenuOpt_InseminationUsePregChance",Main.Config.GetBool(".InseminationUsePregChance"))	
 
 
 

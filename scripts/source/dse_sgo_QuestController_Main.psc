@@ -457,7 +457,7 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 
 	If(Config.GetBool(".OrgasmGrowsMilk") && Who.IsInFaction(FactionProduceMilk) && (PregPercent >= (Config.GetFloat(".MilksPregPercent") / 100.0)))
 		Data.ActorMilkInc(Who,(Config.GetFloat(".OrgasmGrowsMilkAmount")))
-		Data.ActorMilkLimit(Who)	
+		Data.ActorMilkLimit(Who)
 		
 		If(Config.GetBool(".OrgasmMilksMilk") && Data.ActorMilkAmount(Who) >= 1)
 			Data.ActorMilkInc(Who,(-1.0))
@@ -1003,7 +1003,7 @@ Function MenuActorStatsOpen(Actor Who=None)
 	Menu.AddEntryItem(" ",NoParent)
 
 	Menu.AddEntryItem("$SGO4_MenuStatMilksProduced",NoParent)
-	Menu.AddEntryItem(Stats.GetInt(Who,Stats.KeyMilksProduced),NoParent)
+	Menu.AddEntryItem(Stats.GetFloat(Who,Stats.KeyMilksProduced),NoParent)
 	Menu.AddEntryItem(" ",NoParent)
 
 	Menu.AddEntryItem("$SGO4_MenuStatMilksMilked",NoParent)

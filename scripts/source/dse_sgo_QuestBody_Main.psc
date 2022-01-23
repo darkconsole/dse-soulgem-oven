@@ -84,7 +84,24 @@ Function ActorUpdateGems(Actor Who)
 		GemPercent = 0.0
 		WeightPercent = 0.0
 	EndIf
+	
+	;; Here is where to put lingering Weight morphs.
+	
+	If(Main.Config.GetInt(".LingeringExtraWeightPercentage") > 0 && !Who.IsInFaction(Main.FactionNoBodyScale))
 
+		Int GemsBirthed = Main.Stats.GetInt(Who,Main.Stats.KeyGemsBirthed)
+		Int GemLevelingThreshold = Main.Config.GetInt(".GemLevelingThreshold")
+		Int GemCap = Main.Config.GetInt(".GemLevelingCap") * GemLevelingThreshold
+			
+		If(GemsBirthed > GemCap)
+			GemsBirthed = GemCap
+		EndIf
+	
+		Float LingeringExtraWeight = Main.Util.RoundTo(Main.Config.GetFloat(".GemLevelingWeightMult") / GemLevelingThreshold * GemsBirthed / 100 * Main.Config.GetInt(".LingeringExtraWeightPercentage"),3)
+	
+		WeightPercent += LingeringExtraWeight
+	EndIf
+	
 	self.ActorSlidersApply(Who,self.KeySlidersGems,GemPercent,WeightPercent)
 
 	Return
@@ -113,8 +130,15 @@ Function ActorUpdateMilk(Actor Who)
 
 	If(Who.IsInFaction(Main.FactionNoBodyScale))
 		MilkPercent = 0.0
+		MilkPercentRelative = 0.0
 	EndIf
-
+	
+	;; Here is where to put lingering Breast morphs.
+	
+	If(Main.Config.GetInt(".LingeringExtraBreastPercentage") > 0 && !Who.IsInFaction(Main.FactionNoBodyScale))
+		MilkPercentRelative += Main.Util.RoundTo(Main.Data.ActorMilkMax(Who) - 1 / 100 * Main.Config.GetInt(".LingeringExtraBreastPercentage"),3)
+	EndIf
+	
 	self.ActorSlidersApply(Who,self.KeySlidersMilk,MilkPercentRelative)
 
 	Return

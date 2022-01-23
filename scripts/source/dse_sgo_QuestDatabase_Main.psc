@@ -1057,6 +1057,8 @@ Function ActorMilkInc(Actor Who, Float Value)
 {add/sub how much milk this actor has.}
 
 	Float Milk = StorageUtil.AdjustFloatValue(Who,self.KeyActorMilkData,Value)
+	
+	ActorMilkLimit(Who)	
 
 	If(Milk < 0.0)
 		Milk = 0.0
@@ -1066,6 +1068,40 @@ Function ActorMilkInc(Actor Who, Float Value)
 	Main.Util.ActorLevelAlchemy(Who,Value)
 
 	;;Main.Util.PrintDebug(Who.GetDisplayName() + " now has " + Milk + " milk.")
+
+	;;Milkleveling is here now, if you have any better idea on where to slap it in, feel free to change/share.
+	
+	If(Main.Config.GetBool(".MilkLeveling"))
+		Int MilkedCount = Main.Stats.GetInt(Who,Main.Stats.KeyMilksProduced)
+
+		Float MilkLevelingCapacityMult = Main.Config.GetFloat(".MilkLevelingCapacityMult")*MilkedCount
+		Float MilkLevelingCapacityMultCap = Main.Config.GetFloat(".MilkLevelingCapacityMultCap")
+		If MilkLevelingCapacityMult > MilkLevelingCapacityMultCap
+			MilkLevelingCapacityMult = MilkLevelingCapacityMultCap
+		EndIf
+
+		Float MilkLevelingGainMult = Main.Config.GetFloat(".MilkLevelingGainMult")*MilkedCount
+		Float MilkLevelingGainMultCap = Main.Config.GetFloat(".MilkLevelingGainMultCap")
+		If MilkLevelingGainMult > MilkLevelingGainMultCap
+			MilkLevelingGainMult = MilkLevelingGainMultCap
+		EndIf
+			
+		Float MilkLevelingSpeechMult = Main.Config.GetFloat(".MilkLevelingSpeechMult")*MilkedCount
+		Float MilkLevelingSpeechMultCap = Main.Config.GetFloat(".MilkLevelingSpeechMultCap")
+		If MilkLevelingSpeechMult > MilkLevelingSpeechMultCap
+			MilkLevelingSpeechMult = MilkLevelingSpeechMultCap
+		EndIf
+			
+		Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModMilkMaxMult,".MilkLevelCapacityMult",MilkLevelingCapacityMult)
+		Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModMilkRateMult,".MilkLevelRateMult",MilkLevelingGainMult)
+		Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModInfluenceMilkSpeechMult,".MilkLevelSpeechMult",MilkLevelingSpeechMult)
+		Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModInfluenceMilkSpeechExposedMult,".MilkLevelSpeechExposedMult",MilkLevelingSpeechMult)			
+	Else
+		Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModMilkMaxMult,".MilkLevelCapacityMult")
+		Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModMilkRateMult,".MilkLevelRateMult")
+		Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModInfluenceMilkSpeechMult,".MilkLevelSpeechMult")
+		Main.Data.ActorModSetValue(Who,Main.Data.KeyActorModInfluenceMilkSpeechExposedMult,".MilkLevelSpeechExposedMult")	
+	EndIf					
 
 	self.ActorTrackingAdd(Who)
 	Main.Body.ActorUpdate(Who)
@@ -1078,6 +1114,11 @@ Function ActorMilkLimit(Actor Who)
 
 	Float Amount = self.ActorMilkAmount(Who,FALSE)
 	Float Max = self.ActorMilkMax(Who)
+
+	If(Main.Config.GetBool(".ExcessMilkCounts"))
+		Float Excess = Main.Util.RoundTo(Amount-Max,3)
+		Main.Stats.IncFloat(Who,Main.Stats.KeyMilksProduced,Excess,TRUE)
+	Endif
 
 	If(Amount > Max)
 		self.ActorMilkSet(Who,Max as Float)
@@ -1151,8 +1192,8 @@ actor is physically not capable of producing this item.}
 	Float ModRate
 	Float PassiveLoss
 	Float MilkMax
-	Int MilkOld
-	Int MilkNew
+	Float MilkOld
+	Float MilkNew
 	Float MilkCur
 
 	;;;;;;;;
@@ -1208,12 +1249,15 @@ actor is physically not capable of producing this item.}
 
 	;;;;;;;;
 
-	MilkOld = Math.Floor(MilkCur)
+	;;Rewrote this part a bit, to allow float values. limited to 3 decimal points.
+	
+	MilkOld = MilkCur
 	self.ActorMilkInc(Who,Inc)
-	MilkNew = Math.Floor(self.ActorMilkAmount(Who))
+	MilkNew = self.ActorMilkAmount(Who)
+	Float MilkDiff = Main.Util.RoundTo(MilkNew-MilkOld,3)
 
 	If(MilkOld != MilkNew)
-		Main.Stats.IncInt(Who,Main.Stats.KeyMilksProduced,(MilkNew-MilkOld),TRUE)
+		Main.Stats.IncFloat(Who,Main.Stats.KeyMilksProduced,(MilkDiff),TRUE)
 
 		If(Who == Main.Player)
 			If(MilkNew == MilkMax)
