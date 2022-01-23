@@ -269,28 +269,28 @@ Event OnOptionSelect(Int Item)
 		self.SetToggleOptionValue(ItemStripSexLabForeplay,FALSE)
 		self.SetToggleOptionValue(ItemStripBodyOnly,FALSE)
 		self.SetToggleOptionValue(ItemStripNone,FALSE)
-		Main.Config.SetBool(".ActorStripMode",Main.Config.StripModeSexLabNormal)
+		Main.Config.SetInt(".ActorStripMode",Main.Config.StripModeSexLabNormal)
 
 	ElseIf(Item == ItemStripSexLabForeplay)
 		Val = TRUE
 		self.SetToggleOptionValue(ItemStripSexLabNormal,FALSE)
 		self.SetToggleOptionValue(ItemStripBodyOnly,FALSE)
 		self.SetToggleOptionValue(ItemStripNone,FALSE)
-		Main.Config.SetBool(".ActorStripMode",Main.Config.StripModeSexLabForeplay)
+		Main.Config.SetInt(".ActorStripMode",Main.Config.StripModeSexLabForeplay)
 
 	ElseIf(Item == ItemStripBodyOnly)
 		Val = TRUE
 		self.SetToggleOptionValue(ItemStripSexLabForeplay,FALSE)
 		self.SetToggleOptionValue(ItemStripSexLabNormal,FALSE)
 		self.SetToggleOptionValue(ItemStripNone,FALSE)
-		Main.Config.SetBool(".ActorStripMode",Main.Config.StripModeBodyOnly)
+		Main.Config.SetInt(".ActorStripMode",Main.Config.StripModeBodyOnly)
 
 	ElseIf(Item == ItemStripNone)
 		Val = TRUE
 		self.SetToggleOptionValue(ItemStripSexLabForeplay,FALSE)
 		self.SetToggleOptionValue(ItemStripSexLabNormal,FALSE)
 		self.SetToggleOptionValue(ItemStripBodyOnly,FALSE)
-		Main.Config.SetBool(".ActorStripMode",Main.Config.StripModeNone)
+		Main.Config.SetInt(".ActorStripMode",Main.Config.StripModeNone)
 
 	;;;;;;;;
 
