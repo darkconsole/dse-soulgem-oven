@@ -967,7 +967,7 @@ Function ActorMilkInc(Actor Who, Float Value)
 		StorageUtil.SetFloatValue(Who,self.KeyActorMilkData,Milk)
 	EndIf
 
-	Main.Util.ActorLevelAlchemy(Who,Value)
+	Main.Util.ActorLevelAlchemy(Who,Math.abs(Value))
 
 	;;Main.Util.PrintDebug(Who.GetDisplayName() + " now has " + Milk + " milk.")
 
@@ -1189,7 +1189,7 @@ Function ActorSemenInc(Actor Who, Float Value)
 		StorageUtil.SetFloatValue(Who,self.KeyActorSemenData,Semen)
 	EndIf
 
-	Main.Util.ActorLevelAlchemy(Who,Value)
+	Main.Util.ActorLevelAlchemy(Who,Math.abs(Value))
 
 	;;Main.Util.PrintDebug(Who.GetDisplayName() + " now has " + Semen + " semen.")
 

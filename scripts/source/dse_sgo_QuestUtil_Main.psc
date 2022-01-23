@@ -247,7 +247,7 @@ EndFunction
 Float Function GetLeveledValue(Float Level, Float Value, Float Factor = 1.0)
 {modify a value based on a level 100 system. this means at level 100 the input
 value will be doubled.}
-	
+
 	;; input 1 at level 0
 	;; ((0 / 100) * 1) + 1 = 1
 
@@ -278,7 +278,7 @@ Float[] Function GetNodePositionData(ObjectReference What, String Node)
 	NetImmerse.GetNodeWorldPosition(What,Node,NodePos,FALSE)
 
 	;; get me the node rotation.
-	;; GetNodeWorldRotationEuler currently is bugged in SKSE and is returning the 
+	;; GetNodeWorldRotationEuler currently is bugged in SKSE and is returning the
 	;; local values instead of world values. if they fix that we can get rid of this
 	;; matrix stupidness.
 
@@ -344,7 +344,7 @@ String Function StringInsert(String Format, String InputList="")
 				Format = StringUtil.Substring(Format,0,Pos) + Inputs[Iter] + StringUtil.Substring(Format,(Pos+2))
 			Else
 				Format = Inputs[Iter] + StringUtil.Substring(Format,(Pos+2))
-			EndIf			
+			EndIf
 		EndIf
 
 		Iter += 1
@@ -472,9 +472,8 @@ leave ItemValue at the default of 1.0.}
 	Level = Who.GetLevel()
 	Value = (100 / MilksPerDay) * ItemValue
 
-	;; if its progressing retarded fast, manipulate the 24 to be smaller.
-	;; if too slow manipulate the 24 larger.
-	;; once this calc feels good to me at default, users can tweak it via the factor.
+	Main.Util.PrintDebug("[ActorLevelAlchemy] Level: " + Level + ", Factor: " + Factor + ", MilksPerDay: " + MilksPerDay)
+	Main.Util.PrintDebug("[ActorLevelAlchemy] Value: " + Value + ", Leveled: " + self.GetLeveledValue(Level,Value,Factor))
 
 	Game.AdvanceSkill("Alchemy",self.GetLeveledValue(Level,Value,Factor))
 	Return
@@ -759,7 +758,7 @@ Function ActorCleanAll(Bool Force=FALSE)
 	EndIf
 
 	ActorCount = Main.Data.ActorTrackingCount()
-	
+
 	While(ActorIter < ActorCount)
 		Who = Main.Data.ActorTrackingGet(ActorIter)
 
@@ -806,7 +805,7 @@ EndFunction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; THIRD PARTY CODE. HOPEFULLY TEMPORARY. 
+;; THIRD PARTY CODE. HOPEFULLY TEMPORARY.
 
 Float[] Function MatrixToEuler(Float[] afMatrix) Global
 {Converts a rotation matrix to Euler angles. Tailored for Skyrim (extrinsic left-handed ZYX Euler).}
@@ -817,17 +816,17 @@ Float[] Function MatrixToEuler(Float[] afMatrix) Global
    ;
    ; Source for the math: https://web.archive.org/web/20051124013711/http://skal.planet-d.net/demo/matrixfaq.htm#Q37
    ;
-   ; The math there is righthanded, but it's easy to tailor it to 
-   ; lefthanded if you have a handy-dandy reference like the one 
+   ; The math there is righthanded, but it's easy to tailor it to
+   ; lefthanded if you have a handy-dandy reference like the one
    ; at <http://www.vectoralgebra.info/eulermatrix.html>.
    ;
    Float[] fEuler = new Float[3]
-   ; 
-   ; We can immediately solve for Y, but we must round it to account 
-   ; for imprecision that is sometimes introduced when we have 
-   ; converted through other forms (e.g. axis-angle). fCYTest exists 
+   ;
+   ; We can immediately solve for Y, but we must round it to account
+   ; for imprecision that is sometimes introduced when we have
+   ; converted through other forms (e.g. axis-angle). fCYTest exists
    ; solely as part of that accounting.
-   ; 
+   ;
    Float fY = Math.asin( (((-afMatrix[2] * 1000000) as int) as float) / 1000000 )
    Float fCY = Math.cos(fY)
    Float fCYTest = (((fCY * 100) as int) as float) / 100
@@ -844,7 +843,7 @@ Float[] Function MatrixToEuler(Float[] afMatrix) Global
    Else
       ;Debug.Trace("MatrixToEuler: cos(Y) == 0. Taking another path...")
       ;
-      ; We can't compute X and Z by using Y, because cos(Y) is zero. Therefore, 
+      ; We can't compute X and Z by using Y, because cos(Y) is zero. Therefore,
       ; we have to compromise.
       ;
       ; We'll assume X to be zero, and dump the rest into Z.
@@ -853,8 +852,8 @@ Float[] Function MatrixToEuler(Float[] afMatrix) Global
       fTX = afMatrix[4]             ; Setting X to zero simplifies this element to: 0*sinY*sinZ + 1*cosZ
       fTY = afMatrix[3]             ; Setting X to zero simplifies this element to: 0*sinY*cosZ - 1*sinZ
       ;
-      ; NOTE: Negating the result APPEARS to be necessary to account for our use of a 
-      ; left-handed system versus the source's use of a right-handed system. However, 
+      ; NOTE: Negating the result APPEARS to be necessary to account for our use of a
+      ; left-handed system versus the source's use of a right-handed system. However,
       ; I arrived at that conclusion deductively, and I am not 100% certain of it.
       ;
       fEuler[2] = -atan2(fTY, fTX)   ; = atan(sin Z / cos Z)
