@@ -91,6 +91,7 @@ Function OnRenderWidget()
 			self.iWant.SetMeterPercent(self.Items[Iter], 0)
 			self.iWant.SetZoom(self.Items[Iter], ModW, ModH)
 			self.iWant.SetRotation(self.Items[Iter], Rot)
+			Utility.Wait(0.1)
 			self.iWant.SetPos( \
 				self.Items[Iter], \
 				((PosX + ((Iter * Gap) * Scale) + (self.iWant.GetXSize(self.Items[Iter]) / 2)) As Int), \
@@ -107,7 +108,6 @@ Function OnRenderWidget()
 	If(Who.IsInFaction(SGO.FactionProduceMilk))
 		SGO.Util.PrintDebug("[WidgetBase] OnRenderWidget Milk " + Iter)
 		self.iWant.SetMeterRGB(self.Items[Iter], 200,200,200, 128,128,128, 255,255,255)
-		self.iWant.SetZoom(self.Items[Iter], ModW, ModH)
 		self.iWant.SetMeterPercent(self.Items[Iter], ((Milk * 100) As Int))
 		Iter += 1
 	EndIf
