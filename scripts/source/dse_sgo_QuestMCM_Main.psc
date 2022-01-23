@@ -383,12 +383,12 @@ Event OnOptionSliderOpen(Int Item)
 		Val = Main.Config.GetFloat(".WidgetOffsetX")
 		Min = 0.0
 		Max = 1280.0
-		Interval = 0.1
+		Interval = 1.0
 	ElseIf(Item == ItemWidgetOffsetY)
 		Val = Main.Config.GetFloat(".WidgetOffsetY")
 		Min = 0.0
 		Max = 720.0
-		Interval = 0.1
+		Interval = 1.0
 	ElseIf(Item == ItemWidgetScale)
 		Val = Main.Config.GetFloat(".WidgetScale")
 		Min = 0.1
@@ -397,12 +397,12 @@ Event OnOptionSliderOpen(Int Item)
 	ElseIf(Item == ItemWidgetBarW)
 		Val = Main.Config.GetInt(".WidgetBarW")
 		Min = 1.0
-		Max = 100.0
+		Max = 200.0
 		Interval = 1.0
 	ElseIf(Item == ItemWidgetBarH)
 		Val = Main.Config.GetInt(".WidgetBarH")
 		Min = 1.0
-		Max = 100.0
+		Max = 200.0
 		Interval = 1.0
 	ElseIf(Item == ItemWidgetSpacing)
 		Val = Main.Config.GetInt(".WidgetSpacing")
@@ -523,27 +523,27 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 	If(Item == ItemWidgetOffsetX)
 		Fmt = "{1}"
 		Main.Config.SetFloat(".WidgetOffsetX",Val)
-		Main.GemUI.OnUpdateWidget()
+		Main.GemUI.OnUpdateWidget(TRUE)
 	ElseIf(Item == ItemWidgetOffsetY)
 		Fmt = "{1}"
 		Main.Config.SetFloat(".WidgetOffsetY",Val)
-		Main.GemUI.OnUpdateWidget()
+		Main.GemUI.OnUpdateWidget(TRUE)
 	ElseIf(Item == ItemWidgetScale)
 		Fmt = "{2}"
 		Main.Config.SetFloat(".WidgetScale",Val)
-		Main.GemUI.OnUpdateWidget()
+		Main.GemUI.OnUpdateWidget(TRUE)
 	ElseIf(Item == ItemWidgetBarW)
-		Fmt = "{0}"
+		Fmt = "{0}%"
 		Main.Config.SetInt(".WidgetBarW",Val as Int)
-		Main.GemUI.OnUpdateWidget()
+		Main.GemUI.OnUpdateWidget(TRUE)
 	ElseIf(Item == ItemWidgetBarH)
-		Fmt = "{0}"
+		Fmt = "{0}%"
 		Main.Config.SetInt(".WidgetBarH",Val as Int)
-		Main.GemUI.OnUpdateWidget()
+		Main.GemUI.OnUpdateWidget(TRUE)
 	ElseIf(Item == ItemWidgetSpacing)
 		Fmt = "{0}"
 		Main.Config.SetInt(".WidgetSpacing",Val as Int)
-		Main.GemUI.OnUpdateWidget()
+		Main.GemUI.OnUpdateWidget(TRUE)
 	ElseIf(Item == ItemActorGemsMax)
 		Fmt = "{0}"
 		Main.Config.SetInt(".ActorGemsMax",(Val as Int))
@@ -1144,9 +1144,9 @@ Function ShowPageWidgets()
 	AddHeaderOption("$SGO4_MenuOpt_ScannerWidget")
 	AddHeaderOption("")
 	ItemWidgetOffsetX = AddSliderOption("$SGO4_MenuOpt_WidgetOffsetX",Main.Config.GetFloat(".WidgetOffsetX"),"{1}")
-	ItemWidgetBarW = AddSliderOption("$SGO4_MenuOpt_WidgetBarW",Main.Config.GetInt(".WidgetBarW"),"{0}")
+	ItemWidgetBarW = AddSliderOption("$SGO4_MenuOpt_WidgetBarW",Main.Config.GetInt(".WidgetBarW"),"{0}%")
 	ItemWidgetOffsetY = AddSliderOption("$SGO4_MenuOpt_WidgetOffsetY",Main.Config.GetFloat(".WidgetOffsetY"),"{1}")
-	ItemWidgetBarH = AddSliderOption("$SGO4_MenuOpt_WidgetBarH",Main.Config.GetInt(".WidgetBarH"),"{0}")
+	ItemWidgetBarH = AddSliderOption("$SGO4_MenuOpt_WidgetBarH",Main.Config.GetInt(".WidgetBarH"),"{0}%")
 	ItemWidgetScale = AddSliderOption("$SGO4_MenuOpt_WidgetScale",Main.Config.GetFloat(".WidgetScale"),"{2}")
 	ItemWidgetSpacing = AddSliderOption("$SGO4_MenuOpt_WidgetSpacing",Main.Config.GetInt(".WidgetSpacing"),"{0}")
 

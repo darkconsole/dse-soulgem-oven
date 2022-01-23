@@ -7,7 +7,11 @@ dse_sgo_QuestController_Main Property SGO Auto
 ReferenceAlias Property Target Auto
 
 iWant_Widgets Property iWant Auto Hidden
+
 Int[] Property Items Auto Hidden
+
+Int Property Title Auto Hidden
+Int Property TitleShadow Auto Hidden
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17,6 +21,8 @@ Event OnInit()
 	SGO.Util.PrintDebug("[WidgetBase] OnInit")
 
 	self.DynopulateItemsAsMeters(0)
+	self.Title = 0
+	self.TitleShadow = 0
 
 	UnregisterForModEvent("iWantWidgetsReset")
 	RegisterForModEvent("iWantWidgetsReset", "OnLocalEvent")
@@ -60,12 +66,9 @@ Event OnDataUpdate(Form Whom)
 	Return
 EndEvent
 
-Function OnUpdateWidget()
+Function OnUpdateWidget(Bool Flush=FALSE)
 
-	;;If(self.IsRunning())
-		self.OnRenderWidget()
-	;;EndIf
-
+	self.OnRenderWidget()
 	Return
 EndFunction
 
