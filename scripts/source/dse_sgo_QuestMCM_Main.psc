@@ -44,6 +44,8 @@ Event OnGameReload()
 	;; add books to vendors.
 	Main.InstallVendorItems()
 
+	Main.GemUI.OnInit()
+
 	Return
 EndEvent
 
@@ -53,7 +55,7 @@ properties as a way to optimise their read time because they are used very
 very very frequently. seeeding them on gameload because i elect to support
 people editing their json by hand and reloading the game.}
 
-	
+
 
 	Return
 EndFunction
@@ -97,7 +99,7 @@ Event OnConfigInit()
 
 	self.Pages[0] = "$SGO4_Menu_Databank"
 	;; sgo actor tracking data.
-	
+
 	self.Pages[1] = "$SGO4_Menu_General"
 	;; info, enable/disable, uninstall.
 
@@ -390,8 +392,23 @@ Event OnOptionSliderOpen(Int Item)
 	ElseIf(Item == ItemWidgetScale)
 		Val = Main.Config.GetFloat(".WidgetScale")
 		Min = 0.1
-		Max = 1.0
+		Max = 2.0
 		Interval = 0.05
+	ElseIf(Item == ItemWidgetBarW)
+		Val = Main.Config.GetInt(".WidgetBarW")
+		Min = 1.0
+		Max = 100.0
+		Interval = 1.0
+	ElseIf(Item == ItemWidgetBarH)
+		Val = Main.Config.GetInt(".WidgetBarH")
+		Min = 1.0
+		Max = 100.0
+		Interval = 1.0
+	ElseIf(Item == ItemWidgetSpacing)
+		Val = Main.Config.GetInt(".WidgetSpacing")
+		Min = 1.0
+		Max = 100.0
+		Interval = 1.0
 	ElseIf(Item == ItemActorGemsMax)
 		Val = Main.Config.GetFloat(".ActorGemsMax")
 		Min = 1.0
@@ -475,7 +492,7 @@ Event OnOptionSliderOpen(Int Item)
 	ElseIf(PageCurrentKey == "$SGO4_Menu_GemSliders" || PageCurrentKey == "$SGO4_Menu_MilkSliders")
 
 		Int ItemCount = ItemSliderVal.Length
-		
+
 		While(ItemCount > 0)
 			ItemCount -= 1
 
@@ -506,12 +523,27 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 	If(Item == ItemWidgetOffsetX)
 		Fmt = "{1}"
 		Main.Config.SetFloat(".WidgetOffsetX",Val)
+		Main.GemUI.OnUpdateWidget()
 	ElseIf(Item == ItemWidgetOffsetY)
 		Fmt = "{1}"
 		Main.Config.SetFloat(".WidgetOffsetY",Val)
+		Main.GemUI.OnUpdateWidget()
 	ElseIf(Item == ItemWidgetScale)
 		Fmt = "{2}"
 		Main.Config.SetFloat(".WidgetScale",Val)
+		Main.GemUI.OnUpdateWidget()
+	ElseIf(Item == ItemWidgetBarW)
+		Fmt = "{0}"
+		Main.Config.SetInt(".WidgetBarW",Val as Int)
+		Main.GemUI.OnUpdateWidget()
+	ElseIf(Item == ItemWidgetBarH)
+		Fmt = "{0}"
+		Main.Config.SetInt(".WidgetBarH",Val as Int)
+		Main.GemUI.OnUpdateWidget()
+	ElseIf(Item == ItemWidgetSpacing)
+		Fmt = "{0}"
+		Main.Config.SetInt(".WidgetSpacing",Val as Int)
+		Main.GemUI.OnUpdateWidget()
 	ElseIf(Item == ItemActorGemsMax)
 		Fmt = "{0}"
 		Main.Config.SetInt(".ActorGemsMax",(Val as Int))
@@ -565,7 +597,7 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 
 		Int ItemCount = ItemSliderVal.Length
 		String SliderPath
-		
+
 		While(ItemCount > 0)
 			ItemCount -= 1
 
@@ -592,37 +624,35 @@ Event OnOptionMenuOpen(Int Item)
 	Int Select = 0
 	Int Iter
 
-	If(Item == ItemWidgetAnchorH)
-		Opts = Utility.CreateStringArray(3)
-		Opts[0] = "left"
-		Opts[1] = "center"
-		Opts[2] = "right"
+	;;If(Item == ItemWidgetAnchorH)
+	;;	Opts = Utility.CreateStringArray(3)
+	;;	Opts[0] = "left"
+	;;	Opts[1] = "center"
+	;;	Opts[2] = "right"
+	;;	Iter = Opts.Length
+	;;	While(Iter > 0)
+	;;		Iter -= 1
+	;;		If(Opts[Iter] == Main.Config.GetString(".WidgetAnchorH"))
+	;;			Select = Iter
+	;;			Iter = 0
+	;;		EndIf
+	;;	EndWhile
+	;;ElseIf(Item == ItemWidgetAnchorV)
+	;;	Opts = Utility.CreateStringArray(3)
+	;;	Opts[0] = "top"
+	;;	Opts[1] = "center"
+	;;	Opts[2] = "bottom"
+	;;	Iter = Opts.Length
+	;;	While(Iter > 0)
+	;;		Iter -= 1
+	;;		If(Opts[Iter] == Main.Config.GetString(".WidgetAnchorV"))
+	;;			Select = Iter
+	;;			Iter = 0
+	;;		EndIf
+	;;	EndWhile
+	;; EndIf
 
-		Iter = Opts.Length
-		While(Iter > 0)
-			Iter -= 1
-			If(Opts[Iter] == Main.Config.GetString(".WidgetAnchorH"))
-				Select = Iter
-				Iter = 0
-			EndIf
-		EndWhile
-
-	ElseIf(Item == ItemWidgetAnchorV)
-		Opts = Utility.CreateStringArray(3)
-		Opts[0] = "top"
-		Opts[1] = "center"
-		Opts[2] = "bottom"
-
-		Iter = Opts.Length
-		While(Iter > 0)
-			Iter -= 1
-			If(Opts[Iter] == Main.Config.GetString(".WidgetAnchorV"))
-				Select = Iter
-				Iter = 0
-			EndIf
-		EndWhile
-
-	ElseIf(Item == ItemSliderDel)
+	If(Item == ItemSliderDel)
 		self.OnOptionMenuOpen_SliderDelete(Item,ItemSliderType)
 		Return
 	ElseIf(Item == ItemSliderBelly)
@@ -682,25 +712,28 @@ Event OnOptionMenuAccept(Int Item, Int Selected)
 
 	String Val = ""
 
-	If(Item == ItemWidgetAnchorH)
-		If(Selected == 0)
-			Val = Main.Config.SetString(".WidgetAnchorH","left")
-		ElseIf(Selected == 1)
-			Val = Main.Config.SetString(".WidgetAnchorH","center")
-		ElseIf(Selected == 2)
-			Val = Main.Config.SetString(".WidgetAnchorH","right")
-		EndIf
 
-	ElseIf(Item == ItemWidgetAnchorV)
-		If(Selected == 0)
-			Val = Main.Config.SetString(".WidgetAnchorV","top")
-		ElseIf(Selected == 1)
-			Val = Main.Config.SetString(".WidgetAnchorV","center")
-		ElseIf(Selected == 2)
-			Val = Main.Config.SetString(".WidgetAnchorV","bottom")
-		EndIf
+	;;If(Item == ItemWidgetAnchorH)
+	;;	If(Selected == 0)
+	;;		Val = Main.Config.SetString(".WidgetAnchorH","left")
+	;;	ElseIf(Selected == 1)
+	;;		Val = Main.Config.SetString(".WidgetAnchorH","center")
+	;;	ElseIf(Selected == 2)
+	;;		Val = Main.Config.SetString(".WidgetAnchorH","right")
+	;;	EndIf
 
-	ElseIf(Item == ItemSliderDel)
+	;;ElseIf(Item == ItemWidgetAnchorV)
+	;;	If(Selected == 0)
+	;;		Val = Main.Config.SetString(".WidgetAnchorV","top")
+	;;	ElseIf(Selected == 1)
+	;;		Val = Main.Config.SetString(".WidgetAnchorV","center")
+	;;	ElseIf(Selected == 2)
+	;;		Val = Main.Config.SetString(".WidgetAnchorV","bottom")
+	;;	EndIf
+	;;EndIf
+
+
+	If(Item == ItemSliderDel)
 		self.OnOptionMenuAccept_SliderDelete(Item,ItemSliderType,Selected)
 		Return
 	ElseIf(Item == ItemSliderBelly)
@@ -742,7 +775,7 @@ EndEvent
 *****************************************************************************/;
 
 Event OnOptionInputAccept(Int Opt, String Txt)
-	
+
 	If(Opt == ItemSliderAdd)
 		If(PageCurrentKey == "$SGO4_Menu_GemSliders")
 			Main.Body.SliderAdd(Main.Body.KeySlidersGems,Txt)
@@ -760,17 +793,17 @@ EndEvent
 *****************************************************************************/;
 
 Event OnOptionHighlight(Int Item)
-	
+
 	String Txt = "$SGO4_Mod_TitleFull"
 
 	If(Item == ItemWidgetOffsetX)
 		Txt = "$SGO4_MenuTip_WidgetOffsetX"
 	ElseIf(Item == ItemWidgetOffsetY)
 		Txt = "$SGO4_MenuTip_WidgetOffsetY"
-	ElseIf(Item == ItemWidgetAnchorH)
-		Txt = "$SGO4_MenuTip_WidgetAnchorH"
-	ElseIf(Item == ItemWidgetAnchorV)
-		Txt = "$SGO4_MenuTip_WidgetAnchorV"
+	;;ElseIf(Item == ItemWidgetAnchorH)
+	;;	Txt = "$SGO4_MenuTip_WidgetAnchorH"
+	;;ElseIf(Item == ItemWidgetAnchorV)
+	;;	Txt = "$SGO4_MenuTip_WidgetAnchorV"
 	ElseIf(Item == ItemWidgetScale)
 		Txt = "$SGO4_MenuTip_WidgetScale"
 	ElseIf(Item == ItemModStatus)
@@ -843,7 +876,7 @@ EndEvent
 *****************************************************************************/;
 
 Function ShowPageIntro()
-	
+
 	self.LoadCustomContent(Main.KeySplashGraphic)
 	Return
 EndFunction
@@ -1073,7 +1106,7 @@ Function ShowPageSliders(String PageTitle, String SliderConfig)
 		SliderValue = Main.Config.GetFloat(SliderConfig + "[" + SliderIter + "].Max")
 
 		ItemSliderVal[SliderIter] = AddSliderOption(SliderName,SliderValue,"{2}")
-		
+
 		SliderIter += 1
 	EndWhile
 
@@ -1098,8 +1131,9 @@ EndFunction
 Int ItemWidgetScale
 Int ItemWidgetOffsetX
 Int ItemWidgetOffsetY
-Int ItemWidgetAnchorH
-Int ItemWidgetAnchorV
+Int ItemWidgetBarW
+Int ItemWidgetBarH
+Int ItemWidgetSpacing
 
 Function ShowPageWidgets()
 
@@ -1110,10 +1144,11 @@ Function ShowPageWidgets()
 	AddHeaderOption("$SGO4_MenuOpt_ScannerWidget")
 	AddHeaderOption("")
 	ItemWidgetOffsetX = AddSliderOption("$SGO4_MenuOpt_WidgetOffsetX",Main.Config.GetFloat(".WidgetOffsetX"),"{1}")
-	ItemWidgetAnchorH = AddMenuOption("$SGO4_MenuOpt_WidgetAnchorH",Main.Config.GetString(".WidgetAnchorH"))
+	ItemWidgetBarW = AddSliderOption("$SGO4_MenuOpt_WidgetBarW",Main.Config.GetInt(".WidgetBarW"),"{0}")
 	ItemWidgetOffsetY = AddSliderOption("$SGO4_MenuOpt_WidgetOffsetY",Main.Config.GetFloat(".WidgetOffsetY"),"{1}")
-	ItemWidgetAnchorV = AddMenuOption("$SGO4_MenuOpt_WidgetAnchorV",Main.Config.GetString(".WidgetAnchorV"))
+	ItemWidgetBarH = AddSliderOption("$SGO4_MenuOpt_WidgetBarH",Main.Config.GetInt(".WidgetBarH"),"{0}")
 	ItemWidgetScale = AddSliderOption("$SGO4_MenuOpt_WidgetScale",Main.Config.GetFloat(".WidgetScale"),"{2}")
+	ItemWidgetSpacing = AddSliderOption("$SGO4_MenuOpt_WidgetSpacing",Main.Config.GetInt(".WidgetSpacing"),"{0}")
 
 	Return
 EndFunction

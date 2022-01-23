@@ -3,18 +3,18 @@ ScriptName dse_sgo_QuestController_Main extends Quest
 ;/*;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-              _________            .__                          
-             /   _____/ ____  __ __|  |    ____   ____   _____  
-             \_____  \ /  _ \|  |  \  |   / ___\_/ __ \ /     \ 
+              _________            .__
+             /   _____/ ____  __ __|  |    ____   ____   _____
+             \_____  \ /  _ \|  |  \  |   / ___\_/ __ \ /     \
              /        (  <_> )  |  /  |__/ /_/  >  ___/|  Y Y  \
             /_______  /\____/|____/|____/\___  / \___  >__|_|  /
-                    \/                  /_____/      \/      \/ 
-                 ________                          _____        
-                 \_____  \___  __ ____   ____     /  |  |       
-                  /   |   \  \/ // __ \ /    \   /   |  |_      
-                 /    |    \   /\  ___/|   |  \ /    ^   /      
-                 \_______  /\_/  \___  >___|  / \____   |       
-                         \/          \/     \/       |__|       
+                    \/                  /_____/      \/      \/
+                 ________                          _____
+                 \_____  \___  __ ____   ____     /  |  |
+                  /   |   \  \/ // __ \ /    \   /   |  |_
+                 /    |    \   /\  ___/|   |  \ /    ^   /
+                 \_______  /\_/  \___  >___|  / \____   |
+                         \/          \/     \/       |__|
 
                           SPECIAL EDITION EDITION
 
@@ -48,6 +48,8 @@ dse_sgo_QuestStats_Main Property Stats Auto
 dse_sgo_QuestGemBar_Main Property GemBar Auto
 dse_sgo_QuestMilkBar_Main Property MilkBar Auto
 dse_sgo_QuestSemenBar_Main Property SemenBar Auto
+
+dse_sgo_QuestGemUI Property GemUI Auto
 
 ;; third party libraries.
 
@@ -163,7 +165,7 @@ Event OnInit()
 	;; biological features.
 
 	self.Data.ActorTrackingAdd(self.Player)
-	
+
 	;; handle sexlab events.
 
 	self.UnregisterForModEvent("SexLabOrgasm")
@@ -625,7 +627,7 @@ EndFunction
 
 Function MenuWheelPopulate(String[] ItemText, String[] ItemDesc, Bool[] ItemShow)
 {populate the wheel menu from some data arrays.}
-	
+
 	Int Iter
 
 	;;;;;;;;

@@ -434,7 +434,7 @@ Function ActorUpdate(Actor Who)
 		;;Main.Util.PrintDebug(Who.GetDisplayName() + " not ready for calc.")
 		Return
 	EndIf
-	
+
 	Gems = self.ActorGemUpdateData(Who,TimeSince)
 	Milk = self.ActorMilkUpdateData(Who,TimeSince)
 	Semen = self.ActorSemenUpdateData(Who,TimeSince)
@@ -709,7 +709,7 @@ Float Function ActorGemGet(Actor Who, Int Index, Bool Limit=TRUE)
 EndFunction
 
 Float[] Function ActorGemGetList(Actor Who, Bool Limit=TRUE)
-{get the value of a specific gem in an actor.}
+{get a list of the gems in here.}
 
 	Float Max = self.GemStageCount(Who) As Float
 	Float[] Gems = StorageUtil.FloatListToArray(Who,KeyActorGemData)
@@ -751,10 +751,10 @@ event with mods its a fraction of a gem.}
 
 	;; apply multiplictative.
 	Val = self.ActorModGetFinal(Who,self.KeyActorModGemsMaxMult,Base,TRUE)
-	
+
 	;; apply additive.
 	Val = self.ActorModGetFinal(Who,self.KeyActorModGemsMax,Val,FALSE)
-	
+
 	Return Main.Util.RoundToInt(Val)
 EndFunction
 
@@ -1026,7 +1026,7 @@ Int Function ActorMilkMax(Actor Who)
 
 	;; apply multiplictative.
 	Val = self.ActorModGetFinal(Who,self.KeyActorModMilkMaxMult,Base,TRUE)
-	
+
 	;; apply additive.
 	Val = self.ActorModGetFinal(Who,self.KeyActorModMilkMax,Val,FALSE)
 
@@ -1079,7 +1079,7 @@ actor is physically not capable of producing this item.}
 		If(PassiveLoss > 0.0 && MilkCur > 0.0)
 			PerDay = Main.Config.GetFloat(".MilksPerDay")
 			Inc = (((TimeSince * PerDay) / 24) * PassiveLoss) * -1
-			
+
 			Main.Util.PrintDebug("Milk Passive Loss " + Who.GetDisplayName() + " " + Inc)
 			self.ActorMilkInc(Who,Inc)
 
@@ -1195,7 +1195,7 @@ Function ActorSemenInc(Actor Who, Float Value)
 
 	self.ActorTrackingAdd(Who)
 	Main.Body.ActorUpdate(Who)
-	
+
 	Return
 EndFunction
 
@@ -1220,7 +1220,7 @@ Int Function ActorSemenMax(Actor Who)
 
 	;; apply multiplictative.
 	Val = self.ActorModGetFinal(Who,self.KeyActorModSemenMaxMult,Base,TRUE)
-	
+
 	;; apply additive.
 	Val = self.ActorModGetFinal(Who,self.KeyActorModSemenMax,Val,FALSE)
 
@@ -1300,11 +1300,11 @@ Float Function ActorFertilityFactor(Actor Who, float Vmod=0.0)
 
 	;; the period offset is used to crank the amplitude and vertical offset of
 	;; the wave.
-	
+
 	Poff = (FertilityWindow - 1) / 2
 
 	;; the period length.
-	
+
 	Plen = FertilityDays
 
 	;;  /     /          \      \
@@ -1462,7 +1462,7 @@ in and the second number is which array item was the race.}
 
 	Main.Util.PrintDebug("Race Find Fail: " + What.GetFormID() + " " + What.GetName())
 	Offset[0] = 0
-	Offset[1] = 0	
+	Offset[1] = 0
 
 	While(Offset[0] < self.RaceFiles.Length)
 		If(self.RaceFiles[Offset[0]] == self.FileRaces)

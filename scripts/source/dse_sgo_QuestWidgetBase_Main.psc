@@ -1,278 +1,239 @@
 Scriptname dse_sgo_QuestWidgetBase_Main extends Quest
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-dse_sgo_QuestController_Main Property Main Auto
-iWant_Widgets Property iWidgets Auto
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; the pseudosize of the viewport. hardcoded in the game.
+dse_sgo_QuestController_Main Property SGO Auto
+ReferenceAlias Property Target Auto
 
-Float Property VW = 1280.0 AutoReadOnly Hidden
-Float Property VH = 720.0 AutoReadOnly Hidden
+iWant_Widgets Property iWant Auto Hidden
 
-;; the size of our flash object.
-
-Float Property FW = 433.0 AutoReadOnly Hidden
-Float Property FH = 60.0 AutoReadOnly Hidden
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; some default values.
-
-String Property Direction = "right" Auto Hidden
-Float Property Percent = 100.0 Auto Hidden
-String Property Text = "" Auto Hidden
-String Property Title = "" Auto Hidden
-
-Int Property ColourLeft = 0xCC66FF Auto Hidden
-Int Property ColourRight = 0x711E95 Auto Hidden
-Int Property ColourFlash = -1 Auto Hidden
-Float Property Scale = 0.75 Auto Hidden
-Float Property PosX = 0.0 Auto Hidden
-Float Property PosY = 0.0 Auto Hidden
-String Property PosH = "left" Auto Hidden
-String Property PosV = "bottom" Auto Hidden
-
-;; place for some data we want in their original values before
-;; we allow any calculators to fudge them for actual use.
-
-Float Property SetW = 0.0 Auto Hidden
-Float Property SetH = 0.0 Auto Hidden
+Int[] Items
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Event OnInit()
 
-	Main.Debug.PrintDebug("WidgetBase.OnInit")
-	RegisterForModEvent("iWantWidgetsReset", "OniWantWidgetsReset")
+	SGO.Util.PrintDebug("[WidgetBase] OnInit")
+
+	self.DynopulateItems(0)
+
+	UnregisterForModEvent("iWantWidgetsReset")
+	RegisterForModEvent("iWantWidgetsReset", "OnLocalEvent")
+
+	UnregisterForModEvent("SGO4.Body.ActorUpdate")
+	RegisterForModEvent("SGO4.Body.ActorUpdate","OnDataUpdate")
+EndEvent
+
+Event OnUpdate()
+
+	self.OnUpdateWidget()
 	Return
 EndEvent
 
-Event OniWantWidgetsReset(String EventName, String ArgStr, Float ArgNum, Form From)
+Event OnLocalEvent(String EvName, String ArgStr, Float ArgInt, Form From)
 
-	If(EventName != "iWantWidgetsReset")
+	If(EvName == "iWantWidgetsReset")
+		SGO.Util.PrintDebug("[WidgetBase] iWantWidgetsReset")
+		self.OnLocalReset(ArgStr, ArgInt, From)
+	EndIf
+
+	Return
+EndEvent
+
+Event OnLocalReset(String ArgStr, Float ArgInt, Form From)
+
+	self.iWant = From as iWant_Widgets
+	self.OnUpdateWidget()
+	Return
+EndEvent
+
+Event OnDataUpdate(Form Whom)
+
+	Actor Who = Whom As Actor
+
+	If(Who != self.Target.GetActorReference())
 		Return
 	EndIf
 
-	this.iWidgets = From As iWant_Widgets
+	self.OnUpdateWidget()
 	Return
 EndEvent
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Function OnUpdateWidget()
 
-String Function GetWidgetSource()
-{override: specificy location of ui element}
-
-	;; assumes basedir interface/exported/widgets
-
-	Return "dse-soulgem-oven/meter.swf"
-EndFunction
-
-String function GetWidgetType()
-{override: specify the class of the ui element.}
-
-	;; skyui source says this should be the same as the
-	;; name of the script.
-
-	;; doing that made skyui flip the fuck out about not
-	;; being extended, i find the logic in how they test
-	;; this strange. other than that one test it seems to
-	;; not matter one damn bit so fuck it, now its random.
-
-	;; i considered setting it to SKI_WidgetBase but could
-	;; not find any instances where someone else had done
-	;; that.
-
-	return "SGO4GemBar"
-EndFunction
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-String Function GetMethod(String Method)
-{get fqmn for the ui.}
-
-	Return WidgetRoot + Method
-EndFunction
-
-Function WidgetBaseReset()
-{this these are things that must be done with a widget starts.}
-
-	self.Scale = Main.Config.GetFloat(".WidgetScale")
-	self.PosH = Main.Config.GetString(".WidgetAnchorH")
-	self.PosV = Main.Config.GetString(".WidgetAnchorV")
-
-	;; copied from SKI_WidgetBase OnWidgetReset() because i was
-	;; having issues with parent resolution when my other bars
-	;; extend this script.
-	
-	UpdateWidgetClientInfo()
-	UpdateWidgetHAnchor()
-	UpdateWidgetVAnchor()
-	UpdateWidgetPositionX()
-	UpdateWidgetPositionY()
-	UpdateWidgetAlpha()
-
-	;; more common code
-
-	UI.Invoke(HUD_MENU, GetMethod(".initCommit"))
+	;;If(self.IsRunning())
+		self.OnRenderWidget()
+	;;EndIf
 
 	Return
 EndFunction
 
-Function WidgetReady(String EvName)
-{emit a mod event when we are done.}
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; below are things that should be moved to scripts extending ;;
+;; this one with generic prototypes added here for templates. ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-	Int Ev = ModEvent.Create(EvName)
-	ModEvent.Send(Ev)
+Function OnRenderWidget()
 
-	;;Main.Util.PrintDebug(WidgetRoot + " is ready.")
+	Actor Who = self.Target.GetActorReference()
+	Int Needed = 0
+	Int Iter = 0
+	Int Oter = 0
 
-	Return
-EndFunction
+	;; values for the positioning of the ui
 
-Float Function CalcX(Float CX)
-{calculate a better x position based on how the widget is anchored.}
+	Int PosX
+	Int PosY
+	Float Scale
+	Int ModW
+	Int ModH
+	Int Gap
+	Int Rot
 
-	If(self.HAnchor == "center")
-		Return ((self.VW / 2) - (self.SetW / 2)) + CX
-	ElseIf(self.HAnchor == "right")
-		Return self.VW - CX
+	;; values for the state of the ui
+
+	Float[] Gems
+	Int GemsMax
+	Float Milk
+	Float Semen
+
+	;;;;;;;;
+
+	If(Who == NONE)
+		SGO.Util.PrintDebug("[WidgetBase] OnRenderWidget: No Target")
+		self.DynopulateItems(0)
+		Return
 	EndIf
 
-	Return CX
-EndFunction
+	SGO.Util.PrintDebug("[WidgetBase] OnRenderWidget: " + Who.GetDisplayName())
+	PosX = SGO.Config.GetFloat(".WidgetOffsetX") As Int
+	PosY = SGO.Config.GetFloat(".WidgetOffsetY") As Int
+	Scale = SGO.Config.GetFloat(".WidgetScale")
+	Gap = SGO.Config.GetFloat(".WidgetSpacing") As Int
+	ModW = (Scale * SGO.Config.GetInt(".WidgetBarW")) As Int
+	ModH = (Scale * SGO.Config.GetInt(".WidgetBarH")) As Int
+	Rot = 90
 
-Float Function CalcY(Float CY)
-{calculate a better y position based on how the widget is anchored.}
+	;;;;;;;;
 
-	If(self.VAnchor == "center")
-		Return ((self.VH / 2) - (self.SetH / 2)) + CY
-	ElseIf(self.VAnchor == "bottom")
-		Return self.VH - CY
+	If(Who.IsInFaction(SGO.FactionProduceMilk))
+		Milk = SGO.Data.ActorMilkTotalPercent(Who)
+		Needed += 1
 	EndIf
 
-	Return CY
-EndFunction
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-Function SetAnchor(String CH, String CV, Bool Pos=TRUE)
-{set the anchor point for the widget.}
-
-	self.HAnchor = CH
-	self.VAnchor = CV
-
-	If(Pos)
-		self.SetPosition(self.PosX,self.PosY)
+	If(Who.IsInFaction(SGO.FactionProduceSemen))
+		Semen = SGO.Data.ActorSemenTotalPercent(Who)
+		Needed += 1
 	EndIf
 
-	Return
-EndFunction
-
-Function SetColour(Int CColourLeft, Int CColourRight, Int CColourFlash=-1)
-{set the progress bar colours. its a gradient fill.}
-
-	Int[] Colours = new Int[3]
-	Colours[0] = CColourRight
-	Colours[1] = CColourLeft
-	Colours[2] = CColourFlash
-
-	self.ColourLeft = CColourLeft
-	self.ColourRight = CColourRight
-	self.ColourFlash = CColourFlash
-
-	UI.InvokeIntA(HUD_MENU, GetMethod(".setColors"), Colours)
-	Return
-EndFunction
-
-Function SetDirection(String Dir)
-{set which way the progress bar goes. left, right, both.}
-
-	UI.InvokeString(HUD_MENU, GetMethod(".setFillDirection"), Dir)
-	Return
-EndFunction
-
-Function SetPosition(Float CX, Float CY, Float Dur=0.0)
-{move the widget to the specified location taking into consideration 
-how the widget is anchored.}
-
-	self.PosX = CX
-	self.PosY = CY
-
-	If(Dur == 0.0)
-		self.X = self.CalcX(CX)
-		self.Y = self.CalcY(CY)
-	Else
-		self.TweenTo(self.CalcX(CX),self.CalcY(CY),Dur)
+	If(Who.IsInFaction(SGO.FactionProduceGems))
+		Gems = SGO.Data.ActorGemGetList(Who)
+		GemsMax = SGO.Data.GemStageCount(Who)
+		Needed += Gems.Length
 	EndIf
 
-	;;Main.Util.PrintDebug(WidgetRoot + " position " + self.X + " " + self.Y)
-	Return
-EndFunction
+	If(Items.Length != Needed)
+		self.DynopulateItems(Needed)
+	EndIf
 
-Function SetScale(Float Factor)
-{set the scale of the widget also allowing it to update its position
-to reflect depending on how it was anchored.}
+	;;;;;;;;
 
-	self.SetW = self.FW * Factor
-	self.SetH = self.FH * Factor
-	self.Scale = Factor
+	Iter = 0
 
-	UI.InvokeFloat(HUD_MENU, GetMethod(".setWidth"), self.SetW)
-	UI.InvokeFloat(HUD_MENU, GetMethod(".setHeight"), self.SetH)
-	self.SetPosition(self.PosX,self.PosY)
+	If(Who.IsInFaction(SGO.FactionProduceMilk))
+		SGO.Util.PrintDebug("[WidgetBase] OnRenderWidget Milk " + Iter)
+		self.iWant.SetMeterRGB(Items[Iter], 200,200,200, 128,128,128, 255,255,255)
+		self.iWant.SetMeterPercent(Items[Iter], 0)
+		self.iWant.SetZoom(Items[Iter], ModW, ModH)
+		self.iWant.SetRotation(Items[Iter], Rot)
+		self.iWant.SetPos(Items[Iter], (PosX + (Iter * Gap)), PosY)
+		self.iWant.SetMeterPercent(Items[Iter], ((Milk * 100) As Int))
+		Iter += 1
+	EndIf
 
-	;;Main.Util.PrintDebug(WidgetRoot + " scale " + self.SetW + " " + self.H)
-	Return
-EndFunction
+	If(Who.IsInFaction(SGO.FactionProduceSemen))
+		SGO.Util.PrintDebug("[WidgetBase] OnRenderWidget Semen " + Iter)
+		self.iWant.SetMeterRGB(Items[Iter], 200,200,180, 128,128,108, 255,255,235)
+		self.iWant.SetMeterPercent(Items[Iter], 0)
+		self.iWant.SetZoom(Items[Iter], ModW, ModH)
+		self.iWant.SetRotation(Items[Iter], Rot)
+		self.iWant.SetPos(Items[Iter], (PosX + (Iter * Gap)), PosY)
+		self.iWant.SetMeterPercent(Items[Iter], ((Semen * 100) As Int))
+		Iter += 1
+	EndIf
 
-Function SetAlpha(Float CA)
-{set the widget's opacity from 0.0 to 100.0}
-
-	self.Alpha = CA
-
-	;;Main.Util.PrintDebug(WidgetRoot + " alpha " + self.Alpha)
-	Return
-EndFunction
-
-Function SetPercent(Float Value, Bool Force=FALSE)
-{set the meter to a specific percentage. if force is true then it will
-be snapped to that percentage rather than animated to it.}
-
-	Float[] Args = new Float[2]
-	Args[0] = Value / 100.0
-	Args[1] = (Force As Int) As Float
-
-	self.Percent = Value
-	UI.InvokeFloatA(HUD_MENU, GetMethod(".setPercent"), Args)
-
-	;;Main.Util.PrintDebug(WidgetRoot + " percent " + Args[0] + " " + Args[1])
-
-	Return
-EndFunction
-
-Function SetText(String InputText)
-{set the text that appears on top of the progress bar.}
-
-	self.Text = InputText
-	UI.InvokeString(HUD_MENU, GetMethod(".setText"), InputText)
+	Oter = Iter
+	While(Iter < (Gems.Length + Oter))
+		SGO.Util.PrintDebug("[WidgetBase] OnRenderWidget Gem " + Iter + ": " + (((Gems[Iter-Oter] / GemsMax) * 100) As Int))
+		self.iWant.SetMeterRGB(Items[Iter], 147,32,195, 137,22,185, 120,200,200)
+		self.iWant.SetMeterPercent(Items[Iter], 0)
+		self.iWant.SetZoom(Items[Iter], ModW, ModH)
+		self.iWant.SetRotation(Items[Iter], Rot)
+		self.iWant.SetPos(Items[Iter], (PosX + (Iter * Gap)), PosY)
+		self.iWant.SetMeterPercent(Items[Iter], (((Gems[Iter-Oter] / GemsMax) * 100) As Int))
+		Iter += 1
+	EndWhile
 
 	Return
 EndFunction
 
-Function SetTitle(String InputText)
-{set the title that appears above the progress bar.}
+Function DynopulateItems(Int Needed)
 
-	self.Title = InputText
-	UI.InvokeString(HUD_MENU, GetMethod(".setTitle"), InputText)
+	Int[] ItemsNew
+	Int Iter
+
+	;; we need more than we have so add additional meters.
+
+	If(Needed > Items.Length)
+		SGO.Util.PrintDebug("[WidgetBase] DynopulateItems Expand To " + Needed)
+		ItemsNew = Utility.CreateIntArray(Needed)
+		Iter = 0
+
+		;; retain existing meters.
+
+		While(Iter < Items.Length)
+			ItemsNew[Iter] = Items[Iter]
+			Iter += 1
+		EndWhile
+
+		;; initialize addtional meters.
+
+		While(Iter < ItemsNew.Length)
+			ItemsNew[Iter] = self.iWant.loadMeter()
+			self.iWant.SetVisible(ItemsNew[Iter])
+			Iter += 1
+		EndWhile
+
+		Items = ItemsNew
+		Return
+	EndIf
+
+	;; we do not need as many meters as we used to.
+
+	If(Needed < Items.Length)
+		SGO.Util.PrintDebug("[WidgetBase] DynopulateItems Shrink To " + Needed)
+		ItemsNew = Utility.CreateIntArray(Needed)
+		Iter = 0
+
+		;; retain only as many as we need.
+
+		While(Iter < ItemsNew.Length)
+			ItemsNew[Iter] = Items[Iter]
+			Iter += 1
+		EndWhile
+
+		;; then destroy the remainders.
+
+		While(Iter < Items.Length)
+			self.iWant.Destroy(Items[Iter])
+			Iter += 1
+		EndWhile
+
+		Items = ItemsNew
+		Return
+	EndIf
 
 	Return
 EndFunction
