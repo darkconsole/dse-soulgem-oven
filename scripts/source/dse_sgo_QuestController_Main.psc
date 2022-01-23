@@ -43,11 +43,7 @@ dse_sgo_QuestUtil_Main Property Util Auto
 dse_sgo_QuestBody_Main Property Body Auto
 dse_sgo_QuestStats_Main Property Stats Auto
 
-;; ui api
-
-dse_sgo_QuestGemBar_Main Property GemBar Auto
-dse_sgo_QuestMilkBar_Main Property MilkBar Auto
-dse_sgo_QuestSemenBar_Main Property SemenBar Auto
+;; ui ap
 
 dse_sgo_QuestGemUI Property GemUI Auto
 
