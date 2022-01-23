@@ -838,7 +838,6 @@ Function MenuActorOptionsOpen(Actor Who=None)
 	;;;;;;;;
 
 	Result = self.MenuWheelPopulateOpen(Who,ItemText,ItemDesc,ItemShow)
-	self.Util.PrintDebug("Selected " + Result + ": " + ItemText[Result])
 
 	If(Result == 0)
 		self.Util.ActorToggleFaction(Who,self.FactionProduceGems)
