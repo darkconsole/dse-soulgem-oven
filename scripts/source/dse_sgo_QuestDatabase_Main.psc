@@ -860,6 +860,7 @@ actor is physically not capable of producing this item.}
 	Float WeightCur
 	Float WeightDrain
 	Float WeightDays
+	Float WeightGain
 	Float ModRate
 	Bool Growth
 
@@ -874,7 +875,7 @@ actor is physically not capable of producing this item.}
 	WeightDrain = WeightCur + 1.0
 
 	If(WeightDays > 0.0)
-		WeightDrain = 1.0 / (Main.Config.GetFloat(".ActorWeightDays") * 24)
+		WeightDrain = 1.0 / (WeightDays * 24)
 		WeightDrain *= TimeSince
 	EndIf
 
@@ -928,17 +929,13 @@ actor is physically not capable of producing this item.}
 
 	;;;;;;;;
 
-	;; update weight gain values.
+	;; don't instantly get thicc, slowly add it every update. speed scales
+	;; on how preggo you are.
 
-	GemPregPercentDone = self.ActorGemTotalPercent(Who,TRUE)
-
-	If(GemPregPercentDone > WeightCur)
-		;; don't instantly get thicc, slowly add it every update.
-		self.ActorWeightSet(                                               \
-			Who,                                                         \
-			(WeightCur + ((GemPregPercentDone * 0.1) * TimeSince))       \
-		)
-	EndIf
+	GemPregPercentDone = self.ActorGemTotalPercent(Who)
+	WeightGain = GemPregPercentDone * (TimeSince / ((GemStages / PerDay) * 24.0))
+	Main.Util.PrintDebug("[UpdateGemData] Weight Gain " + Who.GetDisplayName() + " " + WeightGain)
+	self.ActorWeightSet(Who, (WeightCur + WeightGain))
 
 	;;;;;;;;
 

@@ -346,6 +346,9 @@ Event OnOptionSelect(Int Item)
 		Else
 			Debug.MessageBox(Main.Util.StringLookup("OnActorUpdateNameEnabled"))
 		EndIf
+	ElseIf(Item == ItemActorWeightByGem)
+		Val = !Main.Config.GetBool(".ActorWeightByGem")
+		Main.Config.SetBool(".ActorWeightByGem",Val)
 
 	;;;;;;;;
 
@@ -891,7 +894,6 @@ Int ItemUpdateAfterWait
 Int ItemDatabankShowAll
 Int ItemDatabankLoadedOnly
 Int ItemActorUpdateName
-Int ItemActorWeightDays
 
 Function ShowPageGeneral()
 
@@ -1026,6 +1028,8 @@ Int ItemMilkerRate
 Int ItemFertilitySync
 Int ItemMessagesPlayer
 Int ItemMessagesNPC
+Int ItemActorWeightDays
+Int ItemActorWeightByGem
 
 Function ShowPageGameplay()
 
@@ -1054,6 +1058,7 @@ Function ShowPageGameplay()
 	ItemActorMilkMax = AddSliderOption("$SGO4_MenuOpt_ActorMilkMax",Main.Config.GetInt(".ActorMilkMax"),"{0}")
 	ItemActorSemenMax = AddSliderOption("$SGO4_MenuOpt_ActorSemenMax",Main.Config.GetInt(".ActorSemenMax"),"{0}")
 	ItemActorWeightDays = AddSliderOption("$SGO4_MenuOpt_ActorWeightDays",Main.Config.GetFloat(".ActorWeightDays"),"{2}")
+	ItemActorWeightByGem = AddToggleOption("$SGO4_MenuOpt_ActorWeightByGem",Main.Config.GetBool(".ActorWeightByGem"))
 	ItemFertilitySync = AddToggleOption("$SGO4_MenuOpt_FertilitySync",Main.Config.GetBool(".FertilitySync"))
 	AddEmptyOption()
 	AddEmptyOption()
