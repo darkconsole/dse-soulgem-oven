@@ -29,6 +29,7 @@ String Property AniWanking01 = "dse-sgo-wanking01-01" AutoReadOnly Hidden
 String Property KeySliders = ".Sliders" AutoReadOnly Hidden
 String Property KeySlidersGems = ".Sliders.Gems" AutoReadOnly Hidden
 String Property KeySlidersMilk = ".Sliders.Milk" AutoReadOnly Hidden
+String Property KeySlidersSemen = ".Sliders.Semen" AutoReadOnly Hidden
 String Property KeySliderBelly = ".Sliders.Belly" AutoReadOnly Hidden
 String Property KeyMorphGems = "SGO4Gems" AutoReadOnly Hidden
 String Property KeyMorphMilk = "SGO4Milk" AutoReadOnly Hidden
@@ -80,6 +81,8 @@ Function ActorUpdateGems(Actor Who)
 
 	Float GemPercent = Main.Data.ActorGemTotalPercent(Who)
 	Float WeightPercent = Main.Data.ActorWeightGet(Who)
+	Float GemCount = Main.Data.ActorGemCount(Who)
+	Float GemMax = Main.Data.ActorGemMax(Who)
 
 	If(Who == Main.Player)
 		self.ActorUpdateGemsInfluence(Who,GemPercent)
@@ -90,8 +93,11 @@ Function ActorUpdateGems(Actor Who)
 		WeightPercent = 0.0
 	EndIf
 
-	self.ActorSlidersApply(Who,self.KeySlidersGems,GemPercent,WeightPercent)
+	If(Main.Config.GetBool(".ActorWeightByGem"))
+		WeightPercent = WeightPercent * (GemCount / GemMax)
+	EndIf
 
+	self.ActorSlidersApply(Who,self.KeySlidersGems,GemPercent,WeightPercent)
 	Return
 EndFunction
 
@@ -115,8 +121,7 @@ Function ActorUpdateMilk(Actor Who)
 		MilkPercent = 0.0
 	EndIf
 
-	self.ActorSlidersApply(Who,self.KeySlidersMilk,MilkPercent)
-
+	self.ActorSlidersApply(Who, self.KeySlidersMilk, MilkPercent)
 	Return
 EndFunction
 
@@ -129,7 +134,7 @@ Function ActorUpdateSemen(Actor Who)
 		SemenPercent = 0.0
 	EndIf
 
-	self.ActorBoneApply(Who, self.KeyMorphSemen, SemenPercent)
+	self.ActorSlidersApply(Who, self.KeySlidersSemen, SemenPercent)
 	Return
 EndFunction
 
@@ -211,14 +216,17 @@ Function ActorSlidersApply(Actor Who, String Prefix, Float Percent, Float AltPer
 	String SliderBelly = Main.Config.GetString(".Sliders.Belly")
 	Int SliderCount = Main.Config.GetCount(Prefix)
 	Int SliderIter = 0
+	String SliderType
 	String SliderName
 	Float SliderMax
 	Float SliderPercent
 
 	If(Prefix == self.KeySlidersGems)
-		MorphKey = self.KeyMorphGems;
+		MorphKey = self.KeyMorphGems
 	ElseIf(Prefix == self.KeySlidersMilk)
-		MorphKey = self.KeyMorphMilk;
+		MorphKey = self.KeyMorphMilk
+	ElseIf(Prefix == self.KeySlidersSemen)
+		MorphKey = self.KeyMorphSemen
 	EndIf
 
 	If(StringUtil.GetLength(MorphKey) == 0)
@@ -226,6 +234,7 @@ Function ActorSlidersApply(Actor Who, String Prefix, Float Percent, Float AltPer
 	EndIf
 
 	While(SliderIter < SliderCount)
+		SliderType = Main.Config.GetString(Prefix + "[" + SliderIter + "].Type", "morph")
 		SliderName = Main.Config.GetString(Prefix + "[" + SliderIter + "].Name")
 		SliderMax = Main.Config.GetFloat(Prefix + "[" + SliderIter + "].Max")
 		SliderPercent = Percent
@@ -240,9 +249,35 @@ Function ActorSlidersApply(Actor Who, String Prefix, Float Percent, Float AltPer
 		EndIf
 
 		If(SliderPercent > 0)
-			NiOverride.SetBodyMorph(Who,SliderName,MorphKey,(SliderMax * SliderPercent))
+			Main.Util.PrintDebug("[ActorSlidersApply] " + SliderName + " " + SliderPercent)
+			If(SliderType == "morph")
+				NiOverride.SetBodyMorph(                               \
+					Who,                                             \
+					SliderName,                                      \
+					MorphKey,                                        \
+					(SliderMax * SliderPercent)                      \
+				)
+			ElseIf(SliderType == "bone")
+				Main.Util.PrintDebug("[ActorSlidersApply] " + SliderName + " " + SliderPercent)
+				NiOverride.AddNodeTransformScale(                      \
+					Who,                                             \
+					FALSE,                                           \
+					Who.GetActorBase().GetSex(),                     \
+					SliderName,                                      \
+					MorphKey,                                        \
+					((SliderMax * SliderPercent) + 1)                \
+				)
+				NiOverride.UpdateNodeTransform(Who, FALSE, Who.GetActorBase().GetSex(), SliderName)
+			EndIf
 		Else
-			NiOverride.ClearBodyMorph(Who,SliderName,MorphKey)
+			If(SliderType == "morph")
+				Main.Util.PrintDebug("[ActorSlidersApply] Remove Morph " + SliderName)
+				NiOverride.ClearBodyMorph(Who, SliderName, MorphKey)
+			ElseIf(SliderType == "bone")
+				Main.Util.PrintDebug("[ActorSlidersApply] Remove Bone " + SliderName)
+				NiOverride.RemoveNodeTransformScale(Who, FALSE, Who.GetActorBase().GetSex(), SliderName, MorphKey)
+				NiOverride.UpdateNodeTransform(Who, FALSE, Who.GetActorBase().GetSex(), SliderName)
+			EndIf
 		EndIf
 
 		SliderIter += 1
@@ -266,24 +301,7 @@ Function ActorSlidersClear(Actor Who, String Prefix)
 		Return
 	EndIf
 
-	NiOverride.ClearBodyMorphKeys(Who,MorphKey)
-
-	Return
-EndFunction
-
-Function ActorBoneApply(Actor Who, String Prefix, Float Percent)
-
-	Float NodeMax = Main.Config.GetFloat(".SemenNodeScale")
-	Float Scale = 1 + (Percent * (NodeMax - 1))
-
-	If(Prefix == self.KeyMorphSemen)
-		Main.Util.PrintDebug("[ActorBoneApply] Testicles " + Scale)
-		If(Scale != 1.0)
-			NiOverride.AddNodeTransformScale(Who, FALSE, Who.GetActorBase().GetSex(), "NPC GenitalsScrotum [GenScrot]", Prefix, Scale)
-		Else
-			NiOverride.RemoveNodeTransformScale(Who, FALSE, Who.GetActorBase().GetSex(), "NPC GenitalsScrotum [GenScrot]", Prefix)
-		EndIf
-	EndIf
+	NiOverride.ClearBodyMorphKeys(Who, MorphKey)
 
 	Return
 EndFunction
@@ -576,7 +594,7 @@ EndFunction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Bool Function SliderAdd(String SliderKey, String SliderName, Float SliderValue=0.0)
+Bool Function SliderAdd(String SliderKey, String SliderName, Float SliderValue=0.0, String SliderType="morph")
 {add a slider to the custom config.}
 
 	Int SliderOld = self.SliderFindByName(SliderKey,SliderName)
@@ -587,11 +605,14 @@ Bool Function SliderAdd(String SliderKey, String SliderName, Float SliderValue=0
 		Return FALSE
 	EndIf
 
+	SliderPath = SliderKey + "[" + SliderCount + "].Type"
+	Main.Config.SetString(SliderPath, SliderType)
+
 	SliderPath = SliderKey + "[" + SliderCount + "].Name"
-	Main.Config.SetString(SliderPath,SliderName)
+	Main.Config.SetString(SliderPath, SliderName)
 
 	SliderPath = SliderKey + "[" + SliderCount + "].Max"
-	Main.Config.SetFloat(SliderPath,SliderValue)
+	Main.Config.SetFloat(SliderPath, SliderValue)
 
 	Return TRUE
 EndFunction
@@ -619,6 +640,7 @@ Function SliderConfigDefault()
 {force the default sliders into the custom configuration file.}
 
 	Int SliderCount
+	String SliderType
 	String SliderName
 	Float SliderValue
 
@@ -627,17 +649,28 @@ Function SliderConfigDefault()
 	SliderCount = Main.Config.GetCount(self.KeySlidersGems,TRUE)
 	While(SliderCount > 0)
 		SliderCount -= 1
+		SliderType = self.SliderTypeByOffset(self.KeySlidersGems,SliderCount,TRUE)
 		SliderName = self.SliderNameByOffset(self.KeySlidersGems,SliderCount,TRUE)
 		SliderValue = self.SliderValueByOffset(self.KeySlidersGems,SliderCount,TRUE)
-		self.SliderAdd(self.KeySlidersGems,SliderName,SliderValue)
+		self.SliderAdd(self.KeySlidersGems,SliderName,SliderValue,SliderType)
 	EndWhile
 
 	SliderCount = Main.Config.GetCount(self.KeySlidersMilk,TRUE)
 	While(SliderCount > 0)
 		SliderCount -= 1
+		SliderType = self.SliderTypeByOffset(self.KeySlidersMilk,SliderCount,TRUE)
 		SliderName = self.SliderNameByOffset(self.KeySlidersMilk,SliderCount,TRUE)
 		SliderValue = self.SliderValueByOffset(self.KeySlidersMilk,SliderCount,TRUE)
-		self.SliderAdd(self.KeySlidersMilk,SliderName,SliderValue)
+		self.SliderAdd(self.KeySlidersMilk,SliderName,SliderValue,SliderType)
+	EndWhile
+
+	SliderCount = Main.Config.GetCount(self.KeySlidersSemen,TRUE)
+	While(SliderCount > 0)
+		SliderCount -= 1
+		SliderType = self.SliderTypeByOffset(self.KeySlidersSemen,SliderCount,TRUE)
+		SliderName = self.SliderNameByOffset(self.KeySlidersSemen,SliderCount,TRUE)
+		SliderValue = self.SliderValueByOffset(self.KeySlidersSemen,SliderCount,TRUE)
+		self.SliderAdd(self.KeySlidersSemen,SliderName,SliderValue,SliderType)
 	EndWhile
 
 	Return
@@ -650,8 +683,10 @@ Function SliderConfigReset(String SliderKey="")
 		JsonUtil.SetRawPathValue(Main.Config.FileCustom,self.KeySlidersGems,"[]")
 	ElseIf(SliderKey == self.KeySlidersMilk)
 		JsonUtil.SetRawPathValue(Main.Config.FileCustom,self.KeySlidersMilk,"[]")
+	ElseIf(SliderKey == self.KeySlidersSemen)
+		JsonUtil.SetRawPathValue(Main.Config.FileCustom,self.KeySlidersSemen,"[]")
 	ElseIf(SliderKey == self.KeySliders)
-		JsonUtil.SetRawPathValue(Main.Config.FileCustom,self.KeySliders,"{\"Gems\":[],\"Milk\":[]}")
+		JsonUtil.SetRawPathValue(Main.Config.FileCustom,self.KeySliders,"{\"Gems\":[],\"Milk\":[],\"Semen\":[]}")
 	EndIf
 
 	Return
@@ -703,6 +738,14 @@ Bool Function SliderDeleteByOffset(String SliderKey, Int SliderOffset)
 	EndWhile
 
 	Return TRUE
+EndFunction
+
+String Function SliderTypeByOffset(String SliderKey, Int Offset, Bool Default=FALSE)
+{get the name of a slider by its offset.}
+
+	String SliderPath = SliderKey + "[" + Offset + "].Type"
+
+	Return Main.Config.GetString(SliderPath,Default)
 EndFunction
 
 String Function SliderNameByOffset(String SliderKey, Int Offset, Bool Default=FALSE)

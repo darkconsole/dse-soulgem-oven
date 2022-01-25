@@ -78,6 +78,10 @@ defined any configuration.}
 		Bootstrap = TRUE
 	EndIf
 
+	If(!JsonUtil.IsPathArray(Main.Config.FileCustom,Main.Body.KeySlidersSemen))
+		Bootstrap = TRUE
+	EndIf
+
 	;;;;;;;;
 
 	If(Bootstrap)
@@ -95,7 +99,7 @@ String PageCurrentKey
 Event OnConfigInit()
 {things to do when the menu initalises (is opening)}
 
-	self.Pages = new String[8]
+	self.Pages = new String[9]
 
 	self.Pages[0] = "$SGO4_Menu_Databank"
 	;; sgo actor tracking data.
@@ -112,13 +116,16 @@ Event OnConfigInit()
 	self.Pages[4] = "$SGO4_Menu_MilkSliders"
 	;; milking sliders
 
-	self.Pages[5] = "$SGO4_Menu_Widgets"
+	self.Pages[5] = "$SGO4_Menu_SemenSliders"
+	;; semen sliders
+
+	self.Pages[6] = "$SGO4_Menu_Widgets"
 	;; widget settings utilities
 
-	self.Pages[6] = "$SGO4_Menu_Debug"
+	self.Pages[7] = "$SGO4_Menu_Debug"
 	;; testing utilities
 
-	self.Pages[7] = "$SGO4_Menu_Splash"
+	self.Pages[8] = "$SGO4_Menu_Splash"
 	;; splash screen
 
 	Return
@@ -161,6 +168,8 @@ Event OnPageReset(String Page)
 		self.ShowPageSliders("$SGO4_MenuTitle_GemSliders",Main.Body.KeySlidersGems)
 	ElseIf(Page == "$SGO4_Menu_MilkSliders")
 		self.ShowPageSliders("$SGO4_MenuTitle_MilkSliders",Main.Body.KeySlidersMilk)
+	ElseIf(Page == "$SGO4_Menu_SemenSliders")
+		self.ShowPageSliders("$SGO4_MenuTitle_SemenSliders",Main.Body.KeySlidersSemen)
 	ElseIf(Page == "$SGO4_Menu_Debug")
 		self.ShowPageDebug()
 	Else
@@ -379,6 +388,8 @@ Event OnOptionSliderOpen(Int Item)
 	Float Max = 0.0
 	Float Interval = 0.0
 
+	;;Main.Util.PrintDebug("[SliderOpen] " + Item + " (wtf " + ItemWidgetOffsetX + " " + ItemWidgetOffsetY + ") ")
+
 	If(Item == ItemWidgetOffsetX)
 		Val = Main.Config.GetFloat(".WidgetOffsetX")
 		Min = 0.0
@@ -489,7 +500,7 @@ Event OnOptionSliderOpen(Int Item)
 		Min = 0.0
 		Max = 10.0
 		Interval = 0.05
-	ElseIf(PageCurrentKey == "$SGO4_Menu_GemSliders" || PageCurrentKey == "$SGO4_Menu_MilkSliders")
+	ElseIf(PageCurrentKey == "$SGO4_Menu_GemSliders" || PageCurrentKey == "$SGO4_Menu_MilkSliders" || PageCurrentKey == "$SGO4_Menu_SemenSliders")
 
 		Int ItemCount = ItemSliderVal.Length
 
@@ -593,7 +604,7 @@ Event OnOptionSliderAccept(Int Item, Float Val)
 		Fmt = "{2}"
 		Main.Config.SetFloat(".ActorWeightDays",Val)
 
-	ElseIf(PageCurrentKey == "$SGO4_Menu_GemSliders" || PageCurrentKey == "$SGO4_Menu_MilkSliders")
+	ElseIf(PageCurrentKey == "$SGO4_Menu_GemSliders" || PageCurrentKey == "$SGO4_Menu_MilkSliders" || PageCurrentKey == "$SGO4_Menu_SemenSliders")
 
 		Int ItemCount = ItemSliderVal.Length
 		String SliderPath
@@ -623,34 +634,6 @@ Event OnOptionMenuOpen(Int Item)
 	String[] Opts
 	Int Select = 0
 	Int Iter
-
-	;;If(Item == ItemWidgetAnchorH)
-	;;	Opts = Utility.CreateStringArray(3)
-	;;	Opts[0] = "left"
-	;;	Opts[1] = "center"
-	;;	Opts[2] = "right"
-	;;	Iter = Opts.Length
-	;;	While(Iter > 0)
-	;;		Iter -= 1
-	;;		If(Opts[Iter] == Main.Config.GetString(".WidgetAnchorH"))
-	;;			Select = Iter
-	;;			Iter = 0
-	;;		EndIf
-	;;	EndWhile
-	;;ElseIf(Item == ItemWidgetAnchorV)
-	;;	Opts = Utility.CreateStringArray(3)
-	;;	Opts[0] = "top"
-	;;	Opts[1] = "center"
-	;;	Opts[2] = "bottom"
-	;;	Iter = Opts.Length
-	;;	While(Iter > 0)
-	;;		Iter -= 1
-	;;		If(Opts[Iter] == Main.Config.GetString(".WidgetAnchorV"))
-	;;			Select = Iter
-	;;			Iter = 0
-	;;		EndIf
-	;;	EndWhile
-	;; EndIf
 
 	If(Item == ItemSliderDel)
 		self.OnOptionMenuOpen_SliderDelete(Item,ItemSliderType)
@@ -778,10 +761,26 @@ Event OnOptionInputAccept(Int Opt, String Txt)
 
 	If(Opt == ItemSliderAdd)
 		If(PageCurrentKey == "$SGO4_Menu_GemSliders")
-			Main.Body.SliderAdd(Main.Body.KeySlidersGems,Txt)
+			Main.Body.SliderAdd(Main.Body.KeySlidersGems, Txt, 0.0, "morph")
 			self.ForcePageReset()
 		ElseIf(PageCurrentKey == "$SGO4_Menu_MilkSliders")
-			Main.Body.SliderAdd(Main.Body.KeySlidersMilk,Txt)
+			Main.Body.SliderAdd(Main.Body.KeySlidersMilk, Txt, 0.0, "morph")
+			self.ForcePageReset()
+		ElseIf(PageCurrentKey == "$SGO4_Menu_SemenSliders")
+			Main.Body.SliderAdd(Main.Body.KeySlidersSemen, Txt, 0.0, "morph")
+			self.ForcePageReset()
+		EndIf
+	EndIf
+
+	If(Opt == ItemSliderAddBone)
+		If(PageCurrentKey == "$SGO4_Menu_GemSliders")
+			Main.Body.SliderAdd(Main.Body.KeySlidersGems, Txt, 0.0, "bone")
+			self.ForcePageReset()
+		ElseIf(PageCurrentKey == "$SGO4_Menu_MilkSliders")
+			Main.Body.SliderAdd(Main.Body.KeySlidersMilk, Txt, 0.0, "bone")
+			self.ForcePageReset()
+		ElseIf(PageCurrentKey == "$SGO4_Menu_SemenSliders")
+			Main.Body.SliderAdd(Main.Body.KeySlidersSemen, Txt, 0.0, "bone")
 			self.ForcePageReset()
 		EndIf
 	EndIf
@@ -800,10 +799,6 @@ Event OnOptionHighlight(Int Item)
 		Txt = "$SGO4_MenuTip_WidgetOffsetX"
 	ElseIf(Item == ItemWidgetOffsetY)
 		Txt = "$SGO4_MenuTip_WidgetOffsetY"
-	;;ElseIf(Item == ItemWidgetAnchorH)
-	;;	Txt = "$SGO4_MenuTip_WidgetAnchorH"
-	;;ElseIf(Item == ItemWidgetAnchorV)
-	;;	Txt = "$SGO4_MenuTip_WidgetAnchorV"
 	ElseIf(Item == ItemWidgetScale)
 		Txt = "$SGO4_MenuTip_WidgetScale"
 	ElseIf(Item == ItemModStatus)
@@ -1080,6 +1075,7 @@ EndFunction
 
 String ItemSliderType
 Int ItemSliderAdd
+Int ItemSliderAddBone
 Int ItemSliderDel
 Int[] ItemSliderVal
 Int ItemSliderBelly
@@ -1100,21 +1096,21 @@ Function ShowPageSliders(String PageTitle, String SliderConfig)
 	self.SetCursorFillMode(TOP_TO_BOTTOM)
 
 	self.SetCursorPosition(0)
-	AddHeaderOption("Current Morphs")
+	AddHeaderOption("Current Sliders")
 	While(SliderIter < SliderCount)
 		SliderName = Main.Config.GetString(SliderConfig + "[" + SliderIter + "].Name")
 		SliderValue = Main.Config.GetFloat(SliderConfig + "[" + SliderIter + "].Max")
 
 		ItemSliderVal[SliderIter] = AddSliderOption(SliderName,SliderValue,"{2}")
+		Main.Util.PrintDebug("[ShowPageSliders] " + SliderIter + " " + ItemSliderVal[SliderIter])
 
 		SliderIter += 1
 	EndWhile
 
 	self.SetCursorPosition(1)
-	AddHeaderOption("Manage Morphs")
-	;;ItemSliderAdd = AddToggleOption("$SGO4_MenuOpt_BodySliderAdd",FALSE)
+	AddHeaderOption("Manage Sliders")
 	ItemSliderAdd = AddInputOption("$SGO4_MenuOpt_BodySliderAdd","")
-	;;ItemSliderDel = AddToggleOption("$SGO4_MenuOpt_BodySliderDel",FALSE)
+	ItemSliderAddBone = AddInputOption("$SGO4_MenuOpt_BodySliderAddBone","")
 	ItemSliderDel = AddMenuOption("$SGO4_MenuOpt_BodySliderDel","")
 	AddEmptyOption()
 

@@ -9,10 +9,12 @@
 	"ActorGemsMax": 2,
 	"ActorMilkMax": 2,
 	"ActorSemenMax": 2,
+	"ActorSemenScale": 2.5,
 	"ActorUpdateName": false,
 	"ActorDropDistance": 35.0,
 	"ActorWeightDays": 2.0,
 	"ActorStripMode": 3,
+	"ActorWeightByGem": true,
 	"GemsPerDay": 1.0,
 	"InfluenceGemsWhen": 0.1,
 	"InfluenceGemsHealth": 75.0,
@@ -24,7 +26,6 @@
 	"MilksPregPercent": 30.0,
 	"MilksPassiveLoss": 0.25,
 	"SemensPerDay": 2.0,
-	"SemenNodeScale": 2.5,
 	"LevelAlchFactor": 1.0,
 	"LevelEnchFactor": 1.0,
 	"LevelValueBase": 100.0,
@@ -48,20 +49,23 @@
 	"Sliders": {
 		"Belly": "PregnancyBelly",
 		"Gems": [
-			{ "Max": 0.75, "Name": "ChubbyWaist" },
-			{ "Max": 1.25, "Name": "ChubbyLegs" },
-			{ "Max": 1.25, "Name": "ChubbyButt" },
-			{ "Max": 1.25, "Name": "ChubbyArms" },
-			{ "Max": 0.65, "Name": "PregnancyBelly" },
-			{ "Max": 1.2, "Name": "BackArch" },
-			{ "Max": 1.0, "Name": "Belly" },
-			{ "Max": -0.55, "Name": "TummyTuck" },
-			{ "Max": 0.6, "Name": "BigTorso" }
+			{ "Type": "morph", "Max": 0.75, "Name": "ChubbyWaist" },
+			{ "Type": "morph", "Max": 1.25, "Name": "ChubbyLegs" },
+			{ "Type": "morph", "Max": 1.25, "Name": "ChubbyButt" },
+			{ "Type": "morph", "Max": 1.25, "Name": "ChubbyArms" },
+			{ "Type": "morph", "Max": 0.65, "Name": "PregnancyBelly" },
+			{ "Type": "morph", "Max": 1.2, "Name": "BackArch" },
+			{ "Type": "morph", "Max": 1.0, "Name": "Belly" },
+			{ "Type": "morph", "Max": -0.55, "Name": "TummyTuck" },
+			{ "Type": "morph", "Max": 0.6, "Name": "BigTorso" }
 		],
 		"Milk": [
-			{ "Name": "Breasts", "Max": 1.5 },
-			{ "Name": "BreastGravity2", "Max": 1.0 },
-			{ "Name": "BreastTopSlope", "Max": 0.5 }
+			{ "Type": "morph", "Name": "Breasts", "Max": 1.5 },
+			{ "Type": "morph", "Name": "BreastGravity2", "Max": 1.0 },
+			{ "Type": "morph", "Name": "BreastTopSlope", "Max": 0.5 }
+		],
+		"Semen": [
+			{ "Type": "bone", "Name": "NPC GenitalsScrotum [GenScrot]", "Max": 2.5 }
 		]
 	}
 }

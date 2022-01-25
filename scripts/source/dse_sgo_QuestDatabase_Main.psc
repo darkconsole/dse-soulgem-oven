@@ -898,11 +898,11 @@ actor is physically not capable of producing this item.}
 
 	;;;;;;;;
 
+	GemCurMax = self.ActorGemMax(Who)
 	GemCurTotal = 0
 	GemIter = 0
 	Growth = FALSE
 
-	GemCurMax = self.ActorGemMax(Who)
 	GemStages = self.GemStageCount(Who)
 	PerDay = Main.Config.GetFloat(".GemsPerDay")
 	Inc = ((TimeSince * PerDay) / 24.0)
@@ -934,7 +934,10 @@ actor is physically not capable of producing this item.}
 
 	If(GemPregPercentDone > WeightCur)
 		;; don't instantly get thicc, slowly add it every update.
-		self.ActorWeightSet(Who,(WeightCur + ((GemPregPercentDone * 0.1) * TimeSince)))
+		self.ActorWeightSet(                                               \
+			Who,                                                         \
+			(WeightCur + ((GemPregPercentDone * 0.1) * TimeSince))       \
+		)
 	EndIf
 
 	;;;;;;;;
