@@ -24,6 +24,7 @@
 	"MilksPregPercent": 30.0,
 	"MilksPassiveLoss": 0.25,
 	"SemensPerDay": 2.0,
+	"SemenNodeScale": 2.5,
 	"LevelAlchFactor": 1.0,
 	"LevelEnchFactor": 1.0,
 	"LevelValueBase": 100.0,

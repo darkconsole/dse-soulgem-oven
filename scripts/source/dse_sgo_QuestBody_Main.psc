@@ -32,6 +32,7 @@ String Property KeySlidersMilk = ".Sliders.Milk" AutoReadOnly Hidden
 String Property KeySliderBelly = ".Sliders.Belly" AutoReadOnly Hidden
 String Property KeyMorphGems = "SGO4Gems" AutoReadOnly Hidden
 String Property KeyMorphMilk = "SGO4Milk" AutoReadOnly Hidden
+String Property KeyMorphSemen = "SGO4Semens" AutoReadOnly Hidden
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -50,6 +51,10 @@ Function ActorUpdate(Actor Who, Bool Force=FALSE)
 	If(Force || Who.IsInFaction(Main.FactionProduceMilk))
 		self.ActorUpdateMilk(Who)
 	EndIF
+
+	If(Force || Who.IsInFaction(Main.FactionProduceSemen))
+		self.ActorUpdateSemen(Who)
+	EndIf
 
 	If(Who.Is3dLoaded())
 		;; allow our data to have gotten updated, but there is no need to
@@ -98,9 +103,9 @@ Function ActorUpdateMilk(Actor Who)
 	If(Who == Main.Player)
 		self.ActorUpdateMilkInfluence(Who,MilkPercent)
 	EndIf
-	
+
 	If(MilkPercent >= 0.1)
-		;; todo - config option to tell me what body you are using. 
+		;; todo - config option to tell me what body you are using.
 		Main.Util.ActorOverlayApply(Who,"MilkLeak","textures\\dse-soulgem-oven\\MilkLeakCBBE.dds",1,MilkPercent)
 	Else
 		Main.Util.ActorOverlayClear(Who,"MilkLeak")
@@ -112,6 +117,19 @@ Function ActorUpdateMilk(Actor Who)
 
 	self.ActorSlidersApply(Who,self.KeySlidersMilk,MilkPercent)
 
+	Return
+EndFunction
+
+Function ActorUpdateSemen(Actor Who)
+{handle body updaets on the state of their semen.}
+
+	Float SemenPercent = Main.Data.ActorSemenTotalPercent(Who)
+
+	If(Who.IsInFaction(Main.FactionNoBodyScale))
+		SemenPercent = 0.0
+	EndIf
+
+	self.ActorBoneApply(Who, self.KeyMorphSemen, SemenPercent)
 	Return
 EndFunction
 
@@ -138,7 +156,7 @@ Function ActorUpdateGemsInfluence(Actor Who, Float GemPercent)
 	If(GemPercent >= GemsWhen)
 		;; effect 0 is the health influence.
 		Main.SpellInfluenceGems.SetNthEffectMagnitude(0,(GemsHealth * GemPercent))
-		
+
 		;; effect 1 is the mana influence.
 		Main.SpellInfluenceGems.SetNthEffectMagnitude(1,(GemsMagicka * GemPercent))
 
@@ -249,6 +267,23 @@ Function ActorSlidersClear(Actor Who, String Prefix)
 	EndIf
 
 	NiOverride.ClearBodyMorphKeys(Who,MorphKey)
+
+	Return
+EndFunction
+
+Function ActorBoneApply(Actor Who, String Prefix, Float Percent)
+
+	Float NodeMax = Main.Config.GetFloat(".SemenNodeScale")
+	Float Scale = 1 + (Percent * (NodeMax - 1))
+
+	If(Prefix == self.KeyMorphSemen)
+		Main.Util.PrintDebug("[ActorBoneApply] Testicles " + Scale)
+		If(Scale != 1.0)
+			NiOverride.AddNodeTransformScale(Who, FALSE, Who.GetActorBase().GetSex(), "NPC GenitalsScrotum [GenScrot]", Prefix, Scale)
+		Else
+			NiOverride.RemoveNodeTransformScale(Who, FALSE, Who.GetActorBase().GetSex(), "NPC GenitalsScrotum [GenScrot]", Prefix)
+		EndIf
+	EndIf
 
 	Return
 EndFunction
@@ -455,7 +490,7 @@ Function ActorLockdown(Actor Who, Package Pkg=NONE)
 			10000,0.000001            \
 		)
 	EndIf
-	
+
 	StorageUtil.SetFormValue(Who,"SGO4.Actor.Lockdown",Pkg)
 	Utility.Wait(0.2)
 
@@ -474,7 +509,7 @@ Function ActorLockdown(Actor Who, Package Pkg=NONE)
 EndFunction
 
 Function ActorRelease(Actor Who)
-	
+
 	Package Pkg = StorageUtil.GetFormValue(Who,"SGO4.Actor.Lockdown") as Package
 
 	If(Pkg == None)
@@ -508,7 +543,7 @@ Function ActorAnimateSolo(Actor Who, String AniName)
 	;;Utility.Wait(1.0)
 	;;Debug.SendAnimationEvent(Who,"IdleForceDefaultState")
 	;;Utility.Wait(0.25)
-	
+
 	Debug.SendAnimationEvent(Who,AniName)
 	;;ConsoleUtil.SetSelectedReference(Who)
 	;;ConsoleUtil.ExecuteCommand("sae " + AniName)
@@ -567,7 +602,7 @@ found.}
 
 	Int SliderCount = Main.Config.GetCount(SliderKey)
 	String SliderPath
-	
+
 	While(SliderCount > 0)
 		SliderCount -= 1
 		SliderPath = SliderKey + "[" + SliderCount + "].Name"
@@ -653,13 +688,13 @@ Bool Function SliderDeleteByOffset(String SliderKey, Int SliderOffset)
 	EndWhile
 
 	;; blow the old one away and reinstall sliders.
-	
+
 	self.SliderConfigReset(SliderKey)
 
 	Iter = 0
 	While(Iter < SliderCount)
 		;; skip the one we wanted to delete.
-		
+
 		If(Iter != SliderOffset)
 			self.SliderAdd(SliderKey,SliderName[Iter],SliderVal[Iter])
 		EndIf
