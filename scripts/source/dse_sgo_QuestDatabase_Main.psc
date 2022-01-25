@@ -990,7 +990,7 @@ Function ActorMilkLimit(Actor Who)
 {if this actor is over the limit on maximum milk, limit it.}
 
 	Float Amount = self.ActorMilkAmount(Who,FALSE)
-	Int Max = self.ActorMilkMax(Who)
+	Float Max = self.ActorMilkMax(Who)
 
 	If(Amount > Max)
 		self.ActorMilkSet(Who,Max as Float)
@@ -1002,7 +1002,7 @@ EndFunction
 Float Function ActorMilkAmount(Actor Who, Bool Limit=TRUE)
 {return how much milk an actor has.}
 
-	Int MilkMax = self.ActorMilkMax(Who)
+	Float MilkMax = self.ActorMilkMax(Who)
 	Float MilkVal = StorageUtil.GetFloatValue(Who,self.KeyActorMilkData)
 
 	If(Limit && MilkVal > MilkMax)
@@ -1027,7 +1027,7 @@ Function ActorMilkClear(Actor Who)
 	Return
 EndFunction
 
-Int Function ActorMilkMax(Actor Who)
+Float Function ActorMilkMax(Actor Who)
 {return how much milk an actor can have at once.}
 
 	Int Base = Main.Config.GetInt(".ActorMilkMax")
@@ -1046,7 +1046,7 @@ Float Function ActorMilkTotalPercent(Actor Who)
 {get the current state of fullness of milk.}
 
 	Float MilkAmount = self.ActorMilkAmount(Who)
-	Int ValueMax = self.ActorMilkMax(Who)
+	Float ValueMax = self.ActorMilkMax(Who)
 
 	Return (MilkAmount / (ValueMax as Float))
 EndFunction
@@ -1063,7 +1063,7 @@ actor is physically not capable of producing this item.}
 	Float Inc
 	Float ModRate
 	Float PassiveLoss
-	Int MilkMax
+	Float MilkMax
 	Int MilkOld
 	Int MilkNew
 	Float MilkCur

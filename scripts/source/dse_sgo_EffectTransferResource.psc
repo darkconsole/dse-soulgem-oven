@@ -243,7 +243,7 @@ Int Function GetDepositSpace()
 	If(self.ResourceType == self.ResourceGem)
 		Output = Main.Data.ActorGemMax(self.Dest) - Main.Data.ActorGemCount(self.Dest)
 	ElseIf(self.ResourceType == self.ResourceMilk)
-		Output = Main.Data.ActorMilkMax(self.Dest) - Main.Data.ActorMilkCount(self.Dest)
+		Output = Math.floor(Main.Data.ActorMilkMax(self.Dest) - Main.Data.ActorMilkCount(self.Dest))
 	ElseIf(self.ResourceType == self.ResourceSemen)
 		Output = Main.Data.ActorSemenMax(self.Dest) - Main.Data.ActorSemenCount(self.Dest)
 	EndIf

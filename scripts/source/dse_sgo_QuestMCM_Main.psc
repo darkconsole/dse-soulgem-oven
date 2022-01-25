@@ -429,7 +429,7 @@ Event OnOptionSliderOpen(Int Item)
 		Max = 12.0
 		Interval = 1.0
 	ElseIf(Item == ItemActorMilkMax)
-		Val = Main.Config.GetFloat(".ActorMilkMax")
+		Val = Main.Config.GetInt(".ActorMilkMax")
 		Min = 1.0
 		Max = 4.0
 		Interval = 1.0
