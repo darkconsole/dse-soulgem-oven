@@ -68,7 +68,7 @@ Event OnEffectStart(Actor Who, Actor From)
 	IsValidMode = (self.ExtractMode >= self.ExtractModeSingle) && (self.ExtractMode <= self.ExtractModeAll)
 	HasTarget = (self.Source != None)
 	HasResources = (self.ResourceCount > 0)
-	
+
 	;; proceed.
 
 	Main.Util.PrintDebug("[EffectExtractResource.OnEffectStart] " + self.Source.GetDisplayName() + " Animate: " + (self.Animate As Int))
@@ -141,6 +141,7 @@ Function StartExtractingAnimated()
 
 	Main.Util.ActorArmourRemove(self.Source)
 	Main.Body.ActorLockdown(self.Source)
+	Debug.SendAnimationEvent(self.Source, "SOSFastErect")
 
 	self.GotoState("Animating")
 	self.OnUpdate()
@@ -299,7 +300,7 @@ Function DropResource(Form ItemForm)
 
 	If(!self.Animate)
 		NodeName = self.DropNodeStatic
-		Distance = self.DropDistance	
+		Distance = self.DropDistance
 	Else
 		NodeName = self.DropNodeAnimated
 		Distance = 0.0

@@ -248,8 +248,9 @@ Function ActorSlidersApply(Actor Who, String Prefix, Float Percent, Float AltPer
 			EndIf
 		EndIf
 
+		Main.Util.PrintDebug("[ActorSlidersApply] " + Who.GetDisplayName() + " "  + SliderName + " " + SliderPercent)
+
 		If(SliderPercent > 0)
-			Main.Util.PrintDebug("[ActorSlidersApply] " + SliderName + " " + SliderPercent)
 			If(SliderType == "morph")
 				NiOverride.SetBodyMorph(                               \
 					Who,                                             \
@@ -258,7 +259,6 @@ Function ActorSlidersApply(Actor Who, String Prefix, Float Percent, Float AltPer
 					(SliderMax * SliderPercent)                      \
 				)
 			ElseIf(SliderType == "bone")
-				Main.Util.PrintDebug("[ActorSlidersApply] " + SliderName + " " + SliderPercent)
 				NiOverride.AddNodeTransformScale(                      \
 					Who,                                             \
 					FALSE,                                           \
@@ -271,10 +271,8 @@ Function ActorSlidersApply(Actor Who, String Prefix, Float Percent, Float AltPer
 			EndIf
 		Else
 			If(SliderType == "morph")
-				Main.Util.PrintDebug("[ActorSlidersApply] Remove Morph " + SliderName)
 				NiOverride.ClearBodyMorph(Who, SliderName, MorphKey)
 			ElseIf(SliderType == "bone")
-				Main.Util.PrintDebug("[ActorSlidersApply] Remove Bone " + SliderName)
 				NiOverride.RemoveNodeTransformScale(Who, FALSE, Who.GetActorBase().GetSex(), SliderName, MorphKey)
 				NiOverride.UpdateNodeTransform(Who, FALSE, Who.GetActorBase().GetSex(), SliderName)
 			EndIf
