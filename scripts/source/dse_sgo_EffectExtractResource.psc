@@ -182,13 +182,14 @@ Event OnAnimatedDone(Form Who)
 		Return
 	EndIf
 
-	;;Main.Body.ActorLockdown(self.Source)
 	Main.Body.ActorRelease(self.Source)
+	Main.Body.OnAnimationEvent_ActorReset(self.Source)
 	Main.Util.ActorArmourReplace(self.Source)
+
 	StorageUtil.UnsetStringValue(self.Source,"SGO4.Package.AnimationEnd")
 	Main.Util.PrintDebug("[EffectExtractResource:OnAnimatedSpawnItem] " + self.Source.GetDisplayName() + " done animating.")
-	self.Dispel()
 
+	self.Dispel()
 	Return
 EndEvent
 

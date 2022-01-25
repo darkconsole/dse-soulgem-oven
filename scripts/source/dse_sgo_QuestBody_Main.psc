@@ -385,19 +385,18 @@ EndFunction
 Function OnAnimationEvent_ActorReset(Actor Who)
 {reset an actor's body and face.}
 
+	Main.Util.PrintDebug("[Animate:ActorReset] " + Who.GetDisplayName())
+
 	sslBaseExpression.ClearMFG(Who)
 
-	;;If(Who == Main.Player)
-	;;	Game.SetPlayerAIDriven(FALSE)
-	;;EndIf
-
 	Debug.SendAnimationEvent(Who,self.AniDefault)
-
 	Return
 EndFunction
 
 Function OnAnimationEvent_ActorResetFace(Actor Who)
 {reset an actor's face.}
+
+	Main.Util.PrintDebug("[Animate:ActorResetFace] " + Who.GetDisplayName())
 
 	sslBaseExpression.ClearMFG(Who)
 
@@ -411,7 +410,7 @@ Function OnAnimationEvent_ActorDone(Actor Who)
 
 	self.OnAnimationEvent_ActorReset(Who)
 
-	Main.Util.PrintDebug("ModEvent: " + self.KeyEvActorDone)
+	Main.Util.PrintDebug("[Animate:ActorDone]: " + self.KeyEvActorDone)
 
  	Ev = ModEvent.Create(self.KeyEvActorDone)
 	ModEvent.PushForm(Ev,Who)
