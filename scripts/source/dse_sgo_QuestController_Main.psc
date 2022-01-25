@@ -68,6 +68,7 @@ Faction Property FactionProduceGems Auto
 Faction Property FactionProduceMilk Auto
 Faction Property FactionProduceSemen Auto
 Faction Property FactionNoBodyScale Auto
+Faction Property FactionExposed Auto
 Spell Property SpellActorDataScan Auto
 Spell Property SpellActorDataScanToggle Auto
 Spell Property SpellFindActors Auto
