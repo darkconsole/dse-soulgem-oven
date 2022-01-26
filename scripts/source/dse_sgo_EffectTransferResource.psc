@@ -70,7 +70,7 @@ Event OnEffectStart(Actor Who, Actor From)
 	HasTarget = (self.Source != None) && (self.Dest != None)
 	HasResources = (self.ResourceCount > 0)
 	HasSpace = (self.DepositSpace > 0)
-	
+
 	;; proceed.
 
 	Main.Util.PrintDebug("[EffectTransferResource.OnEffectStart] " + self.Source.GetDisplayName() + " & " + self.Dest.GetDisplayname() + " Animate: " + (self.Animate As Int))
@@ -107,7 +107,8 @@ Function StartExtracting()
 {kick off the extraction process.}
 
 	If(self.Animate)
-		self.StartExtractingAnimated()
+		;;self.StartExtractingAnimated()
+		self.StartExtractingStatic()
 	Else
 		self.StartExtractingStatic()
 	EndIf
