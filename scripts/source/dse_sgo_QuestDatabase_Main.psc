@@ -239,6 +239,7 @@ Int Function ListSemenFilterPrepare()
 		FileRaceIter = 0
 
 		While(FileRaceIter < FileRaceCount)
+			;;Main.Util.PrintDebug("[SemenFilterPrepare] " + FileIter + " " + FileRaceIter + " " + self.RaceGetSemen(FileIter,FileRaceIter))
 			Main.ListSemenFilter.AddForm(self.RaceGetSemen(FileIter,FileRaceIter))
 			FileRaceIter += 1
 		EndWhile

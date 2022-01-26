@@ -60,7 +60,6 @@ Faction Property FactionCurrentFollower Auto
 Book Property Book01 Auto
 Book Property Book02 Auto
 Container Property ContainInsertGems Auto
-Container Property ContainInsertSemens Auto
 FormList Property ListGemFilter Auto
 FormList property ListSemenFilter Auto
 FormList Property ListBookVendors Auto
@@ -74,7 +73,6 @@ Spell Property SpellActorDataScanToggle Auto
 Spell Property SpellFindActors Auto
 Spell Property SpellFindActorsAOE Auto
 Spell Property SpellInsertGems Auto
-Spell Property SpellInsertSemens Auto
 Spell Property SpellInfluenceGems Auto
 Spell Property SpellInfluenceMilk Auto
 Spell Property SpellMenuMainOpen Auto
@@ -675,7 +673,7 @@ Function MenuMainOpen(Actor Who=None)
 
 	;; 0 insert gems | 4 gem status
 	;; 1 xfer gems   | 5 milk status
-	;; 2 insert sem  | 6 semen status
+	;; 2             | 6 semen status
 	;; 3 actor opts  | 7 actor stats
 
 	ItemText[0] = "$SGO4_MenuInsertGemsText"
@@ -686,9 +684,9 @@ Function MenuMainOpen(Actor Who=None)
 	ItemDesc[1] = "$SGO4_MenuTransferGemsDesc"
 	ItemShow[1] = Who.IsInFaction(self.FactionProduceGems)
 
-	ItemText[2] = "$SGO4_MenuInsertSemenText"
-	ItemDesc[2] = "$SGO4_MenuInsertSemenDesc"
-	ItemShow[2] = Who.IsInFaction(self.FactionProduceGems)
+	ItemText[2] = ""
+	ItemDesc[2] = ""
+	ItemShow[2] = FALSE
 
 	ItemText[3] = "$SGO4_MenuActorOptionsText"
 	ItemDesc[3] = "$SGO4_MenuActorOptionsDesc"
@@ -753,8 +751,7 @@ Function MenuMainOpen(Actor Who=None)
 		;; xfer gems
 		self.MenuXferGems()
 	ElseIf(Result == 2)
-		;; inseminate
-		self.SpellInsertSemens.Cast(Who,Who)
+		;; used to be inseminate
 	ElseIf(Result == 3)
 		;; actor options
 		self.MenuActorOptionsOpen(Who)

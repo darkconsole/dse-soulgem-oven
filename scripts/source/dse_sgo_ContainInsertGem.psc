@@ -16,6 +16,7 @@ Float[] Property GemData Auto Hidden
 Int Property GemLoop Auto Hidden
 Int Property GemStageLen Auto Hidden
 Int Property GemActorMax Auto Hidden
+Int Property SemenLen Auto Hidden
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -54,6 +55,7 @@ Event OnLoad()
 	EndIf
 
 	self.GemStageLen = Main.Data.ListGemFilterPrepare()
+	self.SemenLen = Main.Data.ListSemenFilterPrepare()
 
 	;; determine how many gems we can add.
 
@@ -72,9 +74,10 @@ EndEvent
 Event OnItemAdded(Form Type, Int Count, ObjectReference What, ObjectReference Source)
 {when an item is added to this container.}
 
-	;; if its not a valid soulgem we don't want it in here.
+	;; allow any of the valid items that this actor can incubate which
+	;; is usually gems, as well as semen.
 
-	If(!Main.ListGemFilter.HasForm(Type))
+	If(!Main.ListGemFilter.HasForm(Type) && !Main.ListSemenFilter.HasForm(Type))
 		Main.Util.PrintLookup("CannotInsertThat",self.InsertInto.GetDisplayName())
 
 		If(What != None)
@@ -151,7 +154,15 @@ Event OnActivate(ObjectReference What)
 
 	While(Iter < self.GemForm.Length && IterType < CountType)
 		Type = self.GetNthForm(IterType)
-		TypeVal = (Main.ListGemFilter.Find(Type) % self.GemStageLen) + 1
+
+		If(Main.ListSemenFilter.HasForm(Type))
+			;; if semen they must start over from scratch.
+			TypeVal = 0
+		Else
+			;; if gem they can start whre the gem starts
+			TypeVal = (Main.ListGemFilter.Find(Type) % self.GemStageLen) + 1
+		EndIf
+
 		CountItem = self.GetItemCount(Type)
 		IterItem = 0
 
