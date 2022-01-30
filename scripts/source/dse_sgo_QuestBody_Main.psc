@@ -248,7 +248,7 @@ Function ActorSlidersApply(Actor Who, String Prefix, Float Percent, Float AltPer
 			EndIf
 		EndIf
 
-		Main.Util.PrintDebug("[ActorSlidersApply] " + Who.GetDisplayName() + " "  + SliderName + " " + SliderPercent)
+		;;Main.Util.PrintDebug("[ActorSlidersApply] " + Who.GetDisplayName() + " "  + SliderName + " " + SliderPercent)
 
 		If(SliderPercent > 0)
 			If(SliderType == "morph")
@@ -343,7 +343,7 @@ EndFunction
 Event OnAnimationEvent(ObjectReference What, String EvName)
 {handle animation events.}
 
-	Main.Util.PrintDebug(EvName + " " + What.GetDisplayName())
+	;;Main.Util.PrintDebug(EvName + " " + What.GetDisplayName())
 
 	If(What as Actor)
 		If(EvName == self.KeyEvActorMoan)
@@ -385,7 +385,7 @@ EndFunction
 Function OnAnimationEvent_ActorReset(Actor Who)
 {reset an actor's body and face.}
 
-	Main.Util.PrintDebug("[Animate:ActorReset] " + Who.GetDisplayName())
+	;;Main.Util.PrintDebug("[Animate:ActorReset] " + Who.GetDisplayName())
 
 	sslBaseExpression.ClearMFG(Who)
 
@@ -396,7 +396,7 @@ EndFunction
 Function OnAnimationEvent_ActorResetFace(Actor Who)
 {reset an actor's face.}
 
-	Main.Util.PrintDebug("[Animate:ActorResetFace] " + Who.GetDisplayName())
+	;;Main.Util.PrintDebug("[Animate:ActorResetFace] " + Who.GetDisplayName())
 
 	sslBaseExpression.ClearMFG(Who)
 
@@ -410,7 +410,7 @@ Function OnAnimationEvent_ActorDone(Actor Who)
 
 	self.OnAnimationEvent_ActorReset(Who)
 
-	Main.Util.PrintDebug("[Animate:ActorDone]: " + self.KeyEvActorDone)
+	;;Main.Util.PrintDebug("[Animate:ActorDone]: " + self.KeyEvActorDone)
 
  	Ev = ModEvent.Create(self.KeyEvActorDone)
 	ModEvent.PushForm(Ev,Who)
@@ -424,7 +424,7 @@ Function OnAnimationEvent_ActorInsert(Actor Who)
 
 	Int Ev
 
-	Main.Util.PrintDebug("ModEvent: " + self.KeyEvActorInsert)
+	;;Main.Util.PrintDebug("ModEvent: " + self.KeyEvActorInsert)
 
  	Ev = ModEvent.Create(self.KeyEvActorInsert)
 	ModEvent.PushForm(Ev,Who)
@@ -438,7 +438,7 @@ Function OnAnimationEvent_ActorSpawnGem(Actor Who)
 
 	Int Ev
 
-	Main.Util.PrintDebug("ModEvent: " + self.KeyEvActorSpawnGem)
+	;;Main.Util.PrintDebug("ModEvent: " + self.KeyEvActorSpawnGem)
 
  	Ev = ModEvent.Create(self.KeyEvActorSpawnGem)
 	ModEvent.PushForm(Ev,Who)
@@ -452,7 +452,7 @@ Function OnAnimationEvent_ActorSpawnMilk(Actor Who)
 
 	Int Ev
 
-	Main.Util.PrintDebug("ModEvent: " + self.KeyEvActorSpawnMilk)
+	;;Main.Util.PrintDebug("ModEvent: " + self.KeyEvActorSpawnMilk)
 
  	Ev = ModEvent.Create(self.KeyEvActorSpawnMilk)
 	ModEvent.PushForm(Ev,Who)
@@ -466,7 +466,7 @@ Function OnAnimationEvent_ActorSpawnSemen(Actor Who)
 
 	Int Ev
 
-	Main.Util.PrintDebug("ModEvent: " + self.KeyEvActorSpawnSemen)
+	;;Main.Util.PrintDebug("ModEvent: " + self.KeyEvActorSpawnSemen)
 
  	Ev = ModEvent.Create(self.KeyEvActorSpawnSemen)
 	ModEvent.PushForm(Ev,Who)

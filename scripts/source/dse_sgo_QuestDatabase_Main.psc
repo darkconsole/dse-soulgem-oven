@@ -407,7 +407,7 @@ Function ActorTrackingCull()
 	StorageUtil.FormListRemove(None,KeyActorTracking,None,TRUE)
 	After = StorageUtil.FormListCount(None,KeyActorTracking)
 
-	Main.Util.PrintDebug("ActorTrackingCull: " + Before + " => " + After)
+	;; Main.Util.PrintDebug("ActorTrackingCull: " + Before + " => " + After)
 
 	Return
 EndFunction
@@ -654,7 +654,7 @@ Float Function ActorWeightSet(Actor Who, Float Value)
 	Value = PapyrusUtil.Clampfloat(Value,0.0,1.0)
 	StorageUtil.SetFloatValue(Who,self.KeyActorWeightGain,Value)
 
-	Main.Util.PrintDebug("[ActorWeightSet] " + self.ActorGetOriginalName(Who) + " " + Value)
+	;;Main.Util.PrintDebug("[ActorWeightSet] " + self.ActorGetOriginalName(Who) + " " + Value)
 	Return Value
 EndFunction
 
@@ -935,7 +935,7 @@ actor is physically not capable of producing this item.}
 
 	GemPregPercentDone = self.ActorGemTotalPercent(Who)
 	WeightGain = GemPregPercentDone * (TimeSince / ((GemStages / PerDay) * 24.0))
-	Main.Util.PrintDebug("[UpdateGemData] Weight Gain " + Who.GetDisplayName() + " " + WeightGain)
+	;;Main.Util.PrintDebug("[UpdateGemData] Weight Gain " + Who.GetDisplayName() + " " + WeightGain)
 	self.ActorWeightSet(Who, (WeightCur + WeightGain))
 
 	;;;;;;;;
@@ -1367,7 +1367,7 @@ the actor is not biologically able to produce gems.}
 
 	If(FertilitySync && Who != Main.Player && Who.IsInFaction(Main.FactionCurrentFollower))
 		SyncDist = self.ActorFertilityFactor(Who) - self.ActorFertilityFactor(Main.Player)
-		Main.Util.PrintDebug(Who.GetDisplayName() + " fertility out of sync by " + SyncDist)
+		;;Main.Util.PrintDebug(Who.GetDisplayName() + " fertility out of sync by " + SyncDist)
 
 		;; trying to bring followers to be in sync within 1.5 days of eachother.
 		;; i think if someone was almost sycned, and then you fast wait multiple

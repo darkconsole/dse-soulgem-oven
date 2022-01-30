@@ -287,7 +287,7 @@ Float[] Function GetNodePositionData(ObjectReference What, String Node)
 
 	;;;;;;;;
 
-	Main.Util.PrintDebug("[GetNodePositionData] " + What.GetDisplayName() + " " + What.GetAngleZ() + " " + Node + " " + NodeRot[0] + "," + NodeRot[1] + "," + NodeRot[2])
+	;;Main.Util.PrintDebug("[GetNodePositionData] " + What.GetDisplayName() + " " + What.GetAngleZ() + " " + Node + " " + NodeRot[0] + "," + NodeRot[1] + "," + NodeRot[2])
 
 	Output[0] = NodeRot[2]
 	Output[1] = NodePos[0]

@@ -18,7 +18,7 @@ Int Property TitleShadow Auto Hidden
 
 Event OnInit()
 
-	SGO.Util.PrintDebug("[WidgetBase] OnInit")
+	;;SGO.Util.PrintDebug("[WidgetBase] OnInit")
 
 	self.DynopulateItemsAsMeters(0)
 	self.Title = 0
@@ -80,7 +80,7 @@ Function DynopulateItemsAsMeters(Int Needed)
 	;; we need more than we have so add additional meters.
 
 	If(Needed > self.Items.Length)
-		SGO.Util.PrintDebug("[WidgetBase] DynopulateItemsAsMeters Expand To " + Needed)
+		;;SGO.Util.PrintDebug("[WidgetBase] DynopulateItemsAsMeters Expand To " + Needed)
 		ItemsNew = Utility.CreateIntArray(Needed)
 		Iter = 0
 
@@ -106,7 +106,7 @@ Function DynopulateItemsAsMeters(Int Needed)
 	;; we do not need as many meters as we used to.
 
 	If(Needed < self.Items.Length)
-		SGO.Util.PrintDebug("[WidgetBase] DynopulateItemsAsMeters Shrink To " + Needed)
+		;;SGO.Util.PrintDebug("[WidgetBase] DynopulateItemsAsMeters Shrink To " + Needed)
 		ItemsNew = Utility.CreateIntArray(Needed)
 		Iter = 0
 
