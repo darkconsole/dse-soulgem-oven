@@ -13,7 +13,7 @@ Int Property Ready Auto Hidden
 
 Event OnEffectStart(Actor Who, Actor From)
 
-	self.Target = Game.GetCurrentCrosshairRef() As Actor
+	self.Target = StorageUtil.GetFormValue(NONE, "SGO4.ActorDataScan") AS Actor
 
 	If(self.Target == None)
 		self.Target = Who
@@ -33,10 +33,14 @@ Event OnEffectStart(Actor Who, Actor From)
 EndEvent
 
 Event OnEffectFinish(Actor Who, Actor From)
-	Main.Util.PrintLookup("ScannerDone",self.Target.GetDisplayName())
 
-	Main.GemUI.Target.Clear()
-	Main.GemUI.OnUpdateWidget()
+	;; this seems to be suffering the age old problem of properties getting
+	;; destroyed before this even gets called. cleanup moved to the toggle
+	;; script instead.
+
+	;;Main.Util.PrintLookup("ScannerDone",self.Target.GetActorReference().GetDisplayName())
+	;;Main.GemUI.Target.Clear()
+	;;Main.GemUI.OnUpdateWidget()
 
 	Return
 EndEvent

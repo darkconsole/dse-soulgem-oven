@@ -12,23 +12,26 @@ Int[] Property Items Auto Hidden
 
 Int Property Title Auto Hidden
 Int Property TitleShadow Auto Hidden
+Bool Property Busy = FALSE Auto Hidden
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Event OnInit()
 
-	;;SGO.Util.PrintDebug("[WidgetBase] OnInit")
-
-	self.DynopulateItemsAsMeters(0)
+	self.Items = Utility.CreateIntArray(0)
 	self.Title = 0
 	self.TitleShadow = 0
+
+	SGO.Util.PrintDebug("[WidgetBase] OnInit")
 
 	UnregisterForModEvent("iWantWidgetsReset")
 	RegisterForModEvent("iWantWidgetsReset", "OnLocalEvent")
 
 	UnregisterForModEvent("SGO4.Body.ActorUpdate")
 	RegisterForModEvent("SGO4.Body.ActorUpdate","OnDataUpdate")
+
+	Return
 EndEvent
 
 Event OnUpdate()
@@ -41,6 +44,7 @@ Event OnLocalEvent(String EvName, String ArgStr, Float ArgInt, Form From)
 
 	If(EvName == "iWantWidgetsReset")
 		SGO.Util.PrintDebug("[WidgetBase] iWantWidgetsReset")
+		Utility.Wait(0.25)
 		self.OnLocalReset(ArgStr, ArgInt, From)
 	EndIf
 
@@ -50,7 +54,7 @@ EndEvent
 Event OnLocalReset(String ArgStr, Float ArgInt, Form From)
 
 	self.iWant = From as iWant_Widgets
-	self.OnUpdateWidget()
+	self.OnUpdateWidget(TRUE)
 	Return
 EndEvent
 
@@ -67,8 +71,18 @@ Event OnDataUpdate(Form Whom)
 EndEvent
 
 Function OnUpdateWidget(Bool Flush=FALSE)
+{this method should be the primary means of asking the widget to update, either
+by timer triggers or manual calls.}
+
+	If(self.Busy)
+		Return
+	EndIf
+
+	self.Busy = TRUE
 
 	self.OnRenderWidget()
+
+	self.Busy = FALSE
 	Return
 EndFunction
 
@@ -80,7 +94,7 @@ Function DynopulateItemsAsMeters(Int Needed)
 	;; we need more than we have so add additional meters.
 
 	If(Needed > self.Items.Length)
-		;;SGO.Util.PrintDebug("[WidgetBase] DynopulateItemsAsMeters Expand To " + Needed)
+		SGO.Util.PrintDebug("[WidgetBase] DynopulateItemsAsMeters Expand To " + Needed)
 		ItemsNew = Utility.CreateIntArray(Needed)
 		Iter = 0
 
@@ -95,7 +109,7 @@ Function DynopulateItemsAsMeters(Int Needed)
 
 		While(Iter < ItemsNew.Length)
 			ItemsNew[Iter] = self.iWant.loadMeter()
-			self.iWant.SetVisible(ItemsNew[Iter])
+			;;self.iWant.SetVisible(ItemsNew[Iter])
 			Iter += 1
 		EndWhile
 
@@ -106,7 +120,7 @@ Function DynopulateItemsAsMeters(Int Needed)
 	;; we do not need as many meters as we used to.
 
 	If(Needed < self.Items.Length)
-		;;SGO.Util.PrintDebug("[WidgetBase] DynopulateItemsAsMeters Shrink To " + Needed)
+		SGO.Util.PrintDebug("[WidgetBase] DynopulateItemsAsMeters Shrink To " + Needed)
 		ItemsNew = Utility.CreateIntArray(Needed)
 		Iter = 0
 
