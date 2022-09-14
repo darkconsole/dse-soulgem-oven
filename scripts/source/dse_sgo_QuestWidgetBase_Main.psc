@@ -33,6 +33,7 @@ Event OnInit()
 	RegisterForModEvent("SGO4.Body.ActorUpdate","OnDataUpdate")
 
 	Utility.Wait(5.0)
+	self.Busy = FALSE
 	self.OnUpdateWidget(TRUE)
 
 	Return
