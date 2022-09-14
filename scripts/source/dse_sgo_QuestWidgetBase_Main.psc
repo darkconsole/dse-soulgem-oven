@@ -19,6 +19,7 @@ Bool Property Busy = FALSE Auto Hidden
 
 Event OnInit()
 
+	self.iWant = Game.GetFormFromFile(0x800, "iWant Widgets.esl") as iWant_Widgets
 	self.Items = Utility.CreateIntArray(0)
 	self.Title = 0
 	self.TitleShadow = 0
@@ -26,10 +27,13 @@ Event OnInit()
 	SGO.Util.PrintDebug("[WidgetBase] OnInit")
 
 	UnregisterForModEvent("iWantWidgetsReset")
-	RegisterForModEvent("iWantWidgetsReset", "OnLocalEvent")
+	;;RegisterForModEvent("iWantWidgetsReset", "OnLocalEvent")
 
 	UnregisterForModEvent("SGO4.Body.ActorUpdate")
 	RegisterForModEvent("SGO4.Body.ActorUpdate","OnDataUpdate")
+
+	Utility.Wait(5.0)
+	self.OnUpdateWidget(TRUE)
 
 	Return
 EndEvent
@@ -55,6 +59,7 @@ Event OnLocalReset(String ArgStr, Float ArgInt, Form From)
 
 	self.iWant = From as iWant_Widgets
 	self.OnUpdateWidget(TRUE)
+
 	Return
 EndEvent
 

@@ -27,6 +27,7 @@ Event OnEffectStart(Actor Who, Actor From)
 
 		StorageUtil.UnsetFormValue(NONE, "SGO4.ActorDataScan")
 		Main.GemUI.Target.Clear()
+		Main.GemUI.Busy = FALSE
 		Main.GemUI.OnUpdateWidget()
 		Return
 	EndIf
