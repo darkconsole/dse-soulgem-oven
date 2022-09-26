@@ -21,8 +21,8 @@ Event OnInit()
 
 	self.iWant = Game.GetFormFromFile(0x800, "iWant Widgets.esl") as iWant_Widgets
 	self.Items = Utility.CreateIntArray(0)
-	self.Title = 0
-	self.TitleShadow = 0
+	self.Title = -1
+	self.TitleShadow = -1
 
 	SGO.Util.PrintDebug("[WidgetBase] OnInit")
 

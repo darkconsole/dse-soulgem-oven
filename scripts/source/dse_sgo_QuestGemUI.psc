@@ -16,8 +16,8 @@ Function OnUpdateWidget(Bool Flush=FALSE)
 		self.DynopulateItemsAsMeters(0)
 		self.iWant.Destroy(self.TitleShadow)
 		self.iWant.Destroy(self.Title)
-		self.TitleShadow = 0
-		self.Title = 0
+		self.TitleShadow = -1
+		self.Title = -1
 	EndIf
 
 	self.OnRenderWidget()
@@ -59,8 +59,8 @@ Function OnRenderWidget()
 		self.DynopulateItemsAsMeters(0)
 		self.iWant.Destroy(self.TitleShadow)
 		self.iWant.Destroy(self.Title)
-		self.TitleShadow = 0
-		self.Title = 0
+		self.TitleShadow = -1
+		self.Title = -1
 		Return
 	EndIf
 
@@ -76,7 +76,8 @@ Function OnRenderWidget()
 
 	;;;;;;;;
 
-	If(self.Title)
+	If(self.Title != -1)
+		SGO.Util.PrintDebug("Update Title: " + self.Title)
 		self.iWant.SetText(self.TitleShadow, Who.GetDisplayName())
 		self.iWant.SetText(self.Title, Who.GetDisplayName())
 	Else
@@ -85,22 +86,25 @@ Function OnRenderWidget()
 
 		self.TitleShadow = self.iWant.loadText(Who.GetDisplayName(), size=FontSize)
 		self.Title = self.iWant.loadText(Who.GetDisplayName(), size=FontSize)
+		SGO.Util.PrintDebug("Create Title: " + self.Title)
 
 		self.iWant.SetTransparency(self.TitleShadow, 50)
 		self.iWant.SetRGB(self.TitleShadow, 0, 0, 0)
 	EndIf
 
-	self.iWant.SetPos(                                        \
-		self.TitleShadow,                                   \
-		((PosX + 1 + (self.iWant.GetXSize(self.Title) / 2)) As Int),     \
+	self.iWant.SetPos(                                                                      \
+		self.TitleShadow,                                                                 \
+		((PosX + 1 + (self.iWant.GetXSize(self.Title) / 2)) As Int),                      \
 		((PosY + 1 + ((Gap / 2) * Scale) + (self.iWant.GetYSize(self.Title) / 2)) As Int) \
 	)
 
-	self.iWant.SetPos(                                        \
-		self.Title,                                         \
-		((PosX + (self.iWant.GetXSize(self.Title) / 2)) As Int),     \
+	self.iWant.SetPos(                                                                  \
+		self.Title,                                                                   \
+		((PosX + (self.iWant.GetXSize(self.Title) / 2)) As Int),                      \
 		((PosY + ((Gap / 2) * Scale) + (self.iWant.GetYSize(self.Title) / 2)) As Int) \
 	)
+
+	SGO.Util.PrintDebug("Positioned Title: " + self.Title)
 
 	self.iWant.SetVisible(self.TitleShadow)
 	self.iWant.SetVisible(self.Title)
