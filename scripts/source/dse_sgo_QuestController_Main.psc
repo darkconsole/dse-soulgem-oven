@@ -939,3 +939,36 @@ Function MenuXferGems()
 
 	Return
 EndFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Event OnKeyDown(int KeyCode)
+
+	int MenuKey = self.Config.GetInt(".MenuKey")
+
+	If(KeyCode == MenuKey)
+		self.MenuMainOpen(None)
+		Return
+	EndIf
+
+	Return
+EndEvent
+
+Function UnregisterKeys()
+
+	int MenuKey = self.Config.GetInt(".MenuKey")
+
+	self.UnregisterForKey(MenuKey)
+
+	Return
+EndFunction
+
+Function RegisterKeys()
+
+	int MenuKey = self.Config.GetInt(".MenuKey")
+
+	self.RegisterForKey(MenuKey)
+
+	Return
+EndFunction

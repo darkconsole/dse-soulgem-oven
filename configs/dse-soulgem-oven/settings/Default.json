@@ -46,6 +46,7 @@
 	"MilkerRate": 0.10,
 	"DatabankShowAll": false,
 	"DatabankLoadedOnly": false,
+	"MenuKey": 65,
 	"Sliders": {
 		"Belly": "PregnancyBelly",
 		"Gems": [

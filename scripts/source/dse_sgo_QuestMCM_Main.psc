@@ -43,6 +43,7 @@ Event OnGameReload()
 
 	;; add books to vendors.
 	Main.InstallVendorItems()
+	Main.RegisterKeys()
 
 	Main.GemUI.OnInit()
 
@@ -873,6 +874,23 @@ EndEvent
 ;/*****************************************************************************
 *****************************************************************************/;
 
+Event OnOptionKeyMapChange(int Item, int KeyCode, string ExistCtrl, string ExistName)
+
+	;; todo - check how that conflict detection works.
+
+	If(Item == ItemMenuKey)
+		Main.UnregisterKeys()
+		Main.Config.SetInt(".MenuKey", KeyCode)
+		self.SetKeyMapOptionValue(Item, KeyCode)
+		Main.RegisterKeys()
+	EndIf
+
+	Return
+EndEvent
+
+;/*****************************************************************************
+*****************************************************************************/;
+
 Function ShowPageIntro()
 
 	self.LoadCustomContent(Main.KeySplashGraphic)
@@ -894,6 +912,7 @@ Int ItemUpdateAfterWait
 Int ItemDatabankShowAll
 Int ItemDatabankLoadedOnly
 Int ItemActorUpdateName
+Int ItemMenuKey
 
 Function ShowPageGeneral()
 
@@ -905,8 +924,9 @@ Function ShowPageGeneral()
 
 	AddHeaderOption("$SGO4_MenuOpt_ModStatus")
 	AddHeaderOption("")
-	ItemModStatus = AddToggleOption("$SGO4_MenuOpt_IsModActive",Main.IsRunning())
-	AddEmptyOption()
+	ItemModStatus = self.AddToggleOption("$SGO4_MenuOpt_IsModActive",Main.IsRunning())
+	ItemMenuKey = self.AddKeymapOption("$SGO4_MenuOpt_MenuKey", Main.Config.GetInt(".MenuKey"))
+	;;AddEmptyOption()
 	AddEmptyOption()
 	AddEmptyOption()
 
