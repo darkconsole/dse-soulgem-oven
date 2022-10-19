@@ -495,6 +495,12 @@ Function OnModEvent_SexLabOrgasm(Form Whom, Int Enjoy, Int OCount)
 		Return
 	EndIf
 
+	If(Oven != self.Player && self.Config.GetBool(".ActorPregPlayerOnly"))
+		;; bail because not player
+		Util.PrintDebug("Preg Abort: Not player and ActorPregPlayerOnly is on.")
+		Return
+	EndIf
+
 	;;;;;;;;
 
 	PregRoll = Utility.RandomFloat(0.0,100.0) * Data.ActorFertilityFactor(Oven)

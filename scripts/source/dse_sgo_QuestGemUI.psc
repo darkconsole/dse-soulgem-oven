@@ -57,10 +57,12 @@ Function OnRenderWidget()
 	If(Who == NONE)
 		SGO.Util.PrintDebug("[WidgetBase] OnRenderWidget: No Target")
 		self.DynopulateItemsAsMeters(0)
+
 		self.iWant.Destroy(self.TitleShadow)
 		self.iWant.Destroy(self.Title)
 		self.TitleShadow = -1
 		self.Title = -1
+
 		Return
 	EndIf
 

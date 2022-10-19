@@ -15,6 +15,7 @@
 	"ActorWeightDays": 2.0,
 	"ActorStripMode": 3,
 	"ActorWeightByGem": true,
+	"ActorPregPlayerOnly": false,
 	"GemsPerDay": 1.0,
 	"InfluenceGemsWhen": 0.1,
 	"InfluenceGemsHealth": 75.0,
